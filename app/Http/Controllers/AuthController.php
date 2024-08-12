@@ -219,6 +219,54 @@ class AuthController extends Controller
         return response()->json(['message' => 'Token not provided'], 400);
     }
 
+    // Update profile
+    public function viewProfile(Request $request){
+        $userFound = Auth::user();
+
+        return response()->json([
+            'user found' => $userFound
+        ]);
+    }
+
+    // update Profile
+    public function updateProfile(Request $request){
+        $userId = Auth::user()->id;
+
+        try {       
+            try{
+                $userValidation = $request->validate([
+                    'user_genders_id' => 'string|max:255',
+                    'occupation' => 'string|max:255',
+                    'location' => 'string',
+                    'age' => 'string|max:255',
+                    'profile_image' => 'string|max:255',
+                ]);
+
+                // Trouve l'utilisateur par email
+                $user = User::where('id', $userId)->first();
+    
+                // Mettre à jour le mot de passe de l'utilisateur
+                $user->update($userValidation);
+
+                return response()->json([
+                    'message' => 'Success',
+                    'success' => "Update Successfull!",
+                ], 200);
+                
+            }catch (ValidationException $e) {        
+                return response()->json([
+                    'message' => 'The given data was invalid.',
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+        }catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Update error.',
+                'errors' => $e->errors(),
+            ], 422);
+        }
+    }
+
     // Reset password Link
     public function forgotPassword(Request $request){
         try {

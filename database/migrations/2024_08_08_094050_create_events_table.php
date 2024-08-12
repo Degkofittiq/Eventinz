@@ -16,15 +16,21 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->Integer('user_id');
-            $table->integer('event_type_id'); // Event type(party for birthday, communion, mariage, etc...)
-            $table->integer('vendor_type_id'); // Array min:1 to store all the categories of vendor need for the event
+            $table->integer('event_type_id'); // Event type(party for birthday, communion, mariage, etc...) 
+            $table->string('vendor_type_id'); // Array min:1 to store all the categories of vendor need for the event
             $table->string('duration'); // In hours or per day
             $table->string('start_date'); //  event's start date
             $table->string('end_date'); //  event's end date
             $table->string('country'); // event's country
             $table->string('state'); //  event's state
+            $table->string('city'); //  event's city
+            $table->string('subcategory')->nullable(); //  event's subcategory
+            $table->Integer('public_or_private')->default(0); //  event's status(public 0 / private 1)
             $table->string('description')->nullable(); // In hours or per day
-            $table->timestamps();
+            $table->string('vendor_poke')->nullable(); //  Array : nullable(); If the event's author wants one particular vendor
+            $table->decimal('total_amount')->nullable(); //  Event's total_amount services amount 
+            $table->Integer('is_pay_done')->default(0); //  event's pay status (no 0 / yes 1)
+            $table->timestamps(); // Created at ...
         });
     }
 

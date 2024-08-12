@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Eventiz;
 
 use Exception;
 use App\Models\Company;
+use App\Mail\SuccessMail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,7 @@ class CompanyController extends Controller
         // Récupérer l'utilisateur authentifié
         $user = $request->user();
 
-        if($user){
+        if($user && $user->role_id == 2){
             try{
 
                 $request->validate([
@@ -65,7 +66,11 @@ class CompanyController extends Controller
                 ], 500);
             }
 
-            // Mail::to($request->email)->send(new ForgotPasswordMail($resetOTP));
+            
+            $successMsg = 'You\'re been registered with your company! You will receive a confirmation email shortly.';
+
+            // Envoyer un mail de confirmation
+            Mail::to($user->email)->send(new SuccessMail($successMsg));
 
             return response()->json([
                 'status' => 200,

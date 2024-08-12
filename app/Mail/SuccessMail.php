@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OTPMail extends Mailable
+class SuccessMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,24 +18,22 @@ class OTPMail extends Mailable
      *
      * @return void
      */
+    public $successMsg;
 
-    public $otp;
-
-    public function __construct($otp)
+    public function __construct($successMsg)
     {
         //
-        $this->otp = $otp;
+        $this->successMsg = $successMsg;
     }
-
     /**
      * Get the message envelope.
-     * 
+     *
      * @return \Illuminate\Mail\Mailables\Envelope
      */
     public function envelope()
     {
         return new Envelope(
-            subject: 'EvenTinz OTP Code',
+            subject: 'Success Mail',
         );
     }
 
@@ -47,9 +45,9 @@ class OTPMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'emails.otpmail',
+            view: 'emails.successmsg',
             with: [
-                'otp' => $this->otp,
+                'otp' => $this->successMsg,
             ],
         );
     }
