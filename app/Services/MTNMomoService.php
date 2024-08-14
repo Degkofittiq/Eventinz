@@ -23,14 +23,14 @@ class MTNMomoService
             $payment_id = 'trx_' . Str::uuid();
             $referenceId = $this->collection->requestToPay(
                 $payment_id,
-                $payment->phone_number,
+                $payment->phone_number_or_email,
                 $payment->amount,
-                $payment->currency,
+                $payment->currency, 
                 $payment->description
             );
 
             $payment->update([
-                'reference' => $referenceId,
+                'payment_id' => $referenceId,
                 'status' => 'pending'
             ]);
 
@@ -48,7 +48,7 @@ class MTNMomoService
     public function complete(Paymenthistory $payment)
     {
         try {
-            $paymentStatus = $this->collection->getPaymenthistoryStatus($payment->reference);
+            $paymentStatus = $this->collection->getPaymenthistoryStatus($payment->payment_id);
             if ($paymentStatus['status'] === 'SUCCESSFUL') {
                 $payment->update([
                     'status' => 'completed',

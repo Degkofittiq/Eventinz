@@ -74,13 +74,48 @@ class CompanyController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'message' => 'You\'re been registered with your company.'
+                'message' => 'You\'re been registered with your company. Now you will be redirect to payment page.'
             ]); 
         }else{
             return response()->json([
                'status' => 401,
                'message' => 'Unauthorized, you need to be connected'
             ], 401);  // Unauthorized
+        }
+    }
+
+    public function companyInformation(){
+        $user = Auth::user();
+        $company = Company::where('users_id', $user->id)->first();
+        $companyWithoutUser = $company->makeHidden(['user']);
+
+        $companyUser = $company->user;
+
+        if($company){
+            return response()->json([
+               'status' => 200,
+               'message' => 'Company summary information',
+               'company' => [
+                'Company Name:' => $companyWithoutUser['name'],
+                'Company country:' => $companyWithoutUser['country'],
+                'Company State:' => $companyWithoutUser['state'],
+                'Company Service type:' => $companyWithoutUser['vendor_service_types_id'] == 2 ? 'Multiple Service' : 'Single Service', //single or multiple
+                'Company Vendor categories:' => $companyWithoutUser['vendor_categories_id'],
+                'Company Current subscriptions:' => $companyWithoutUser['subscriptions_id'],
+                'Company Subscription start date:' => $companyWithoutUser['subscription_start_date'],
+                'Company Subscription end date:' => $companyWithoutUser['subscription_end_date'],
+            ],
+               'Company User' => [
+                'username' => $companyUser['username'],
+                'profile_image' => $companyUser['profile_image'],
+                'location' => $companyUser['location'],
+                ]
+            ]); 
+        }else{
+            return response()->json([
+               'status' => 404,
+               'message' => 'You dont have a company yet, would you like register your company?'
+            ], 404);  // Not Found
         }
     }
 }

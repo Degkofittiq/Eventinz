@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Eventiz\PaymentController;
 use App\Http\Controllers\Eventiz\OtpController;
 use App\Http\Controllers\Eventiz\EventController;
 use App\Http\Controllers\Eventiz\CompanyController;
@@ -55,14 +56,20 @@ Route::middleware(['api', 'web'])->group(function () {
     Route::post('/storeevent', [EventController::class, 'storeEvent']);
 
 
+    // payment
+    // MTn Momo And Paypal
+    Route::post('/process-money-payment', [PaymentController::class, 'initiatePayment']);
 
-    
     // subbscriptionsummary and payment
-    Route::get('/summarypage', [CompanyController::class, 'summaryinformation']);
+    Route::get('/companyInformation', [CompanyController::class, 'companyInformation']);
 
 
 });
 
+
+    Route::get('/payment/{method}/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+    Route::get('/payment/{method}/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
+            
 
 // Google Ath route
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);

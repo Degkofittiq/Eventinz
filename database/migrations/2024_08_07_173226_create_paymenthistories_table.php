@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('payment_id');
             $table->string('payment_type'); // vendor_subscriptions / event_create
-            $table->date('payment_date');
+            $table->string('payment_date');
             $table->decimal('amount');
             $table->String('paymentmethod');
             $table->String('currency'); // Euro , Dollar, XOF, ... 

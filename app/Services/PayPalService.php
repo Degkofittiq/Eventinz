@@ -29,33 +29,33 @@ class PayPalService
 
         if ($response->isRedirect()) {
             $payment->update([
-                'reference' => $response->getPaymenthistoryReference(),
+                'payment_id' => $response->getTransactionReference(),
                 'status' => 'pending'
             ]);
             return ['redirectUrl' => $response->getRedirectUrl()];
         }
-
+        // dd($response);
         $payment->update(['status' => 'failed']);
         return null;
     }
 
-    public function complete(Paymenthistory $payment, array $paymentData)
+    public function complete(Transaction $transaction, array $paymentData)
     {
         $response = $this->gateway->completePurchase([
             'payer_id' => $paymentData['PayerID'],
-            'paymentReference' => $paymentData['payment_id']
+            'transactionReference' => $paymentData['paymentId']
         ])->send();
 
         if ($response->isSuccessful()) {
             $paymentDetails = $response->getData();
-            $payment->update([
+            $transaction->update([
                 'status' => 'completed',
                 'payment_details' => json_encode($paymentDetails)
             ]);
             return $paymentDetails;
         }
 
-        $payment->update(['status' => 'failed']);
+        $transaction->update(['status' => 'failed']);
         return null;
     }
 }

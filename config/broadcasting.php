@@ -40,6 +40,7 @@ return [
                 'useTLS' => true,
             ],
             'client_options' => [
+                'verify' => 'C:\windows\system32\curl-ca-bundle.crt',
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
             ],
         ],

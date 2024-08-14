@@ -45,7 +45,19 @@ return [
         'client_id' => env('PAYPAL_CLIENT_ID'),
         'client_secret' => env('PAYPAL_CLIENT_SECRET'),
         'mode' => env('PAYPAL_MODE', 'sandbox'), // Vous pouvez définir le mode par défaut ici
-        'currency' => env('PAYPAL_CURRENCY'),
+        'currency' => env('PAYPAL_CURRENCY', 'USD'),
+        'sandbox' => [
+            'client_id'         => env('PAYPAL_CLIENT_ID'),
+            'client_secret'     => env('PAYPAL_CLIENT_SECRET')
+        ],
+        'live' => [
+            'client_id'         => env('PAYPAL_CLIENT_ID'),
+            'client_secret'     => env('PAYPAL_CLIENT_SECRET') //,
+            // 'app_id'            => '',
+        ],
+    ],
+    'exchange_rate_api' => [
+        'key' => 'c0b1eccdd8428725b0d70121',
     ],
 
 

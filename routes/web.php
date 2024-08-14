@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Eventiz\PaymentController;
 use App\Http\Controllers\Eventiz\Auth\GoogleController;
 use App\Http\Controllers\Eventiz\Auth\FacebookMetaController;
 
@@ -14,7 +15,6 @@ use App\Http\Controllers\Eventiz\Auth\FacebookMetaController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -24,5 +24,11 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 Route::post('auth/google/login', [GoogleController::class, 'loginWithGoogle']);
 
 
-Route::get('login/facebook', [FacebookMetaController::class, 'redirectToFacebook']);
+//Define Role_id Session
+Route::get('/session/{role_id}', function () {
+    session(['role_id' => request('role_id')]);
+    return redirect()->route('login.facebook');
+});
+
+Route::get('login/facebook', [FacebookMetaController::class, 'redirectToFacebook'])->name('login.facebook');
 Route::get('login/facebook/callback', [FacebookMetaController::class, 'handleFacebookCallback']);
