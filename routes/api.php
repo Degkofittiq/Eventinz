@@ -55,7 +55,8 @@ Route::middleware(['api', 'web'])->group(function () {
     Route::get('/createeventForm', [EventController::class, 'createEventForm']);
     Route::post('/storeevent', [EventController::class, 'storeEvent']);
 
-
+    Route::get('/myevents', [EventController::class, 'myEvent']);
+    
     // payment
     // MTn Momo And Paypal
     Route::post('/process-money-payment', [PaymentController::class, 'initiatePayment']);

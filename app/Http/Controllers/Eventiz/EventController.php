@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Eventiz;
 
+use Carbon\Carbon;
 use App\Models\Event;
 use App\Mail\SuccessMail;
 use Illuminate\Http\Request;
@@ -74,13 +75,15 @@ class EventController extends Controller
                 // }
 
                 // Créer un évènement avec les données fournies par l'utilisateur
+                // $date = Carbon::createFromFormat('d/m/Y', $dateString);
+
                 $event = Event::create([
                     'user_id' => $user->id,
                     'event_type_id' => $request->event_type_id, // Event's .......
                     'vendor_type_id' => json_encode($request->vendor_type_id),
                     'duration' => $request->duration, // Event's .......
-                    'start_date' => $request->start_date, // Event's .......
-                    'end_date' => $request->end_date, // Event's .......
+                    'start_date' => Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d'), // Event's .......
+                    'end_date' => Carbon::createFromFormat('d/m/Y', $request->end_date)->format('Y-m-d'), // Event's .......
                     'country' => $request->country, // Event's .......
                     'state' => $request->state, // Event's .......
                     'city' => $request->city, // Event's .......
@@ -116,4 +119,45 @@ class EventController extends Controller
             
     }
 
+    public function myEvent(){
+        // Récupérer l'utilisateur authentifié
+        $user = auth()->user();
+
+        if($user){
+            $events = Event::where('user_id', $user->id)->get();
+            $pastEvents = Event::where('user_id', $user->id)->where('start_date', '<', now()->format('Y-m-d'))->get();
+            $futureEvents = Event::where('user_id', $user->id)->where('start_date', '>', now()->format('Y-m-d'))->get();
+            $currentEvents = Event::where('user_id', $user->id)->where('start_date', '=', now()->format('Y-m-d'))->get();
+
+            return response()->json([
+               'message'=> 'Success',
+                // 'events'=> count($events) > 0 ? $events : 0,
+                // 'pastEvents'=> count($pastEvents) > 0 ? $events : 0,
+                // 'futureEvents'=> count($futureEvents) > 0 ? $events : 0,
+                'currentEvents'=> count($currentEvents) > 0 ? $events : 0,
+            ], 200);
+        }else{
+            return response()->json([
+               'message'=> 'Error',
+                'error'=> 'You\'re not authorised to do this action!'
+            ], 401);
+        }
+    }
+
+    /*
+    public function showEvent($id){
+        $event = Event::find($id);
+        if($event){
+            return response()->json([
+               'message'=> 'Success',
+                'event'=> $event
+            ], 200);
+        }else{
+            return response()->json([
+               'message'=> 'Error',
+                'error'=> 'Event not found!'
+            ], 404);
+        }
+    }
+    */
 }

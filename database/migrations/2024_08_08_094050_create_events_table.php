@@ -19,8 +19,8 @@ return new class extends Migration
             $table->integer('event_type_id'); // Event type(party for birthday, communion, mariage, etc...) 
             $table->string('vendor_type_id'); // Array min:1 to store all the categories of vendor need for the event
             $table->string('duration'); // In hours or per day
-            $table->string('start_date'); //  event's start date
-            $table->string('end_date'); //  event's end date
+            $table->date('start_date'); //  event's start date
+            $table->date('end_date'); //  event's end date
             $table->string('country'); // event's country
             $table->string('state'); //  event's state
             $table->string('city'); //  event's city
