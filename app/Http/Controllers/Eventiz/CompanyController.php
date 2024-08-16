@@ -20,7 +20,8 @@ class CompanyController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Store company form',
-            'user' => $user
+            'user' => $user->id,
+            // 'Session Datas' => session()->all()
         ]); 
     }
 
@@ -59,6 +60,11 @@ class CompanyController extends Controller
                     'vendor_categories_id' =>  json_encode($request->vendor_categories_id),
                     'subscriptions_id' => $request->subscriptions_id
                 ]);
+
+                //Get a subscription Id to process to the payment
+                session([
+                    'subscriptions_id' => $request->input('subscriptions_id')
+                ]);
             } catch (Exception $e) {
                 return response()->json([
                     'message'=> 'Error',
@@ -76,10 +82,15 @@ class CompanyController extends Controller
                 'status' => 200,
                 'message' => 'You\'re been registered with your company. Now you will be redirect to payment page.'
             ]); 
+        }elseif ($user && $user->role_id != 2) {
+            return response()->json([
+               'status' => 401,
+               'message' => 'Unauthorized, you need to be a vendor!'
+            ], 401);  // Unauthorized
         }else{
             return response()->json([
                'status' => 401,
-               'message' => 'Unauthorized, you need to be connected'
+               'message' => 'Unauthorized, you need to be connected!'
             ], 401);  // Unauthorized
         }
     }
@@ -87,11 +98,14 @@ class CompanyController extends Controller
     public function companyInformation(){
         $user = Auth::user();
         $company = Company::where('users_id', $user->id)->first();
-        $companyWithoutUser = $company->makeHidden(['user']);
+        
+        if ($company) {
+            $companyWithoutUser = $company->makeHidden(['user']);
+            $companyUser =  $user;
+        }
 
-        $companyUser = $company->user;
 
-        if($company){
+        if($user->role_id == 2 && $company){
             return response()->json([
                'status' => 200,
                'message' => 'Company summary information',
@@ -105,16 +119,22 @@ class CompanyController extends Controller
                 'Company Subscription start date:' => $companyWithoutUser['subscription_start_date'],
                 'Company Subscription end date:' => $companyWithoutUser['subscription_end_date'],
             ],
-               'Company User' => [
+               'Company Vendor' => [
                 'username' => $companyUser['username'],
                 'profile_image' => $companyUser['profile_image'],
                 'location' => $companyUser['location'],
                 ]
             ]); 
-        }else{
+        }elseif ($user->role_id == 2 && !$company) {
             return response()->json([
                'status' => 404,
                'message' => 'You dont have a company yet, would you like register your company?'
+            ], 404);  // Not Found
+        }
+        else{
+            return response()->json([
+               'status' => 404,
+               'message' => 'You\'re not authorized to do this action, you need to be a vendor!'
             ], 404);  // Not Found
         }
     }

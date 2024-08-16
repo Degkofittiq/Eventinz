@@ -45,7 +45,7 @@ class PaymentController extends Controller
                 'paymentmethod' => $method,
                 'payment_id' => Str::uuid(),
                 'status' => 'initiated', //
-                'payment_type' => $payment_type, //
+                'payment_type' => $payment_type, // 
                 'payment_date' => $payment_date, //
             ]);
 

@@ -50,6 +50,8 @@ Route::middleware(['api', 'web'])->group(function () {
     Route::get('/storecompany', [CompanyController::class, 'createCompanyForm']);
     Route::post('/storecompany', [CompanyController::class, 'storeCompany']);
 
+    // subbscriptionsummary and payment
+    Route::get('/companyInformation', [CompanyController::class, 'companyInformation']);
     
     // Management a Event
     Route::get('/createeventForm', [EventController::class, 'createEventForm']);
@@ -61,8 +63,6 @@ Route::middleware(['api', 'web'])->group(function () {
     // MTn Momo And Paypal
     Route::post('/process-money-payment', [PaymentController::class, 'initiatePayment']);
 
-    // subbscriptionsummary and payment
-    Route::get('/companyInformation', [CompanyController::class, 'companyInformation']);
 
 
 });
