@@ -68,9 +68,16 @@ Route::middleware(['api', 'web'])->group(function () {
 });
 
 
-    Route::get('/payment/{method}/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
-    Route::get('/payment/{method}/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
-            
+//Define Role_id Session
+Route::get('/session/{role_id}', function () {
+    session(['role_id' => request('role_id')]);
+    return redirect()->route('login.facebook');
+});
+
+
+Route::get('/payment/{method}/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+Route::get('/payment/{method}/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
+        
 
 // Google Ath route
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
