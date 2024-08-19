@@ -27,7 +27,7 @@ Route::post('auth/google/login', [GoogleController::class, 'loginWithGoogle']);
 //Define Role_id Session
 Route::get('/session/{role_id}', function () {
     session(['role_id' => request('role_id')]);
-    return redirect()->route('login.facebook');
+    // return redirect()->route('login.facebook');
 });
 
 Route::get('login/facebook', [FacebookMetaController::class, 'redirectToFacebook'])->name('login.facebook');
