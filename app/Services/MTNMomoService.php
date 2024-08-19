@@ -62,7 +62,7 @@ class MTNMomoService
                 ]);
                 return null;
             }
-        } catch (\Exception $e) {
+        } catch (\Exception $e) { 
             \Log::error('MTN MoMo payment completion check failed: ' . $e->getMessage());
             $payment->update(['status' => 'failed']);
             return null;

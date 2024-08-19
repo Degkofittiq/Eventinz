@@ -25,6 +25,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//Define Role_id Session
+Route::get('/session/{role_id}', function () {
+    session(['role_id' => request('role_id')]);
+    // return redirect()->route('login.facebook');
+});
+
+
 Route::middleware(['api', 'web'])->group(function () {
     // Route::post('/send-otp', [OtpController::class, 'sendOtp']); Hors Service
     
