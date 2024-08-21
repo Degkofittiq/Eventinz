@@ -151,6 +151,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'OTP is valid. You have been registered successfully.',
             'token' => $token,
+            'user' => $user
         ]);
     }
 
@@ -188,7 +189,7 @@ class AuthController extends Controller
         $user = Auth::user();
         $token = $user->createToken('Personal Access Token')->plainTextToken;
     
-        return response()->json(['token' => $token]);
+        return response()->json(['token' => $token,'user' => $user]);
     }
         
     public function logout(Request $request)
@@ -383,7 +384,8 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Your password was updated successfully.',
-            'token' => $token
+            'token' => $token,
+            'user' => $user
         ]);
     }
 

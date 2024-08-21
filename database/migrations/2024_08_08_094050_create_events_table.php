@@ -25,11 +25,13 @@ return new class extends Migration
             $table->string('state'); //  event's state
             $table->string('city'); //  event's city
             $table->string('subcategory')->nullable(); //  event's subcategory
-            $table->Integer('public_or_private')->default(0); //  event's status(public 0 / private 1)
+            $table->Integer('public_or_private')->default(0); //  event's view status(public 0 / private 1)
             $table->string('description')->nullable(); // In hours or per day
             $table->string('vendor_poke')->nullable(); //  Array : nullable(); If the event's author wants one particular vendor
             $table->decimal('total_amount')->nullable(); //  Event's total_amount services amount 
             $table->Integer('is_pay_done')->default(0); //  event's pay status (no 0 / yes 1)
+            $table->Integer('status')->default(0); //  event's status (canceled 0 / completed 1) 
+            $table->string('cancelstatus')->default("no"); //  cancel status (yes or no)
             $table->timestamps(); // Created at ...
         });
     }

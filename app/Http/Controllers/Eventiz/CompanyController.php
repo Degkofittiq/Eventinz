@@ -17,12 +17,20 @@ class CompanyController extends Controller
     public function createCompanyForm(Request $request){
         
         $user = $request->user();
-        return response()->json([
-            'status' => 200,
-            'message' => 'Store company form',
-            'user' => $user->id,
-            // 'Session Datas' => session()->all()
-        ]); 
+        if ($user) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Store company form',
+                'user' => $user
+                // 'Session Datas' => session()->all()
+            ]); 
+        } else {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Not connected, Please Login!'
+            ]); 
+        }
+        
     }
 
     public function storeCompany(Request $request){

@@ -3,10 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Eventiz\PaymentController;
 use App\Http\Controllers\Eventiz\OtpController;
 use App\Http\Controllers\Eventiz\EventController;
+use App\Http\Controllers\Eventiz\VendorController;
 use App\Http\Controllers\Eventiz\CompanyController;
+use App\Http\Controllers\Eventiz\PaymentController;
 use App\Http\Controllers\Eventiz\Auth\GoogleController;
 use App\Http\Controllers\Eventiz\Auth\FacebookMetaController;
 
@@ -70,6 +71,24 @@ Route::middleware(['api', 'web'])->group(function () {
     // MTn Momo And Paypal
     Route::post('/process-money-payment', [PaymentController::class, 'initiatePayment']);
 
+    // vendor list
+    Route::get('vendorcategorieslist', [VendorController::class, 'vendorCategoriesList']); // All categories vendors
+    Route::get('vendorCategoryList/{vendor_id}', [VendorController::class, 'vendorCategoryList']); //Specific category vendors
+    // Route::get('vendorlist', [VendorController::class, 'vendorList']); // 
+    Route::get('/vendor/{vendor_id}', [VendorController::class, 'showSpecificVendor']);
+
+    //Review storeReview
+    Route::post('addreview/{eventId}', [EventController::class, 'storeReview']);
+
+    // Quote & Bids for events
+    Route::post('addquote/{eventId}', [EventController::class, 'storeQuote']); // Add Quote 
+    Route::get('showquote/{quoteCode}', [EventController::class, 'showQuote']); // Show Quote 
+    Route::get('showbids/{eventId}', [EventController::class, 'showBids']); // show Bids 
+    Route::post('removeQuoteItem/{quoteId}', [EventController::class, 'removeQuoteItem']); // Remove Quote Item 
+    Route::post('validatequotesbid/{quoteCode}', [EventController::class, 'validateQuotesBid']); // Validate the Quotes Bid 
+    Route::post('rejectquotesbid/{quoteCode}', [EventController::class, 'rejectQuotesBid']); // Reject the Quotes Bid 
+    Route::post('cancelevent/{enventId}', [EventController::class, 'cancelEvent']); // Cancel one Event
+    Route::post('completeevent/{enventId}', [EventController::class, 'completeEvent']); // complete one Event
 
 
 });

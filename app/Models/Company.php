@@ -17,4 +17,11 @@ class Company extends Model
     {
         return $this->hasOne(User::class, 'id');
     }
+
+    
+    // Déclaration de la relation avec les devis
+    public function eventQuotes()
+    {
+        return $this->hasMany(EventQuotes::class, 'company_id');
+    }
 }
