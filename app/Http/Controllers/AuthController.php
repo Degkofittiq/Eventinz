@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Throwable;
 use App\Models\User;
 use App\Mail\OTPMail;
 use Illuminate\Support\Str;
@@ -50,10 +51,6 @@ class AuthController extends Controller
             ], 422);
         }
         
-        /*    
-            vendor_service_types_id vendor_categories_id
-        */
-
         // Génération de l'OTP
         $otp = rand(100000, 999999);
         $generic_id = "EVT-" . rand(100000, 999999);
@@ -61,6 +58,7 @@ class AuthController extends Controller
         // Envoi de l'OTP par email
         Mail::to($userValidation['email'])->send(new OTPMail($otp));        
 
+        /*
         if ($request->role_id == 1) {
 
             // Stocker les données de l'utilisateur et l'OTP dans la session
@@ -91,68 +89,101 @@ class AuthController extends Controller
                 // 'vendor_categories_id' => $userValidation['vendor_categories_id'],
             ]);
         }
-
-        return response()->json(['message' => 'OTP sent successfully. Please verify the OTP.', 'generic' => $generic_id]);
+        */
+        try {
+            // Créer l'utilisateur
+            $userCreate = User::create([
+                'generic_id' => $generic_id,
+                'name' => $userValidation['name'],
+                'username' => $userValidation['username'],
+                'email' => $userValidation['email'],
+                'password' => Hash::make($userValidation['password']),
+                'role_id' => $userValidation['role_id'],
+                'otp' => $otp
+            ]);
+            return response()->json(['message' => 'OTP sent successfully. Please verify the OTP.', 'otp' => $otp, 'users' => $userValidation]);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Error.',
+                'Error message' => 'Impossible to register.',
+                'errors' => $e->getMessage() 
+            ], 422);
+        }
     }
 
 
-    //verify OTP and store the user
+    //verify OTP and store the user 
     public function verifyOTP(Request $request)
     {
-        $request->validate([
-            'otp' => 'required|numeric'
+        $otpValidation = $request->validate([
+            'otp' => 'required|numeric',
+            'email' => 'required|string',
         ]);
 
         // Vérifier si l'OTP a expiré 
-        $otpExpiresAt = session('otp_expiration_time');
+        // $otpExpiresAt = session('otp_expiration_time');
 
-        if (now()->greaterThan($otpExpiresAt)) {
-            return response()->json(['message' => 'OTP has expired'], 400);
-        }
+        // if (now()->greaterThan($otpExpiresAt)) {
+        //     return response()->json(['message' => 'OTP has expired'], 400);
+        // }
 
         // Vérifier si l'OTP correspond
-        if (session('otp') != $request->otp) {
-            return response()->json(['message' => 'OTP is not valid'], 401);
-        }
+        // if (session('otp') != $request->otp) {
+        //     return response()->json(['message' => 'OTP is not valid'], 401);
+        // }
 
-        $userType = session('role_id');
+        // $userType = session('role_id');
 
-        if ($userType == 1) {        
-            // Créer l'utilisateur
-            $user = User::create([
-                'generic_id' => session('generic_id'),
-                'name' => session('name'),
-                'username' => session('username'),
-                'email' => session('email'),
-                'password' => Hash::make(session('password')),
-                'role_id' => session('role_id')
+        /*
+            if ($userType == 1) {        
+                // Créer l'utilisateur
+                $user = User::create([
+                    'generic_id' => session('generic_id'),
+                    'name' => session('name'),
+                    'username' => session('username'),
+                    'email' => session('email'),
+                    'password' => Hash::make(session('password')),
+                    'role_id' => session('role_id')
+                ]);
+            } else {
+                // Créer l'utilisateur
+                $user = User::create([
+                    'generic_id' => session('generic_id'),
+                    'name' => session('name'),
+                    'username' => session('username'),
+                    'email' => session('email'),
+                    'password' => Hash::make(session('password')),
+                    'role_id' => session('role_id'),
+                    // 'vendor_service_types_id' => session('vendor_service_types_id'),
+                    // 'vendor_categories_id' => session('vendor_categories_id')
+                ]);
+            }
+        */
+
+        $user = User::where('email', $otpValidation['email'])->first();
+
+        if ($user->otp == $otpValidation['otp']) {
+            $user->update([
+                'is_otp_valid' => 'yes'
+            ]);
+        
+
+            Auth::login($user);
+    
+            // Supprimer les données de session après la création de l'utilisateur
+            // session()->forget(['otp', 'otp_expiration_time']);
+            
+            $token = $user->createToken('Personal Access Token')->plainTextToken;
+    
+            return response()->json([
+                'message' => 'OTP is valid. You have been registered successfully.',
+                'token' => $token,
+                'user' => $user
             ]);
         } else {
-            // Créer l'utilisateur
-            $user = User::create([
-                'generic_id' => session('generic_id'),
-                'name' => session('name'),
-                'username' => session('username'),
-                'email' => session('email'),
-                'password' => Hash::make(session('password')),
-                'role_id' => session('role_id'),
-                // 'vendor_service_types_id' => session('vendor_service_types_id'),
-                // 'vendor_categories_id' => session('vendor_categories_id')
-            ]);
+                return response()->json(['message' => 'OTP is not valid'], 401);
         }
 
-        Auth::login($user);
-
-        // Supprimer les données de session après la création de l'utilisateur
-        session()->forget(['otp', 'otp_expiration_time']);
-        
-        $token = $user->createToken('Personal Access Token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'OTP is valid. You have been registered successfully.',
-            'token' => $token,
-            'user' => $user
-        ]);
     }
 
 

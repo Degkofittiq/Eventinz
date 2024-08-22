@@ -46,7 +46,7 @@ class FacebookMetaController extends Controller
                 ->first();
     
             if ($user) {
-                // Si l'utilisateur existe, mettre à jour les informations
+                // Si l'utilisateur existe, mettre à jour les informations 
                 $user->update([
                     'facebook_id' => $facebookUser->id,
                     'name' => $facebookUser->name,
@@ -70,8 +70,15 @@ class FacebookMetaController extends Controller
     
             // Générer un token d'accès pour l'utilisateur connecté
             $token = $user->createToken('MyApp')->plainTextToken;
+
+            // Retourner le token et les informations de session
+            return response()->json([
+                'token' => $token,
+                'role_id' => session('role_id'),
+                'role_id_expiration_time' => session('role_id_expiration_time')
+            ], 200);
     
-            return response()->json(['token' => $token], 200);
+            // return response()->json(['token' => $token], 200);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 401);
         }

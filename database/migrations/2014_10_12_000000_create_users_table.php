@@ -30,6 +30,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('profile_image')->nullable();
             $table->Integer('credit')->default(0);
+            $table->Integer('otp')->nullable();
+            $table->string('is_otp_valid')->default("no");
             $table->rememberToken();
             $table->timestamps();
         });

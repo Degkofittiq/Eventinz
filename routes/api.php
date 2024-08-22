@@ -33,14 +33,15 @@ Route::get('/session/{role_id}', function () {
 });
 
 
-Route::middleware(['api', 'web'])->group(function () {
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+// Auth routes
+Route::post('register', [AuthController::class, 'register']);
+Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     // Route::post('/send-otp', [OtpController::class, 'sendOtp']); Hors Service
     
-    // Auth routes
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
 
     // Update personal profile
     Route::get('/profile', [AuthController::class, 'viewProfile']);
@@ -90,14 +91,15 @@ Route::middleware(['api', 'web'])->group(function () {
     Route::post('cancelevent/{enventId}', [EventController::class, 'cancelEvent']); // Cancel one Event
     Route::post('completeevent/{enventId}', [EventController::class, 'completeEvent']); // complete one Event
 
-
+    // Logout Api
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
 
 //Define Role_id Session
 Route::get('/session/{role_id}', function () {
     session(['role_id' => request('role_id')]);
-    return redirect()->route('login.facebook');
+    // return redirect()->route('login.facebook');
 });
 
 
@@ -113,7 +115,3 @@ Route::post('auth/google/login', [GoogleController::class, 'loginWithGoogle']);
 // Facebook Api route
 Route::get('login/facebook', [FacebookMetaController::class, 'redirectToFacebook']);
 Route::get('login/facebook/callback', [FacebookMetaController::class, 'handleFacebookCallback']);
-
-
-// Logout Api
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');

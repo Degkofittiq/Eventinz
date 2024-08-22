@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Eventiz\EventController;
 use App\Http\Controllers\Eventiz\PaymentController;
 use App\Http\Controllers\Eventiz\Auth\GoogleController;
 use App\Http\Controllers\Eventiz\Auth\FacebookMetaController;
@@ -32,3 +33,10 @@ Route::get('/session/{role_id}', function () {
 
 Route::get('login/facebook', [FacebookMetaController::class, 'redirectToFacebook'])->name('login.facebook');
 Route::get('login/facebook/callback', [FacebookMetaController::class, 'handleFacebookCallback']);
+
+
+// for test
+Route::get('/tes_form', function () {
+    return view('tes_form');
+});
+Route::post('addquote/{eventId}', [EventController::class, 'storeQuote']); // Add Quote 
