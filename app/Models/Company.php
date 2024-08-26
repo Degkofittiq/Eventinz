@@ -12,6 +12,9 @@ class Company extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $casts = [
+        'images' => 'array', // Cast la colonne images comme tableau
+    ];
     
     public function user(): HasOne
     {

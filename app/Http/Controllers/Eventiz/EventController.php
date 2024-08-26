@@ -407,6 +407,7 @@ class EventController extends Controller
         // Récupérer l'utilisateur authentifié
         $user = Auth::user();
         $foundBid = BidQuotes::where('quote_code',$quoteCode)->first();
+        $foundBidEvent = Event::where('id',$foundBid->event_id)->first();
 
         // dd($foundBid);
 
@@ -414,7 +415,11 @@ class EventController extends Controller
             $foundBid->update([
                 'status' => 'Accepted'
             ]);
-
+            
+            $foundBid->update([
+                'status' => 'Yes' // Yes => Active or No => Inactive
+            ]);
+            
             return response()->json([
                 'message' => 'Success',
                 'error' => 'Bid accepted!'

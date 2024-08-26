@@ -45,7 +45,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
 
     // Update personal profile
     Route::get('/profile', [AuthController::class, 'viewProfile']);
-    Route::patch('/profile', [AuthController::class, 'updateProfile']);
+    Route::post('/profile', [AuthController::class, 'updateProfile']);
 
     // // Update password
     // Route::patch('/password', [AuthController::class, 'updatePassword']);

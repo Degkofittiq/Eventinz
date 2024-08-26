@@ -51,6 +51,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        // 'profile_image' => 'array', // Cast la colonne images comme tableau
     ];
     
     public function company(): HasOne

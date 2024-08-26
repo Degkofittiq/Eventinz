@@ -258,42 +258,54 @@ class AuthController extends Controller
         ]);
     }
 
+ 
     // update Profile
     public function updateProfile(Request $request){
         $userId = Auth::user()->id;
 
         try {       
-            try{
-                $userValidation = $request->validate([
-                    'user_genders_id' => 'string|max:255',
-                    'occupation' => 'string|max:255',
-                    'location' => 'string',
-                    'age' => 'string|max:255',
-                    'profile_image' => 'string|max:255',
-                ]);
+            $userValidation = $request->validate([
+                'user_genders_id' => 'nullable|string|max:255',
+                'occupation' => 'nullable|string|max:255',
+                'location' => 'nullable|string|max:255',
+                'age' => 'nullable|string|max:255',
+                'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120'
+            ]);
 
-                // Trouve l'utilisateur par email
-                $user = User::where('id', $userId)->first();
-    
-                // Mettre à jour le mot de passe de l'utilisateur
-                $user->update($userValidation);
+            // Trouve l'utilisateur par id
+            $user = User::find($userId);
+            // dd($user);
 
-                return response()->json([
-                    'message' => 'Success',
-                    'success' => "Update Successfull!",
-                ], 200);
-                
-            }catch (ValidationException $e) {        
-                return response()->json([
-                    'message' => 'The given data was invalid.',
-                    'errors' => $e->errors(),
-                ], 422);
+            if ($request->hasFile('profile_image')) {
+                // dd(1);
+                $userName = preg_replace('/\s+/', '_', $user->name);
+                $file = $request->file('profile_image');
+                $fileName = $userName . '_' . time() . '_' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('usersProfileImages', $fileName, 'public');
+
+
+                // Update user profile image
+                $userValidation['profile_image'] = $filePath;
             }
-        }catch (ValidationException $e) {
+
+            // Mettre à jour les informations de l'utilisateur
+            $user->update($userValidation);
+
             return response()->json([
-                'message' => 'Update error.',
+                'message' => 'Success',
+                'success' => "Update Successful!",
+            ], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
                 'errors' => $e->errors(),
             ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Update error.',
+                'errors' => $e->getMessage(),
+            ], 500);
         }
     }
 

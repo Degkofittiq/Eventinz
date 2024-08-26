@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('country');
             $table->string('state');
             $table->string('city');
+            $table->json('images')->nullable(); // Colonne pour stocker les informations des images en JSON
             $table->unsignedBigInteger('vendor_service_types_id')->nullable(); // If vendor, her service type (single or multiple)
             $table->text('vendor_categories_id')->nullable(); // If vendor, her category list (DJ, DECORATION, ...) based on service type (single or multiple) 
             $table->text('subscriptions_id')->nullable(); // If vendor, her subscriptions

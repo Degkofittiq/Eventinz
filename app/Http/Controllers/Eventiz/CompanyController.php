@@ -56,7 +56,25 @@ class CompanyController extends Controller
                         'distinct'
                     ], 
                     'subscriptions_id' => 'required|integer', // Subscription plan
+                    'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // Validation pour plusieurs images
                 ]);
+
+
+                $imageData = [];
+                $companyName = preg_replace('/\s+/', '_', $request->name);
+                if ($request->hasFile('images')) {
+                    foreach ($request->file('images') as $file) {
+                        $fileName = $companyName . '_' . time() . '_' . $file->getClientOriginalName();
+                        $filePath = $file->storeAs('companiesImages', $fileName, 'public');
+
+                        $imageData[] = [
+                            'file_name' => $fileName,
+                            'file_path' => $filePath,
+                            'file_type' => $file->getClientMimeType(),
+                            'file_size' => $file->getSize(),
+                        ];
+                    }
+                }
 
                 $company = Company::create([
                     'users_id' => $user->id,
@@ -66,13 +84,14 @@ class CompanyController extends Controller
                     'city' => $request->city,
                     'vendor_service_types_id' => $request->vendor_service_types_id,
                     'vendor_categories_id' =>  json_encode($request->vendor_categories_id),
-                    'subscriptions_id' => $request->subscriptions_id
+                    'subscriptions_id' => $request->subscriptions_id,
+                    'images' => $imageData
                 ]);
 
                 //Get a subscription Id to process to the payment
-                session([
-                    'subscriptions_id' => $request->input('subscriptions_id')
-                ]);
+                // session([
+                //     'subscriptions_id' => $request->input('subscriptions_id')
+                // ]);
             } catch (Exception $e) {
                 return response()->json([
                     'message'=> 'Error',
