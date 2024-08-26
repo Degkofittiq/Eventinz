@@ -68,7 +68,9 @@ class EventController extends Controller
                     ],
                     'duration' => 'required|string',
                     'start_date' => 'required|date_format:d/m/Y',
-                    'end_date' => 'required|date_format:d/m/Y',
+                    'aprx_budget' => 'required|numeric|between:0,999999.99',
+                    'guest_number' => 'required|integer',
+                    'travel' => 'required|string|min:3',
                     'country' => 'required|string',
                     'state' => 'required|string',
                     'city' => 'required|string',
@@ -114,7 +116,6 @@ class EventController extends Controller
                 // Créer un évènement avec les données fournies par l'utilisateur
                 // $date = Carbon::createFromFormat('d/m/Y', $dateString);
 
-
                 $event = Event::create([                    
                     'generic_id' =>  $this->generateUniqueEventID(),
                     'user_id' => $user->id,
@@ -122,7 +123,9 @@ class EventController extends Controller
                     'vendor_type_id' => json_encode($request->vendor_type_id),
                     'duration' => $request->duration,
                     'start_date' => Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d'),
-                    'end_date' => Carbon::createFromFormat('d/m/Y', $request->end_date)->format('Y-m-d'),
+                    'aprx_budget' => $request->aprx_budget,
+                    'guest_number' => $request->guest_number,
+                    'travel' => $request->travel,
                     'country' => $request->country,
                     'state' => $request->state,
                     'city' => $request->city,

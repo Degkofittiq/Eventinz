@@ -21,7 +21,9 @@ return new class extends Migration
             $table->string('vendor_type_id'); // Array min:1 to store all the categories of vendor need for the event
             $table->string('duration'); // In hours or per day
             $table->date('start_date'); //  event's start date
-            $table->date('end_date'); //  event's end date
+            $table->decimal('aprx_budget')->nullable(); //  Event's approcimate budget
+            $table->integer('guest_number')->nullable(); //  Event's approcimate guests number 
+            $table->string('travel')->default("No"); //  Yes or No 
             $table->string('country'); // event's country
             $table->string('state'); //  event's state
             $table->string('city'); //  event's city
