@@ -21,6 +21,14 @@ use Illuminate\Validation\ValidationException;
 class EventController extends Controller
 {
     //
+    function generateUniqueEventID()
+    {
+        do {
+            $generic_id = 'EVT-Event-' . str_pad(rand(1, 999999), 6, '0', STR_PAD_LEFT);
+        } while (Event::where('generic_id', $generic_id)->exists());
+    
+        return $generic_id;
+    }
 
     public function createEventForm(Request $request){
 
@@ -106,7 +114,9 @@ class EventController extends Controller
                 // Créer un évènement avec les données fournies par l'utilisateur
                 // $date = Carbon::createFromFormat('d/m/Y', $dateString);
 
-                $event = Event::create([
+
+                $event = Event::create([                    
+                    'generic_id' =>  $this->generateUniqueEventID(),
                     'user_id' => $user->id,
                     'event_type_id' => $request->event_type_id,
                     'vendor_type_id' => json_encode($request->vendor_type_id),
@@ -145,7 +155,7 @@ class EventController extends Controller
                 'error' => 'You are not authorized to perform this action!'
             ], 403); // Code 403 pour les erreurs d'autorisation
         }
-}
+    }
 
 
     public function myEvent(){
@@ -157,16 +167,17 @@ class EventController extends Controller
             $pastEvents = Event::where('user_id', $user->id)->whereDate('start_date', '<', now()->format('Y-m-d'))->get();
             $futureEvents = Event::where('user_id', $user->id)->whereDate('start_date', '>', now()->format('Y-m-d'))->get();
             $currentEvents = Event::where('user_id', $user->id)->whereDate('start_date', '=', now()->format('Y-m-d'))->get();
+            $activeEvents = Event::where('user_id', $user->id)->where('status', 'Yes')->get();
             // $events = DB::select('SELECT * FROM `events` WHERE `user_id` = ? AND `start_date` = CURDATE()', [2]);
 
-
             return response()->json([
-               'message'=> 'Success',
-                'All events ('. count($events) .')' => count($events) > 0 ? $events : 0,
-                'Past Events ('. count($pastEvents) .')'=> count($pastEvents) > 0 ? $pastEvents : 0,
-                'Future Events ('. count($futureEvents) .')'=> count($futureEvents) > 0 ? $futureEvents : 0,
-                'Current Events ('. count($currentEvents) .')'=> count($currentEvents) > 0 ? $currentEvents : 0,
-            ], 200);
+                'message'=> 'Success',
+                 'All events ('. count($events) .')' => count($events) > 0 ? $events : 0,
+                 'Past Events ('. count($pastEvents) .')'=> count($pastEvents) > 0 ? $pastEvents : 0,
+                 'Future Events ('. count($futureEvents) .')'=> count($futureEvents) > 0 ? $futureEvents : 0,
+                 'Current Events ('. count($currentEvents) .')'=> count($currentEvents) > 0 ? $currentEvents : 0,
+                 'Active Events ('. count($activeEvents) .')'=> count($activeEvents) > 0 ? $activeEvents : 0
+             ], 200);
         }else{
             return response()->json([
                'message'=> 'Error',
@@ -175,9 +186,13 @@ class EventController extends Controller
         }
     }
 
-    /*
-    public function showEvent($id){
-        $event = Event::find($id);
+    // Show specific event based on his Id /*
+    public function showEvent(Request $request , $id){
+
+        // $event = Event::find($id);
+
+        $authUser = auth()->user();
+        $event = Event::where('id', $id)->/*where('user_id', $authUser->id)->*/first();
         if($event){
             return response()->json([
                'message'=> 'Success',
@@ -190,7 +205,7 @@ class EventController extends Controller
             ], 404);
         }
     }
-    */
+    // */
 
     //Reviews section
     public function storeReview(Request $request, $eventId){

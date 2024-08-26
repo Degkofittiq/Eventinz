@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Throwable;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Mail\OTPMail;
+use App\Models\Event;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\ForgotPasswordMail;
@@ -20,9 +22,19 @@ use Illuminate\Validation\ValidationException;
 use  App\Notifications\PasswordResetNotification;
 
 
-
 class AuthController extends Controller
 {
+
+    
+    function generateUniqueUserID()
+    {
+        do {
+            $generic_id = 'EVT-User-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        } while (User::where('generic_id', $generic_id)->exists());
+    
+        return $generic_id;
+    }
+
     // Check all data input and send otp mail to verify the user identity
     public function register(Request $request)
     {
@@ -53,47 +65,15 @@ class AuthController extends Controller
         
         // Génération de l'OTP
         $otp = rand(100000, 999999);
-        $generic_id = "EVT-" . rand(100000, 999999);
+        // $generic_id = "EVT-" . rand(100000, 999999);
 
         // Envoi de l'OTP par email
         Mail::to($userValidation['email'])->send(new OTPMail($otp));        
 
-        /*
-        if ($request->role_id == 1) {
-
-            // Stocker les données de l'utilisateur et l'OTP dans la session
-            session([
-                'otp' => $otp,
-                'otp_expiration_time' => now()->addMinutes(10), // Durée de validité de 10 minutes
-                'name' => $userValidation['name'],
-                'username' => $userValidation['username'],
-                'email' => $userValidation['email'],
-                'password' => $userValidation['password'],
-                'role_id' => $userValidation['role_id'],
-                'generic_id' => $generic_id
-            ]);
-        }else{    
-
-            // Stocker les données de l'utilisateur et l'OTP dans la session
-            session([
-                'otp' => $otp,
-                'otp_expiration_time' => now()->addMinutes(10), // Durée de validité de 10 minutes
-                'name' => $userValidation['name'],
-                'username' => $userValidation['username'],
-                'email' => $userValidation['email'],
-                'password' => $userValidation['password'],
-                'password' => $userValidation['password'],
-                'role_id' => $userValidation['role_id'],
-                'generic_id' => $generic_id,
-                // 'vendor_service_types_id' => $userValidation['vendor_service_types_id'],
-                // 'vendor_categories_id' => $userValidation['vendor_categories_id'],
-            ]);
-        }
-        */
         try {
             // Créer l'utilisateur
             $userCreate = User::create([
-                'generic_id' => $generic_id,
+                'generic_id' => $this->generateUniqueUserID(),
                 'name' => $userValidation['name'],
                 'username' => $userValidation['username'],
                 'email' => $userValidation['email'],
@@ -110,7 +90,6 @@ class AuthController extends Controller
             ], 422);
         }
     }
-
 
     //verify OTP and store the user 
     public function verifyOTP(Request $request)
@@ -186,7 +165,6 @@ class AuthController extends Controller
 
     }
 
-
     public function showLoginForm(){
         // return view('auth.login');
         return 'Show login form';
@@ -216,7 +194,18 @@ class AuthController extends Controller
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-    
+
+        // Trouver l'utilisateur par son email
+        $user = User::where('email', $request->email)->first();
+
+        // Vérifier si l'utilisateur existe et si le mot de passe est correct
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        // Connecter l'utilisateur
+        Auth::login($user);
+        
         $user = Auth::user();
         $token = $user->createToken('Personal Access Token')->plainTextToken;
     
@@ -255,8 +244,17 @@ class AuthController extends Controller
     public function viewProfile(Request $request){
         $userFound = Auth::user();
 
+        $activeEvents = Event::where('user_id', $userFound->id)->where('status', 'Yes')->get();
+        $pastEvents = Event::where('user_id', $userFound->id)->whereDate('start_date', '<', now()->format('Y-m-d'))->get();
+        $futureEvents = Event::where('user_id', $userFound->id)->whereDate('start_date', '>', now()->format('Y-m-d'))->get();
+        $canceledEvents = Event::where('user_id', $userFound->id)->where('cancelstatus', 'Canceled')->get();
+         
         return response()->json([
-            'user found' => $userFound
+            'user found' => $userFound,
+            'Active Events ('. count($activeEvents) .')'=> count($activeEvents) > 0 ? $activeEvents : 0,
+            'Past Events ('. count($pastEvents) .')'=> count($pastEvents) > 0 ? $pastEvents : 0,
+            'Upcomming Events ('. count($futureEvents) .')'=> count($futureEvents) > 0 ? $futureEvents : 0,
+            'Canceled Events ('. count($canceledEvents) .')'=> count($canceledEvents) > 0 ? $canceledEvents : 0,
         ]);
     }
 
@@ -321,12 +319,15 @@ class AuthController extends Controller
             $resetOTP = rand(100000, 999999);
 
             session([
-                'userUpdateEmail' => $request->email,
-                'resetOTP' => $resetOTP,
+                // 'userUpdateEmail' => $request->email,
+                // 'resetOTP' => $resetOTP,
                 'resetOTP_expiration_time' => now()->addMinutes(10), // Durée de validité de 10 minutes
             ]);
 
+
             Mail::to($request->email)->send(new ForgotPasswordMail($resetOTP));
+
+            $user->update(['otp' => $resetOTP ]);
 
             return response()->json([
                 'status' => 200,
@@ -345,6 +346,7 @@ class AuthController extends Controller
     public function verifyResetOTP(Request $request)
     {
         $request->validate([
+            'email' => 'required|string|email|max:255',
             'resetOTP' => 'required|numeric'
         ]);
 
@@ -355,13 +357,29 @@ class AuthController extends Controller
         }
 
         // Vérifier si l'OTP correspond
-        if (session('resetOTP') != $request->resetOTP) {
-            return response()->json(['message' => 'The reset OTP is not valid'], 401);
-        }
+        // if (session('resetOTP') != $request->resetOTP) {
+        //     return response()->json(['message' => 'The reset OTP is not valid'], 401);
+        // }
+        
+        $user = User::where('email', $request->email)->first();
 
-        return response()->json([
-            'message' => 'OTP is valid. You will be redirected to the reset password page!'
-        ]);
+        if ($user->otp == $request->resetOTP) {
+            $user->update([
+                'is_otp_valid' => 'yes'
+            ]);
+        
+            Auth::login($user);
+            
+            $token = $user->createToken('Personal Access Token')->plainTextToken;
+    
+            return response()->json([
+                'message' => 'OTP is valid. You will be redirected to the reset password page!',
+                'token' => $token,
+                'user' => $user
+            ]);
+        } else {
+                return response()->json(['message' => 'OTP is not valid'], 401);
+        }
     }
 
     // resetPassword
@@ -370,6 +388,7 @@ class AuthController extends Controller
 
         try{
             $request->validate([
+                'email' => 'required|string|email|max:255',
                 'password' => ['required',
                             'string',
                             'min:8', // La longueur minimale du mot de passe
@@ -387,7 +406,7 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $userEmail = session('userUpdateEmail');
+        $userEmail = $request->email;
         
         // Trouve l'utilisateur par email
         $user = User::where('email', $userEmail)->first();
@@ -397,10 +416,10 @@ class AuthController extends Controller
         }
 
         // Vérifier si l'OTP a expiré
-        $resetOTPExpiresAt = session('resetOTP_expiration_time');
-        if (now()->greaterThan($resetOTPExpiresAt)) {
-            return response()->json(['message' => 'The reset OTP has expired'], 400);
-        }
+        // $resetOTPExpiresAt = session('resetOTP_expiration_time');
+        // if (now()->greaterThan($resetOTPExpiresAt)) {
+        //     return response()->json(['message' => 'The reset OTP has expired'], 400);
+        // }
 
         $hashedPassword = Hash::make($request->password);
 
@@ -409,7 +428,7 @@ class AuthController extends Controller
 
         Auth::login($user);
         // Supprimer les données de session après la mise à jour du mot de passe
-        session()->forget(['resetOTP', 'resetOTP_expiration_time', 'userUpdateEmail']);
+        // session()->forget(['resetOTP', 'resetOTP_expiration_time', 'userUpdateEmail']);
 
         $token = $user->createToken('Personal Access Token')->plainTextToken;
 

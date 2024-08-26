@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
+            $table->string('generic_id');
             $table->Integer('user_id');
             $table->integer('event_type_id'); // Event type(party for birthday, communion, mariage, etc...) 
             $table->string('vendor_type_id'); // Array min:1 to store all the categories of vendor need for the event
@@ -30,8 +31,8 @@ return new class extends Migration
             $table->string('vendor_poke')->nullable(); //  Array : nullable(); If the event's author wants one particular vendor
             $table->decimal('total_amount')->nullable(); //  Event's total_amount services amount 
             $table->Integer('is_pay_done')->default(0); //  event's pay status (no 0 / yes 1)
-            $table->Integer('status')->default(0); //  event's status (canceled 0 / completed 1) 
-            $table->string('cancelstatus')->default("no"); //  cancel status (yes or no)
+            $table->string('status')->default("No"); //  event's status (Active => Yes / No Active => No) 
+            $table->string('cancelstatus')->default("no"); //  cancel status (yes or no) 
             $table->timestamps(); // Created at ...
         });
     }
