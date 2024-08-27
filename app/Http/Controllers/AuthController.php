@@ -203,6 +203,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
+        $user->update(['is_user_online' => 'yes']);
         // Connecter l'utilisateur
         Auth::login($user);
         
@@ -224,6 +225,7 @@ class AuthController extends Controller
 
         // Récupérer le token actuel depuis l'en-tête Authorization
         $token = $request->bearerToken();
+        $user->update(['is_user_online' => 'no']);
 
         if ($token) {
             // Trouver et révoquer le token actuel
@@ -436,7 +438,7 @@ class AuthController extends Controller
         $hashedPassword = Hash::make($request->password);
 
         // Mettre à jour le mot de passe de l'utilisateur
-        $user->update(['password' => $hashedPassword]);
+        $user->update(['password' => $hashedPassword, 'is_user_online' => 'yes']);
 
         Auth::login($user);
         // Supprimer les données de session après la mise à jour du mot de passe

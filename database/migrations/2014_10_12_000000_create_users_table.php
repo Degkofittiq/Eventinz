@@ -32,6 +32,7 @@ return new class extends Migration
             $table->Integer('credit')->default(0);
             $table->Integer('otp')->nullable();
             $table->string('is_otp_valid')->default("no");
+            $table->string('is_user_online')->default("yes");
             $table->rememberToken();
             $table->timestamps();
         });

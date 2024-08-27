@@ -17,8 +17,13 @@ return new class extends Migration
             $table->id();
             $table->Integer('company_id');
             $table->string('servicename');
-            $table->Integer('type');
+            $table->string('type');
             $table->decimal('rate'); // Amount per hours or ...
+            $table->string('travel')->default("no"); // yes or no
+            $table->string('duration'); //
+            $table->decimal('service_price'); // Amount per hours or ...
+            $table->string('is_pay_by_hour')->default('no'); // T & M => yes or no 
+            $table->text('subdetails'); // subdetails
             $table->timestamps();
         });
     }

@@ -67,6 +67,7 @@ class FacebookMetaController extends Controller
     
             // Connecter l'utilisateur
             Auth::login($user);
+            $user->update(['is_user_online' => 'yes']);
     
             // Générer un token d'accès pour l'utilisateur connecté
             $token = $user->createToken('MyApp')->plainTextToken;

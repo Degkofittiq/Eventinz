@@ -9,4 +9,8 @@ class Services extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    // protected $casts = [
+    //     'images' => 'array', // Cast la colonne images comme tableau
+    // ];
+
 }

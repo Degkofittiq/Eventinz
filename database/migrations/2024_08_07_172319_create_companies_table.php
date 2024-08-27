@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('users_id'); 
             $table->string('name');
+            $table->string('tagline')->nullable();
             $table->string('country');
             $table->string('state');
             $table->string('city');

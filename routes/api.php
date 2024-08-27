@@ -58,15 +58,18 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     // Store a company
     Route::get('/storecompany', [CompanyController::class, 'createCompanyForm']);
     Route::post('/storecompany', [CompanyController::class, 'storeCompany']);
+    Route::post('/storecompanyimages', [CompanyController::class, 'storeCompanyImages']);
+    Route::post('/storecompanyservices', [CompanyController::class, 'storeCompanyServices']);
 
-    // subbscriptionsummary and payment
-    Route::get('/companyInformation', [CompanyController::class, 'companyInformation']);
+    // Vendor self company details
+    Route::get('/companyinformation', [CompanyController::class, 'companyInformation']);
     
     // Management a Event
     Route::get('/createeventForm', [EventController::class, 'createEventForm']);
     Route::post('/storeevent', [EventController::class, 'storeEvent']);
 
-    Route::get('/myevents', [EventController::class, 'myEvent']);
+    Route::get('/myevents', [EventController::class, 'myEvent']); 
+    Route::get('/myeventstatistics', [CompanyController::class, 'myEventStatistics']);
 
     // show Event
     Route::get('event/{eventId}', [EventController::class,'showEvent']);
@@ -84,6 +87,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
 
     //Review storeReview
     Route::post('addreview/{eventId}', [EventController::class, 'storeReview']);
+    Route::get('/viewmyreview', [CompanyController::class, 'viewMyReviews']);
 
     // Quote & Bids for events
     Route::post('addquote/{eventId}', [EventController::class, 'storeQuote']); // Add Quote 
