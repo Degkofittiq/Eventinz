@@ -44,15 +44,15 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('admin.add.category') }}" class="nav-link active">
+                <a href="{{ route('admin.list.category') }}" class="nav-link active">
                   <i class="fas fa-plus nav-icon"></i>
-                  <p>Add new Categorie</p>
+                  <p>Categories Management</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('admin.list.companies') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Services Type</p>
+                  <p>Companies List</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -63,7 +63,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -71,7 +71,7 @@
                 <span class="right badge badge-danger">New</span>
               </p>
             </a>
-          </li>
+          </li> --}}
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

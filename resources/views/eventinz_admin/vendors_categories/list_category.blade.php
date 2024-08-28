@@ -4,6 +4,12 @@
 <div class="card card-primary">
     <div class="card-header">
       <h3 class="card-title">Categories List</h3>
+      <div class="card-tools">
+        <a href="{{ route('admin.add.category') }}" class="btn bg-default">
+          <i class="fas fa-plus"></i>
+          Add New
+        </a>
+      </div>
     </div>
     <!-- /.card-header -->
     <div class="card">

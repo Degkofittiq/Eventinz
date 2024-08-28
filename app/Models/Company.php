@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\VendorCategories;
+use App\Models\VendorServiceType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +21,22 @@ class Company extends Model
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id');
+    }
+
+    public function serviceType(): HasOne
+    {
+        return $this->hasOne(VendorServiceType::class, 'id');
+    }
+
+    
+    public function subscriptionPlan(): HasOne
+    {
+        return $this->hasOne(Subscription::class, 'id');
+    }
+    
+    public function vendorCategory()
+    {
+        return $this->hasMany(VendorCategories::class, 'id');
     }
 
     

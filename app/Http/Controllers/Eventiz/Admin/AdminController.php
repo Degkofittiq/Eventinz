@@ -106,9 +106,38 @@ class AdminController extends Controller
     
     public function companiesList(){
         $companies = Company::all();
+
+        foreach ($companies as $company) {
+            // Décodage de la chaîne JSON
+            $vendorCategoryIds = json_decode($company->vendor_categories_id, true);
+
+            // Récupération des noms des catégories de vendeur
+            $company->vendorCategories = VendorCategories::whereIn('id', $vendorCategoryIds)->get();
+        }
+
+
         return view('eventinz_admin.vendors_companies.list_vendors_companies', compact('companies'));
     }
     
+
+    public function editCompany(Request $request, $companyId){
+        // 
+        $company = Company::find($companyId);
+
+
+        // foreach ($companies as $company) {
+            // Décodage de la chaîne JSON
+            $vendorCategoryIds = json_decode($company->vendor_categories_id, true);
+
+            // Récupération des noms des catégories de vendeur
+            $company->vendorCategories = VendorCategories::whereIn('id', $vendorCategoryIds)->get();
+        // }
+
+        $companyServices = Services::where('company_id',$companyId)->get();
+
+        return view('eventinz_admin.vendors_companies.edit_vendors_companies', compact('company','companyServices'));
+    }
+
     //Company's services management
     public function updateCompanyServices(Request $request, $companyId)
     {
