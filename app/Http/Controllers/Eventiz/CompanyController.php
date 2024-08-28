@@ -42,7 +42,7 @@ class CompanyController extends Controller
         // Récupérer l'utilisateur authentifié
         $user = $request->user();
 
-        if($user && $user->role_id == 2){
+        if($user && $user->role_id != 1){
             try{
 
                 $request->validate([
@@ -108,7 +108,7 @@ class CompanyController extends Controller
         $user = $request->user();
         $userCompany = Company::where('users_id',$user->id)->first();
 
-        if($user && $user->role_id == 2){
+        if($user && $user->role_id != 1){
             try{
 
                 $request->validate([
@@ -176,7 +176,7 @@ class CompanyController extends Controller
         // Récupérer l'utilisateur authentifié
         $user = Auth::user();
     
-        if ($user && $user->role_id == 2) {
+        if ($user && $user->role_id != 1) {
             // Récupération de l'entreprise de l'utilisateur
             $userCompany = Company::where('users_id', $user->id)->first();
     
@@ -259,7 +259,7 @@ class CompanyController extends Controller
             }
         }
 
-        if($user->role_id == 2 && $company){
+        if($user->role_id != 1 && $company){
             return response()->json([
                'status' => 200,
                'message' => 'Company summary information',
@@ -267,7 +267,7 @@ class CompanyController extends Controller
                 'Company Name:' => $companyWithoutUser['name'],
                 'Company country:' => $companyWithoutUser['country'],
                 'Company State:' => $companyWithoutUser['state'],
-                'Company Service type:' => $companyWithoutUser['vendor_service_types_id'] == 2 ? 'Multiple Service' : 'Single Service', //single or multiple
+                'Company Service type:' => $companyWithoutUser['vendor_service_types_id'] != 1 ? 'Multiple Service' : 'Single Service', //single or multiple
                 'Company Vendor categories:' => $companyWithoutUser['vendor_categories_id'],
                 'Company Current subscriptions:' => $companyWithoutUser['subscriptions_id'],
                 'Company Subscription start date:' => $companyWithoutUser['subscription_start_date'],
@@ -280,7 +280,7 @@ class CompanyController extends Controller
                 'location' => $companyUser['location'],
                 ]
             ]); 
-        }elseif ($user->role_id == 2 && !$company) {
+        }elseif ($user->role_id != 1 && !$company) {
             return response()->json([
                'status' => 404,
                'message' => 'You dont have a company yet, would you like register your company?'
