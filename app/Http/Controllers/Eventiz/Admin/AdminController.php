@@ -182,10 +182,14 @@ class AdminController extends Controller
 
             } catch (ValidationException $e) {
                 // Retourner les erreurs de validation
-                return response()->json([
-                    'message' => 'Validation Error',
-                    'errors' => $e->errors(),
-                ], 422);
+
+                return back()->with('error', 'Company update failed! ' . json_encode([
+                        $e->errors(),
+                    ], 422));
+                // return response()->json([
+                //     'message' => 'Validation Error',
+                //     'errors' => $e->errors(),
+                // ], 422);
             }
 
             // Boucle sur les services pour créer les devis
