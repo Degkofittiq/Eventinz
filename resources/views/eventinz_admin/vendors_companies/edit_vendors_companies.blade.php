@@ -27,6 +27,17 @@
 
 @section('content_admin') 
 <div class="card card-primary">
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="card-header">
       <h3 class="card-title">Company Details</h3>
       <div class="card-tools">

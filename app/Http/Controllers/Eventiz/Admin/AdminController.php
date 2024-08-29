@@ -202,10 +202,11 @@ class AdminController extends Controller
                 ]);
             }
 
-            return response()->json([
-                'message' => 'Success',
-                'error' => 'Company\'s  service(s) list has been updated!'
-            ], 200);
+            return back()->with('success', 'Company\'s  service(s) list has been updated!');
+            // return response()->json([
+            //     'message' => 'Success',
+            //     'error' => 'Company\'s  service(s) list has been updated!'
+            // ], 200);
         // } else {
         //     return response()->json([
         //         'message' => 'Unauthorized',
