@@ -61,11 +61,11 @@
     </tr>
     <tr>
         <th>Type de service</th>
-        <td>{{ $company->serviceType->name }}</td>
+        <td>{{ $company->serviceType->name ?? ""}}</td>
     </tr>
     <tr>
         <th>Plan d'abonnement</th>
-        <td>{{ $company->subscriptionPlan->name }}</td>
+        <td>{{ $company->subscriptionPlan->name ?? ""}}</td>
     </tr>
     <tr>
         <th colspan="2">
