@@ -13,12 +13,12 @@
           <img src="{{ asset('AdminTemplate/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">@UserAdmin</a>
+          <a href="{{ route('admin.dashboard') }}" class="d-block">@UserAdmin</a>
         </div>
       </div>
 
       <!-- SidebarSearch Form -->
-      <div class="form-inline">
+      {{-- <div class="form-inline">
         <div class="input-group" data-widget="sidebar-search">
           <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
           <div class="input-group-append">
@@ -27,51 +27,58 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> --}}
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item menu-open">
-            <a href="#" class="nav-link active">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+          <li class="nav-item">
+            <a href="{{ route('admin.userslist.index') }}" class="nav-link  {{ request()->url() == route('admin.userslist.index') ? "active" : "" }}">
+              <i class="far fa-circle nav-icon"></i>
               <p>
-                Vendors's Categories
+                Hosts & Vendors List
+              </p>
+            </a>
+          </li>
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-plus-square"></i>
+              <p>
+                Vendors Functionalities
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('admin.list.category') }}" class="nav-link active">
-                  <i class="fas fa-plus nav-icon"></i>
+                <a href="{{ route('admin.list.category') }}" class="nav-link {{ request()->url() == route('admin.list.category') ? "active" : "" }}">
+                  <i class="far fa-dot-circle nav-icon"></i>
                   <p>Categories Management</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('admin.list.companies') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                <a href="{{ route('admin.list.companies') }}" class="nav-link {{ request()->url() == route('admin.list.companies') ? "active" : "" }}">
+                  <i class="far fa-dot-circle nav-icon"></i>
                   <p>Companies List</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Inactive Page</p>
+                <a href="{{ route('admin.list.servicescategories') }}" class="nav-link {{ request()->url() == route('admin.list.servicescategories') ? "active" : "" }}">
+                  <i class="far fa-dot-circle nav-icon"></i>
+                  <p>Services Categories List</p>
                 </a>
               </li>
             </ul>
           </li>
-          {{-- <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
+          <li class="nav-item">
+            <a href="#" class="nav-link {{ request()->url() == "#" ? "active" : "" }}">
+              <i class="far fa-circle nav-icon"></i>
               <p>
-                Simple Link
-                <span class="right badge badge-danger">New</span>
+                Another Link
               </p>
             </a>
-          </li> --}}
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

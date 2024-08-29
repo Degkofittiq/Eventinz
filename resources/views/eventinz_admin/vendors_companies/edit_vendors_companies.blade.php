@@ -16,12 +16,19 @@
     #btn-add-feature i {
         font-size: 0.8em;
     }
+    .service-group > *{
+        margin: 2px 3px;
+    }
+    /* .myscroll{
+        max-height: 100%;
+        overflow-x: scroll;
+    } */
 </style>
 
 @section('content_admin') 
 <div class="card card-primary">
     <div class="card-header">
-      <h3 class="card-title">Companies List</h3>
+      <h3 class="card-title">Company Details</h3>
       <div class="card-tools">
         {{-- <a href="{{ route('admin.add.company') }}" class="btn bg-default">
           <i class="fas fa-plus"></i>
@@ -72,16 +79,57 @@
             <!-- Dynamic Features Section -->
             <div class="form-group">
                 <label>Services Items</label>
-                <div id="services-wrapper">
-                    <div class="feature-group d-flex align-items-center mb-2">
-                        <input type="text" name="servicename[]" class="form-control me-2"
-                            placeholder="Service item">
-                        <button type="button" class="btn btn-danger btn-remove-item">Remove</button>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-success mt-3" id="btn-add-feature">
-                    <i class="fa fa-plus"> Add item</i>
-                </button>
+                @if (count($companyServices) > 0)
+                    <form action="{{ route('admin.update.companyservices', $company->id ) }}" method="post" enctype="multipart/form-data">  
+                        @csrf
+                        <div id="services-wrapper">                         
+                                @forelse ($companyServices as $companyService) 
+                                    <div class="service-group d-flex align-items-center mb-2">
+                                        <select name="servicename[]" class="form-control">
+                                            <option value="{{ $companyService->servicename }}">{{ $companyService->servicename }}</option>
+                                            <option value="Videography">Videography</option>
+                                            <option value="Editing">Editing</option>
+                                            <!-- Ajoutez d'autres options selon vos besoins -->
+                                        </select>
+                                        <select name="type[]" class="form-control">
+                                            <option value="{{ $companyService->type }}">{{ $companyService->type }}</option>
+                                            <option value="{{ $companyService->type }}">{{ $companyService->type }}</option>
+                                            <!-- Ajoutez d'autres options selon vos besoins -->
+                                        </select>
+                                        <input type="text" name="rate[]" class="form-control" placeholder="Rate" value="{{ $companyService->rate }}">
+                                        <input type="text" name="duration[]" class="form-control" placeholder="Duration" value="{{ $companyService->duration }}">
+                                        <input type="number" step="0.01" name="service_price[]" class="form-control" placeholder="Service Price" value="{{ $companyService->service_price }}">
+                                        <select name="is_pay_by_hour[]" class="form-control">
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                        {{-- <button type="button" class="btn btn-danger btn-remove-service">Remove</button> --}}
+                                    </div>
+                                @empty
+                                    {{ "No service(s) yet !" }}
+                                @endforelse  
+                        </div>
+                        <div class="form-group">
+                            <label>Subdetails</label>
+                            <textarea class="form-control" rows="3" placeholder="Enter subdetails..." style="height: 100px;" name="subdetails"></textarea>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="travel" name="travel" value="yes">
+                            <label class="form-check-label" for="travel">Travel</label>
+                        </div>
+                        <div class="btn-group">  
+                            <button type="submit" class="btn btn-info mt-3 mx-2">
+                                <i class="fa fa-save"></i> 
+                                Update Services
+                            </button>
+                            <button type="button" class="btn btn-success mt-3 mx-2" id="btn-add-feature">
+                                <i class="fa fa-plus"> Add item</i>
+                            </button>
+                        </div>
+                    </form> 
+                @else
+                    {{ "No service(s) for this company yet" }}
+                @endif 
             </div>
         </th>
     </tr>
@@ -96,27 +144,46 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const featuresWrapper = document.getElementById('services-wrapper');
-        const addFeatureButton = document.getElementById('btn-add-feature');
+        const servicesWrapper = document.getElementById('services-wrapper');
+        const addServiceButton = document.getElementById('btn-add-feature');
 
-        addFeatureButton.addEventListener('click', function() {
-            const featureGroup = document.createElement('div');
-            featureGroup.className = 'feature-group d-flex align-items-center mb-2';
-            featureGroup.innerHTML = `
-        <input type="text" name="servicename[]" class="form-control me-2" placeholder="Service item">
-        <button type="button" class="btn btn-danger btn-remove-item">Remove</button>
-    `;
-            featuresWrapper.appendChild(featureGroup);
+        addServiceButton.addEventListener('click', function() {
+            const serviceGroup = document.createElement('div');
+            serviceGroup.className = 'service-group d-flex align-items-center mb-2';
 
-            featureGroup.querySelector('.btn-remove-item').addEventListener('click', function() {
-                featureGroup.remove();
+            serviceGroup.innerHTML = `
+                <select name="servicename[]" class="form-control">
+                    <option value="Photoshoot">Photoshoot</option>
+                    <option value="Videography">Videography</option>
+                    <option value="Editing">Editing</option>
+                    <!-- Ajoutez d'autres options selon vos besoins -->
+                </select>
+                <select name="type[]" class="form-control">
+                    <option value="T&M">T&M</option>
+                    <option value="Fixed">Fixed</option>
+                    <!-- Ajoutez d'autres options selon vos besoins -->
+                </select>
+                <input type="text" name="rate[]" class="form-control" placeholder="Rate">
+                <input type="text" name="duration[]" class="form-control" placeholder="Duration">
+                <input type="text" name="service_price[]" class="form-control" placeholder="Service Price">
+                <select name="is_pay_by_hour[]" class="form-control">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+                <button type="button" class="btn btn-danger btn-remove-service">Remove</button>
+            `;
+
+            servicesWrapper.appendChild(serviceGroup);
+
+            serviceGroup.querySelector('.btn-remove-service').addEventListener('click', function() {
+                serviceGroup.remove();
             });
         });
 
         // Attach the event listener to the existing remove button
-        document.querySelectorAll('.btn-remove-item').forEach(button => {
+        document.querySelectorAll('.btn-remove-service').forEach(button => {
             button.addEventListener('click', function() {
-                button.closest('.feature-group').remove();
+                button.closest('.service-group').remove();
             });
         });
     });

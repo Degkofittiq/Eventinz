@@ -50,12 +50,14 @@
             </td>
           </tr>
           @empty
-              <div class="alert alert-warning">
-                No company yet
-              </div>
           @endforelse
         </tbody>
       </table>
+      @if (count($companies) <= 0)
+        <div class="alert alert-warning">
+          No company yet
+        </div>
+      @endif
     </div>
 </div>
 @endsection
