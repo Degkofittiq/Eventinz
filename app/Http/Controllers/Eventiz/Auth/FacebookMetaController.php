@@ -75,7 +75,7 @@ class FacebookMetaController extends Controller
                 $userCompany = Company::where('users_id',$user->id)->get();
     
                 if (count($userCompany) > 0) {
-                    # code...
+                    
                     $userHaveCompanyYet = true;
                 }
     
