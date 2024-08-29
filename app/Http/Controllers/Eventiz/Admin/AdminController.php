@@ -203,6 +203,7 @@ class AdminController extends Controller
             }
 
             return back()->with('success', 'Company\'s  service(s) list has been updated!');
+            
             // return response()->json([
             //     'message' => 'Success',
             //     'error' => 'Company\'s  service(s) list has been updated!'
