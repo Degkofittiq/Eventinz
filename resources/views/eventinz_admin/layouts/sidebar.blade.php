@@ -1,4 +1,4 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-primary elevation-4"  style="background-color: rgba(39, 40, 34, 1)">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
       <img src="{{ asset('eventinz_logo.png') }}" alt="AdminLTE Logo" class="bg-white brand-image img-circle elevation-3" style="opacity: 1">
