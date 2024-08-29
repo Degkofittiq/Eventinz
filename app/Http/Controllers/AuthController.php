@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Mail\OTPMail;
 use App\Models\Event;
+use App\Models\Company;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\ForgotPasswordMail;
@@ -208,9 +209,22 @@ class AuthController extends Controller
         Auth::login($user);
         
         $user = Auth::user();
+        
         $token = $user->createToken('Personal Access Token')->plainTextToken;
+        if ($user->role_id == 2) {
+            
+            $userHaveCompanyYet = false;
+
+            $userCompany = Company::where('users_id',$user->id)->get();
+            if (count($userCompany) > 0) {
+                # code...
+                $userHaveCompanyYet = true;
+            }
+
+        }
+
     
-        return response()->json(['token' => $token,'user' => $user]);
+        return response()->json(['token' => $token,'user' => $user, 'userHaveCompanyYet' => $userHaveCompanyYet]);
     }
         
     public function logout(Request $request)

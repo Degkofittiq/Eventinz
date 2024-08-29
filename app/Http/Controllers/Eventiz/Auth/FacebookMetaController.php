@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Eventiz\Auth;
 
 use Exception;
 use App\Models\User;
+use App\Models\Company;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -68,6 +69,17 @@ class FacebookMetaController extends Controller
             // Connecter l'utilisateur
             Auth::login($user);
             $user->update(['is_user_online' => 'yes']);
+            if ($user->role_id == 2) {
+            
+                $userHaveCompanyYet = false;
+                $userCompany = Company::where('users_id',$user->id)->get();
+    
+                if (count($userCompany) > 0) {
+                    # code...
+                    $userHaveCompanyYet = true;
+                }
+    
+            }
     
             // Générer un token d'accès pour l'utilisateur connecté
             $token = $user->createToken('MyApp')->plainTextToken;
@@ -76,6 +88,7 @@ class FacebookMetaController extends Controller
             return response()->json([
                 'token' => $token,
                 'role_id' => session('role_id'),
+                'userHaveCompanyYet' => $userHaveCompanyYet,
                 'role_id_expiration_time' => session('role_id_expiration_time')
             ], 200);
     

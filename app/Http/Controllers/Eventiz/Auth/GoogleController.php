@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Eventiz\Auth;
 
 use App\Models\User;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -44,12 +45,23 @@ class GoogleController extends Controller
 
             // Rechercher l'utilisateur par email
             $user = User::where('email', $googleUser->getEmail())->first();
-
+            if ($user->role_id == 2) {
+            
+                $userHaveCompanyYet = false;
+                $userCompany = Company::where('users_id',$user->id)->get();
+    
+                if (count($userCompany) > 0) {
+                    # code...
+                    $userHaveCompanyYet = true;
+                }
+    
+            }
+    
             if ($user) {
                 // Générer un token pour l'API
                 $token = $user->createToken('API Token')->plainTextToken;
 
-                return response()->json(['token' => $token, 'user' => $user]);
+                return response()->json(['token' => $token, 'user' => $user, 'userHaveCompanyYet' => $userHaveCompanyYet,]);
             } else {
                 return response()->json(['error' => 'User not found'], 404);
             }
