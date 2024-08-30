@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de Connexion</title>
+    <title>Eventinz|Admin Login</title>
+    <link rel="icon" href="{{ asset('eventinz_logo.png') }}" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -28,7 +29,7 @@
 </head>
 <body>
     <div class="login-container">
-        <h2 class="text-center">Connexion</h2>
+        <h2 class="text-center">Eventinz Admin Login</h2>
         <form action="{{ route('admin.login') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
