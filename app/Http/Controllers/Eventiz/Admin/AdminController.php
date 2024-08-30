@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Services;
 use App\Rules\SameSizeAs;
 use Illuminate\Http\Request;
+use App\Models\Paymenthistory;
 use App\Models\ServicesCategory;
 use App\Models\VendorCategories;
 use App\Http\Controllers\Controller;
@@ -22,6 +23,7 @@ class AdminController extends Controller
     public function loginForm(){
         return view('eventinz_admin.auth.login');
     }
+
     public function login(Request $request)
     {
         // Validation des données
@@ -377,6 +379,22 @@ class AdminController extends Controller
             $VendorCategories = VendorCategories::all();
                 return view('eventinz_admin.services_categories.edit_services_categories', compact('servicesCategoryFound', 'VendorCategories'))->with('error', 'Update error, try again!');
             }
+    }
+
+    public function paymentsList(){
+        $paymentsStories = Paymenthistory::all();
+        return view('eventinz_admin.payments_stories.list_payment', compact('paymentsStories'));
+    }
+
+    public function showPayment(Request $request, $paymentId){
+
+        $paymentFound = Paymenthistory::find($paymentId);
+        
+        if ($paymentFound) {
+            return view('eventinz_admin.payments_stories.show_payment', compact('paymentFound'));
+        } else {
+            return view('eventinz_admin.payments_stories.list_payment')->with('error', 'Payment not found!');
+        }
     }
 
 }

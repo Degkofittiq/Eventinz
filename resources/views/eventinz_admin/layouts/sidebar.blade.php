@@ -75,10 +75,10 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link {{ request()->url() == "#" ? "active" : "" }}">
+            <a href="{{ route('admin.list.payments') }}" class="nav-link {{ request()->url() == route('admin.list.payments') ? "active" : "" }}">
               <i class="far fa-circle nav-icon"></i>
               <p>
-                Another Link
+                Payments Stories
               </p>
             </a>
           </li>

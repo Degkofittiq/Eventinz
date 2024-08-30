@@ -210,10 +210,11 @@ class AuthController extends Controller
         
         $user = Auth::user();
         
+        $userHaveCompanyYet = false;
+        
         $token = $user->createToken('Personal Access Token')->plainTextToken;
         if ($user->role_id == 2) {
             
-            $userHaveCompanyYet = false;
 
             $userCompany = Company::where('users_id',$user->id)->get();
             if (count($userCompany) > 0) {

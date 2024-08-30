@@ -52,6 +52,11 @@ Route::prefix('admin')->middleware('auth')->group(function() {
     // Route::get('/deleteservicescategory/{servicesCategoryId}', [AdminController::class,'deleteServicesCategoryForm'])->name('admin.deleteform.servicescategory');
     // Route::post('/deleteservicescategory/{servicesCategoryId}', [AdminController::class,'deleteServicesCategory'])->name('admin.delete');
 
+    // Payments Management
+    Route::get('/paymentslist', [AdminController::class, 'paymentsList'])->name('admin.list.payments');
+    Route::get('/payment/{paymentId}', [AdminController::class,'showPayment'])->name('admin.show.payment');
+    // Route::get('/approvepayment/{paymentId}', [AdminController::class,'approvePayment'])->name('admin.approve.payment');
+    // Route::get('/rejectpayment/{paymentId}', [AdminController::class,'rejectPayment'])->name('admin.reject.payment');
 
     // Events Management
 });
