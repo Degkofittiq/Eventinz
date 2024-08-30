@@ -166,10 +166,10 @@ class AuthController extends Controller
 
     }
 
-    public function showLoginForm(){
-        // return view('auth.login');
-        return 'Show login form';
-    }
+    // public function showLoginForm(){
+    //     // return view('auth.login');
+    //     return 'Show login form';
+    // }
 
     public function login(Request $request)
     {

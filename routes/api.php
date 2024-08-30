@@ -33,7 +33,7 @@ Route::get('/session/{role_id}', function () {
 });
 
 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+// Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 // Auth routes
 Route::post('register', [AuthController::class, 'register']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
