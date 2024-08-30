@@ -36,7 +36,17 @@
                 </div>
             @endif
             
-            
+            @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+      
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
             <div class="max-w-6xl mx-auto sm:px-4 lg:px-8">
                 <div class="flex justify-center pt-1 sm:justify-start sm:pt-0">
                     <img src="{{ asset('eventinz_logo.png') }}" alt="" width="250" height="250">

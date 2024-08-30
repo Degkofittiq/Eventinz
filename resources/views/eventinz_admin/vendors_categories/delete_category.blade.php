@@ -3,6 +3,17 @@
 @section('content_admin')
     
 <div class="card card-danger">
+  @if(session('success'))
+  <div class="alert alert-success">
+      {{ session('success') }}
+  </div>
+@endif
+
+@if(session('error'))
+  <div class="alert alert-danger">
+      {{ session('error') }}
+  </div>
+@endif
     <div class="card-header">
       <h3 class="card-title">Delete category</h3>
     </div>

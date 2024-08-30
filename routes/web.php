@@ -18,7 +18,9 @@ use App\Http\Controllers\Eventiz\Auth\FacebookMetaController;
 */
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('/');
+
+
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);

@@ -11,11 +11,99 @@ use App\Models\ServicesCategory;
 use App\Models\VendorCategories;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
 {
     //
+
+
+    public function loginForm(){
+        return view('eventinz_admin.auth.login');
+    }
+    public function login(Request $request)
+    {
+        // Validation des données
+        $validatedData = $request->validate([
+            'email' => 'required|string|email',
+            'password' => [
+                'required',
+                'string',
+                'min:8', // La longueur minimale du mot de passe
+                'regex:/[a-z]/', // Doit contenir au moins une lettre minuscule
+                'regex:/[A-Z]/', // Doit contenir au moins une lettre majuscule
+                'regex:/[0-9]/', // Doit contenir au moins un chiffre
+                'regex:/[@$!%*?&]/', // Doit contenir au moins un caractère spécial
+            ]
+        ]);
+    
+        // Tentative de connexion de l'utilisateur
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+    
+        // Trouver l'utilisateur par son email
+        $user = User::where('email', $request->email)->first();
+    
+        // Vérifier si l'utilisateur existe et si le mot de passe est correct
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+    
+        // Mettre à jour le statut de l'utilisateur et connecter l'utilisateur
+        $user->update(['is_user_online' => 'yes']);
+        Auth::login($user);
+    
+        // Création du token d'accès
+        $token = $user->createToken('Personal Access Token')->plainTextToken;
+    
+        // Vérifier les rôles de l'utilisateur
+        if ($user->role_id == 3 || $user->role_id == 4) {
+            // return response()->json(['token' => $token, 'user' => $user]);
+            return redirect()->route('admin.dashboard');
+        } else {
+            // Déconnecter l'utilisateur et mettre à jour le statut
+            $user->update(['is_user_online' => 'no']);
+            Auth::logout();
+            return redirect()->route('/')->with('error', 'You\'re not authorized');
+        }
+    }
+    
+        
+    public function logout(Request $request)
+    {
+        // Vérifier si l'utilisateur est authentifié
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Not authenticated'], 401);
+        }
+
+        // Récupérer l'utilisateur authentifié
+        $user = Auth::user();
+
+        // Récupérer le token actuel depuis l'en-tête Authorization
+        // $token = $request->bearerToken();
+        $user->update(['is_user_online' => 'no']);
+
+        Auth::logout($user);
+        return redirect()->route('login')->with('success', 'Logged out successfully');
+
+        // if ($token) {
+        //     // Trouver et révoquer le token actuel
+        //     $personalAccessToken = PersonalAccessToken::findToken($token);
+
+        //     if ($personalAccessToken) {
+        //         $personalAccessToken->delete();
+        //         return response()->json(['message' => 'Logged out successfully']);
+        //     }
+
+        //     return response()->json(['message' => 'Token not found'], 404);
+        // }
+
+        // return response()->json(['message' => 'Token not provided'], 400);
+    }
+
+
     public function index(){
         return view('eventinz_admin.dashboard');
     }

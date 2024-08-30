@@ -14,6 +14,9 @@
         </div>
         <div class="info">
           <a href="{{ route('admin.dashboard') }}" class="d-block">@UserAdmin</a>
+          <div class="small">
+            <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          </div>
         </div>
       </div>
 
