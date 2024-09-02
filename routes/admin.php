@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Eventiz\Admin\AdminController;
+use App\Http\Controllers\Eventiz\Admin\SubscriptionPlanController;
 
 // Préfixe toutes les routes avec "admin"
 
@@ -57,6 +58,17 @@ Route::prefix('admin')->middleware('auth')->group(function() {
     Route::get('/payment/{paymentId}', [AdminController::class,'showPayment'])->name('admin.show.payment');
     // Route::get('/approvepayment/{paymentId}', [AdminController::class,'approvePayment'])->name('admin.approve.payment');
     // Route::get('/rejectpayment/{paymentId}', [AdminController::class,'rejectPayment'])->name('admin.reject.payment');
+
+    // Subscription plans
+    Route::get('/subscriptionplanslist', [SubscriptionPlanController::class, 'plansList'])->name('admin.list.subscriptionplans');
+    Route::get('/subscriptionplandetails/{subscriptionId}', [SubscriptionPlanController::class, 'planDetails'])->name('admin.details.subscriptionplan');
+    Route::get('/addsubscriptionplan', [SubscriptionPlanController::class, 'addPlanForm'])->name('admin.add.subscriptionplan');
+    Route::post('/storesubscriptionplan', [SubscriptionPlanController::class,'storePlanForm'])->name('admin.store.subscriptionplan');
+    // Route::get('/editsubscriptionplan/{subscriptionId}', [SubscriptionPlanController::class,'editPlanForm'])->name('admin.edit.subscriptionplan');
+    Route::post('/updatesubscriptionplan/{subscriptionId}', [SubscriptionPlanController::class,'updatePlanForm'])->name('admin.update.subscriptionplan');
+    Route::get('/deletesubscriptionplan/{subscriptionId}', [SubscriptionPlanController::class,'deletePlanForm'])->name('admin.deleteform.subscriptionplan');
+    Route::post('/deletesubscriptionplan/{subscriptionId}', [SubscriptionPlanController::class,'deletePlan'])->name('admin.delete.subscriptionplan');
+
 
     // Events Management
 });

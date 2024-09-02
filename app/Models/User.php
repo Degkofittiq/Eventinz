@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Company;
+use App\Models\Subscription;
 use App\Models\Paymenthistory;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -64,5 +65,11 @@ class User extends Authenticatable
     public function paymenthistory()
     {
         return $this->hasMany(Paymenthistory::class, 'id');
+    }
+
+    // 
+    public function subscription()
+    {
+        return $this->hasMany(Subscription::class, 'id');
     }
 }

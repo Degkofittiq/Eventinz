@@ -15,9 +15,9 @@ return new class extends Migration
     { // All Subscription for vendor
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name'); // name description vendor_service_types_id price duration features
             $table->text('description');
-            $table->unsignedBigInteger('vendor_service_types_id'); 
+            $table->unsignedBigInteger('vendor_service_types_id'); // Single or Multiples 
             $table->decimal('price');
             $table->Integer('duration'); // Preriod in months
             $table->text('features'); // Array
