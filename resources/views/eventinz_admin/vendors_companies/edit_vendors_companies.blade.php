@@ -91,107 +91,163 @@
             <div class="form-group">
                 <label>Services Items</label>
                 @if (count($companyServices) > 0)
-                    <form action="{{ route('admin.update.companyservices', $company->id ) }}" method="post" enctype="multipart/form-data">  
-                        @csrf
-                        <div id="services-wrapper">                         
+                <form action="{{ route('admin.update.companyservices', $company->id ) }}" method="post" enctype="multipart/form-data">  
+                    @csrf
+                    <div id="services-wrapper">
+                        <?php                   
+                            $servicenames = [
+                                "Photoshoot",
+                                "Videography",
+                                "Editing",
+                                "Branding",
+                                "Graphic Design",
+                                "Logo Design",
+                            ];    
+                        ?>  
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Rate</th>
+                                    <th>Duration</th>
+                                    <th>Service Price</th>
+                                    <th>Pay by Hour</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 @forelse ($companyServices as $companyService) 
-                                    <div class="service-group d-flex align-items-center mb-2">
-                                        <select name="servicename[]" class="form-control">
-                                            <option value="{{ $companyService->servicename }}">{{ $companyService->servicename }}</option>
-                                            <option value="Videography">Videography</option>
-                                            <option value="Editing">Editing</option>
-                                            <!-- Ajoutez d'autres options selon vos besoins -->
-                                        </select>
-                                        <select name="type[]" class="form-control">
-                                            <option value="{{ $companyService->type }}">{{ $companyService->type }}</option>
-                                            <option value="{{ $companyService->type }}">{{ $companyService->type }}</option>
-                                            <!-- Ajoutez d'autres options selon vos besoins -->
-                                        </select>
-                                        <input type="text" name="rate[]" class="form-control" placeholder="Rate" value="{{ $companyService->rate }}">
-                                        <input type="text" name="duration[]" class="form-control" placeholder="Duration" value="{{ $companyService->duration }}">
-                                        <input type="number" step="0.01" name="service_price[]" class="form-control" placeholder="Service Price" value="{{ $companyService->service_price }}">
-                                        <select name="is_pay_by_hour[]" class="form-control">
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
-                                        </select>
-                                        {{-- <button type="button" class="btn btn-danger btn-remove-service">Remove</button> --}}
-                                    </div>
+                                    <tr class="service-group">
+                                        <td>
+                                            <select name="servicename[]" class="form-control">
+                                                @foreach ($servicenames as $servicename)
+                                                    @if ($servicename == $companyService->servicename)
+                                                        <option value="{{ $servicename }}" selected>{{ $servicename }}</option>
+                                                    @else                                                    
+                                                        <option value="{{ $servicename }}">{{ $servicename }}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="type[]" class="form-control">
+                                                <option value="{{ $companyService->type }}">{{ $companyService->type }}</option>
+                                                <!-- Ajoutez d'autres options selon vos besoins -->
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="rate[]" class="form-control" placeholder="Rate" value="{{ $companyService->rate }}">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="duration[]" class="form-control" placeholder="Duration" value="{{ $companyService->duration }}">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" name="service_price[]" class="form-control" placeholder="Service Price" value="{{ $companyService->service_price }}">
+                                        </td>
+                                        <td>
+                                            <select name="is_pay_by_hour[]" class="form-control">
+                                                <option value="Yes" @if ($companyService->is_pay_by_hour == 'Yes') selected @endif>Yes</option>
+                                                <option value="No" @if ($companyService->is_pay_by_hour == 'No') selected @endif>No</option>
+                                            </select>
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        {{-- <td><button type="button" class="btn btn-danger btn-remove-service">Remove</button></td> --}}
+                                    </tr>
                                 @empty
-                                    {{ "No service(s) yet !" }}
+                                    <tr>
+                                        <td colspan="6">No service(s) yet!</td>
+                                    </tr>
                                 @endforelse  
-                        </div>
-                        <div class="form-group">
-                            <label>Subdetails</label>
-                            <textarea class="form-control" rows="3" placeholder="Enter subdetails..." style="height: 100px;" name="subdetails"></textarea>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="travel" name="travel" value="yes">
-                            <label class="form-check-label" for="travel">Travel</label>
-                        </div>
-                        <div class="btn-group">  
-                            <button type="submit" class="btn btn-info mt-3 mx-2">
-                                <i class="fa fa-save"></i> 
-                                Update Services
-                            </button>
-                            <button type="button" class="btn btn-success mt-3 mx-2" id="btn-add-feature">
-                                <i class="fa fa-plus"> Add item</i>
-                            </button>
-                        </div>
-                    </form> 
+                            </tbody>
+                        </table>
+                    </div>
+                
+                    <div class="form-group mt-3">
+                        <label>Subdetails</label>
+                        <textarea class="form-control" rows="3" placeholder="Enter subdetails..." style="height: 100px;" name="subdetails">{{ $companyService->subdetails }}</textarea>
+                    </div>
+                
+                    <div class="form-check mt-3">
+                        <input type="checkbox" class="form-check-input" id="travel" name="travel" value="yes" @if ($companyService->travel == "yes") checked @endif>
+                        <label class="form-check-label" for="travel">Travel</label>
+                    </div>
+                
+                    <div class="btn-group mt-3">  
+                        <button type="submit" class="btn btn-info mx-2">
+                            <i class="fa fa-save"></i> 
+                            Update Services
+                        </button>
+                        <button type="button" class="btn btn-success mx-2" id="btn-add-feature">
+                            <i class="fa fa-plus"> Add item</i>
+                        </button>
+                    </div>
+                </form> 
+                
                 @else
                     {{ "No service(s) for this company yet" }}
                 @endif 
             </div>
         </th>
     </tr>
-    {{-- <tr>
-        <th>Actions</th>
-        <td>
-            <a href="{{ route('admin.edit.company', $company->id) }}" class="btn btn-info btn-sm"><i class="fas fa-pen"></i> Modifier</a>
-        </td>
-    </tr> --}}
 </table>
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const servicesWrapper = document.getElementById('services-wrapper');
         const addServiceButton = document.getElementById('btn-add-feature');
 
         addServiceButton.addEventListener('click', function() {
-            const serviceGroup = document.createElement('div');
-            serviceGroup.className = 'service-group d-flex align-items-center mb-2';
+            const serviceGroup = document.createElement('tr');
+            serviceGroup.className = 'service-group';
 
             serviceGroup.innerHTML = `
-                <select name="servicename[]" class="form-control">
-                    <option value="Photoshoot">Photoshoot</option>
-                    <option value="Videography">Videography</option>
-                    <option value="Editing">Editing</option>
-                    <!-- Ajoutez d'autres options selon vos besoins -->
-                </select>
-                <select name="type[]" class="form-control">
-                    <option value="T&M">T&M</option>
-                    <option value="Fixed">Fixed</option>
-                    <!-- Ajoutez d'autres options selon vos besoins -->
-                </select>
-                <input type="text" name="rate[]" class="form-control" placeholder="Rate">
-                <input type="text" name="duration[]" class="form-control" placeholder="Duration">
-                <input type="text" name="service_price[]" class="form-control" placeholder="Service Price">
-                <select name="is_pay_by_hour[]" class="form-control">
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
-                <button type="button" class="btn btn-danger btn-remove-service">Remove</button>
+                <td>
+                    <select name="servicename[]" class="form-control">
+                        <option value="">Select Service Name</option>
+                        @foreach ($servicenames as $servicename)
+                            <option value="{{ $servicename }}">{{ $servicename }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <select name="type[]" class="form-control">
+                        <option value="T&M">T&M</option>
+                        <option value="Fixed">Fixed</option>
+                        <!-- Ajoutez d'autres options selon vos besoins -->
+                    </select>
+                </td>
+                <td>
+                    <input type="text" name="rate[]" class="form-control" placeholder="Rate">
+                </td>
+                <td>
+                    <input type="text" name="duration[]" class="form-control" placeholder="Duration">
+                </td>
+                <td>
+                    <input type="number" step="0.01" name="service_price[]" class="form-control" placeholder="Service Price">
+                </td>
+                <td>
+                    <select name="is_pay_by_hour[]" class="form-control">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-remove-service">Remove</button>
+                </td>
             `;
 
-            servicesWrapper.appendChild(serviceGroup);
+            servicesWrapper.querySelector('tbody').appendChild(serviceGroup);
 
+            // Attach the remove functionality to the new remove button
             serviceGroup.querySelector('.btn-remove-service').addEventListener('click', function() {
                 serviceGroup.remove();
             });
         });
 
-        // Attach the event listener to the existing remove button
+        // Attach the event listener to the existing remove buttons
         document.querySelectorAll('.btn-remove-service').forEach(button => {
             button.addEventListener('click', function() {
                 button.closest('.service-group').remove();
@@ -199,4 +255,5 @@
         });
     });
 </script>
+
 @endsection

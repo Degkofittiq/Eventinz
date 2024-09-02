@@ -231,84 +231,69 @@ class AdminController extends Controller
         // }
 
         $companyServices = Services::where('company_id',$companyId)->get();
-
+        // dd(count($companyServices));
         return view('eventinz_admin.vendors_companies.edit_vendors_companies', compact('company','companyServices'));
     }
-
-    //Company's services management
+        
+    // Company's services management
     public function updateCompanyServices(Request $request, $companyId)
     {
         // Récupérer l'utilisateur authentifié
         $user = Auth::user();
-    
-        // if ($user && $user->role_id == 3 || $user && $user->role_id == 4) {
-            // Récupération de l'entreprise de l'utilisateur
-            $companyFound = Company::where('id', $companyId)->first();
-            $companyServicesFound = Services::where('company_id', $companyId)->first();
 
-            try {
-                // Validation des données
-                $dataValidate = $request->validate([
-                    'servicename' => 'bail|array|min:1', // Le tableau doit contenir au moins 1 élément
-                    'servicename.*' => 'bail|string|min:1|required', // Valider chaque élément du tableau
-                    'type' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
-                    'type.*' => 'bail|required|string', // Valider chaque élément du tableau
-                    'rate' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
-                    'rate.*' => 'bail|required|numeric|regex:/^\d+(\.\d{1,2})?$/', // Valider chaque élément du tableau
-                    'duration' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
-                    'duration.*' => 'bail|required|string', // Valider chaque élément du tableau
-                    'service_price' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
-                    'service_price.*' => 'bail|required|numeric|regex:/^\d+(\.\d{1,2})?$/', // Valider chaque élément du tableau
-                    'is_pay_by_hour' => ['bail', 'array', new SameSizeAs('servicename')], // yes or no
-                    'is_pay_by_hour.*' => 'bail|required|string|min:1', // Valider chaque élément du tableau
-                    'subdetails' => 'bail|string|nullable',
-                    'travel' => 'bail|string|nullable',
-                ]);
-                // dd($dataValidate);
+        // Récupération de l'entreprise de l'utilisateur
+        $companyFound = Company::findOrFail($companyId);
 
-                // Accéder aux valeurs avec une valeur par défaut vide si la clé n'existe pas
-                $subdetails = $dataValidate['subdetails'] ?? "";
-                $travel = $dataValidate['travel'] ?? "";
+        try {
+            // Validation des données
+            $dataValidate = $request->validate([
+                'servicename' => 'bail|array|min:1', 
+                'servicename.*' => 'bail|string|min:1|required', 
+                'type' => ['bail', 'array', new SameSizeAs('servicename')], 
+                'type.*' => 'bail|required|string', 
+                'rate' => ['bail', 'array', new SameSizeAs('servicename')], 
+                'rate.*' => 'bail|required|numeric|regex:/^\d+(\.\d{1,2})?$/', 
+                'duration' => ['bail', 'array', new SameSizeAs('servicename')], 
+                'duration.*' => 'bail|required|string', 
+                'service_price' => ['bail', 'array', new SameSizeAs('servicename')], 
+                'service_price.*' => 'bail|required|numeric|regex:/^\d+(\.\d{1,2})?$/', 
+                'is_pay_by_hour' => ['bail', 'array', new SameSizeAs('servicename')], 
+                'is_pay_by_hour.*' => 'bail|required|string|min:1', 
+                'subdetails' => 'bail|string|nullable',
+                'travel' => 'bail|string|nullable',
+            ]);
 
-            } catch (ValidationException $e) {
-                // Retourner les erreurs de validation
+            // Accéder aux valeurs avec une valeur par défaut vide si la clé n'existe pas
+            $subdetails = $dataValidate['subdetails'] ?? "";
+            $travel = $dataValidate['travel'] ?? "No";
 
-                return back()->with('error', 'Company update failed! ' . json_encode([
-                        $e->errors(),
-                    ], 422));
-                // return response()->json([
-                //     'message' => 'Validation Error',
-                //     'errors' => $e->errors(),
-                // ], 422);
-            }
+        } catch (ValidationException $e) {
+            // Retourner les erreurs de validation
+            return back()->with('error', 'Company update failed! ' . json_encode($e->errors(), 422));
+        }
 
-            // Boucle sur les services pour créer les devis
-            foreach ($dataValidate['servicename'] as $index => $service) {
-                $companyServicesFound->update([
-                    'servicename' => $service,
-                    'type' => $dataValidate['type'][$index],
-                    'rate' => $dataValidate['rate'][$index],
-                    'duration' => $dataValidate['duration'][$index],
-                    'service_price' => $dataValidate['service_price'][$index],
-                    'is_pay_by_hour' => $dataValidate['is_pay_by_hour'][$index],
-                    'subdetails' => $subdetails, // Utilisation de la valeur par défaut si la clé n'existe pas
-                    'travel' => $travel, // Utilisation de la valeur par défaut si la clé n'existe pas
-                ]);
-            }
+        // Supprimer les services existants pour la compagnie
+        Services::where('company_id', $companyId)->delete();
 
-            return back()->with('success', 'Company\'s  service(s) list has been updated!');
-            
-            // return response()->json([
-            //     'message' => 'Success',
-            //     'error' => 'Company\'s  service(s) list has been updated!'
-            // ], 200);
-        // } else {
-        //     return response()->json([
-        //         'message' => 'Unauthorized',
-        //         'error' => 'You need to be a Admin to update a company service(s) list!'
-        //     ], 403);
-        // }
+        // Boucle sur les services pour créer de nouvelles entrées
+        foreach ($dataValidate['servicename'] as $index => $serviceName) {
+            Services::create([
+                'company_id' => $companyId,
+                'servicename' => $serviceName,
+                'type' => $dataValidate['type'][$index],
+                'rate' => $dataValidate['rate'][$index],
+                'duration' => $dataValidate['duration'][$index],
+                'service_price' => $dataValidate['service_price'][$index],
+                'is_pay_by_hour' => $dataValidate['is_pay_by_hour'][$index],
+                'subdetails' => $subdetails,
+                'travel' => $travel,
+            ]);
+        }
+
+        return back()->with('success', 'Company\'s service(s) list has been updated!');
+
     }
+
 
     // Companies Services Categories Management
     public function servicesCategoriesList(){

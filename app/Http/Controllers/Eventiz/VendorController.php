@@ -8,6 +8,7 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Models\VendorCategories;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class VendorController extends Controller
 {
@@ -18,8 +19,32 @@ class VendorController extends Controller
     }
 
     public function vendorCategoryList($id){
-        $vendor = Company::where('vendor_categories_id', 'LIKE', '%'. $id .'%')->get();
-        return response()->json($vendor);
+
+        $user = Auth::user();
+        if($user->location != null){
+            $vendor = Company::where('vendor_categories_id', 'LIKE', '%'. $id .'%')
+            ->where('country',$user->location)
+            ->orWhere('state',$user->location)
+            ->orWhere('city',$user->location)->get();
+            if (count($vendor) < 1) {
+                return response()->json([
+                    "No vendor yet for this category"
+                ]);
+            }
+            return response()->json([
+                $vendor, "For $user->location"
+            ]);
+        }else{
+            $vendor = Company::where('vendor_categories_id', 'LIKE', '%'. $id .'%')->get();
+            if (count($vendor) < 1 ) {
+                return response()->json([
+                    "No vendor yet for this category"
+                ]);
+            }
+            return response()->json([
+                $vendor, "All"
+            ]);
+        }
     }
     /*
         public function vendorList(Request $request){
