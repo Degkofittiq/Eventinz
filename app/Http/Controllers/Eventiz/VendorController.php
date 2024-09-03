@@ -20,6 +20,13 @@ class VendorController extends Controller
 
     public function vendorCategoryList($id){
 
+        $vendorCategoryId = VendorCategories::find($id);
+        if(!$vendorCategoryId){
+            return response()->json([
+                "Vendors Category not found !"
+            ]);
+        }
+
         $user = Auth::user();
         if($user->location != null){
             $vendor = Company::where('vendor_categories_id', 'LIKE', '%'. $id .'%')
@@ -71,7 +78,7 @@ class VendorController extends Controller
             'company Service:' => $company->vendor_service_types_id == 1 ?"Single Service" : "Multiple Services",
             'company Service(s) Categorie:' => $company->vendor_categories_id,
             'company Reviews' => $companyReviews,
-            'company Vendor' => $companyVendor->name
+            'company Vendor' => $companyVendor->username
         ]);
     }
 }

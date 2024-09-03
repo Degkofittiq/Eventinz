@@ -95,14 +95,14 @@
                     @csrf
                     <div id="services-wrapper">
                         <?php                   
-                            $servicenames = [
-                                "Photoshoot",
-                                "Videography",
-                                "Editing",
-                                "Branding",
-                                "Graphic Design",
-                                "Logo Design",
-                            ];    
+                            // $servicenames = [
+                            //     "Photoshoot",
+                            //     "Videography",
+                            //     "Editing",
+                            //     "Branding",
+                            //     "Graphic Design",
+                            //     "Logo Design",
+                            // ];    
                         ?>  
                         <table class="table table-bordered">
                             <thead>

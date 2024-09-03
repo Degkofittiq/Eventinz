@@ -231,8 +231,17 @@ class AdminController extends Controller
         // }
 
         $companyServices = Services::where('company_id',$companyId)->get();
+                 
+        $servicenames = [
+            "Photoshoot",
+            "Videography",
+            "Editing",
+            "Branding",
+            "Graphic Design",
+            "Logo Design",
+        ];   
         // dd(count($companyServices));
-        return view('eventinz_admin.vendors_companies.edit_vendors_companies', compact('company','companyServices'));
+        return view('eventinz_admin.vendors_companies.edit_vendors_companies', compact('company','companyServices', "servicenames"));
     }
         
     // Company's services management

@@ -71,4 +71,6 @@ Route::prefix('admin')->middleware('auth')->group(function() {
 
 
     // Events Management
+    Route::get('/admineventlist', [SubscriptionPlanController::class, 'adminEventList'])->name('admin.list.events');
+
 });
