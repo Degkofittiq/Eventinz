@@ -12,7 +12,7 @@ class Subscription extends Model
     protected $guarded = [];
 
     // 
-    public function vendorType(){
-        return $this->belongsTo(VendorServiceType::class);
+    public function vendorType(){ 
+        return $this->belongsTo(VendorServiceType::class,'vendor_service_types_id');
     }
 }

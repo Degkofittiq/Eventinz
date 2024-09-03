@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Eventiz\Admin;
 
 use App\Models\Subscription;
 use Illuminate\Http\Request;
+use App\Models\VendorServiceType;
 use App\Http\Controllers\Controller;
 
 class SubscriptionPlanController extends Controller
@@ -17,14 +18,16 @@ class SubscriptionPlanController extends Controller
 
     public function planDetails(Request $request, $subscriptionId){
         $subscriptionFound = Subscription::find($subscriptionId);
-
-        return view('eventinz_admin.subscriptions.vendors_subscriptions.show_subscription', compact('subscriptionFound'));
+        $vendorTypes = VendorServiceType::all();
+        
+        return view('eventinz_admin.subscriptions.vendors_subscriptions.show_subscription', compact('subscriptionFound', 'vendorTypes'));
     }
 
 
     public function addPlanForm(){
 
-        return view('eventinz_admin.subscriptions.vendors_subscriptions.create_subscription');
+        $vendorTypes = VendorServiceType::all();
+        return view('eventinz_admin.subscriptions.vendors_subscriptions.create_subscription',compact('vendorTypes'));
     }
 
     public function storePlanForm(Request $request){

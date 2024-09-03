@@ -42,10 +42,10 @@
           <tr>
             <th scope="row">{{ $count++ }}</th>
             <td>{{ $subscriptionPlan->name ?? "" }}</td>
-            <td>{{ $subscriptionPlan->vendor_service_types_id ?? "" }}</td>
-            {{-- <td>{{ $subscriptionPlan->vendorType->name ?? "" }}</td> --}}
+            {{-- <td>{{ $subscriptionPlan->vendor_service_types_id ?? "" }}</td> --}}
+            <td>{{ $subscriptionPlan->vendorType->name ?? "" }}</td>
             <td>{{ $subscriptionPlan->price ?? "" }}</td>
-            <td>{{ $subscriptionPlan->duration ?? "" }}</td>
+            <td>{{ ($subscriptionPlan->duration == 3 ||  $subscriptionPlan->duration == 6) ?  $subscriptionPlan->duration . " Months" :  "1 Year" }}</td>
             <td>
               <a href="{{ route('admin.details.subscriptionplan', $subscriptionPlan->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
               {{-- <a href="{{ route('admin.edit.subscriptionplan', $subscriptionPlan->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-pen"></i> Edit</a> --}}

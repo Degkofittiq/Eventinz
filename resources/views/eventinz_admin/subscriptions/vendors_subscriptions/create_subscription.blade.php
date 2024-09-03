@@ -36,17 +36,21 @@
         </div>
         <div class="form-group">
           <label for="vendor_service_types_id">Vendor Type(Single service / Multiple Services) <span style="color: red"><strong>*</strong></span></label>
-          <input name="vendor_service_types_id" id="vendor_service_types_id" class="form-control  @error('vendor_service_types_id') is-invalid @enderror">
+          <select name="vendor_service_types_id" id="vendor_service_types_id" class="form-control  @error('vendor_service_types_id') is-invalid @enderror">
+            @foreach ($vendorTypes as $vendorType)
+              <option value="{{ $vendorType->id }}">{{ $vendorType->name }}</option>                
+            @endforeach
+          </select>
           @error('vendor_service_types_id') <p> {{ $message }} </p> @enderror
         </div>
         <div class="form-group">
           <label for="price">Price($) <span style="color: red"><strong>*</strong></span></label>
-          <input name="price" id="price" class="form-control  @error('price') is-invalid @enderror">
+          <input name="price" type="number" step="0.01" min="0" id="price" class="form-control  @error('price') is-invalid @enderror">
           @error('price') <p> {{ $message }} </p> @enderror
         </div>
         <div class="form-group">
           <label for="duration">Duration <span style="color: red"><strong>*</strong></span></label>
-          <input name="duration" id="duration" class="form-control  @error('duration') is-invalid @enderror">
+          <input name="duration" type="number" step="3" max="12" min="1" id="duration" class="form-control  @error('duration') is-invalid @enderror">
           @error('duration') <p> {{ $message }} </p> @enderror
         </div>
 
