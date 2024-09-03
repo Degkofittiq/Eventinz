@@ -46,7 +46,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link  {{ request()->url() == "" ? "active" : "" }}">
+            <a href="{{ route('admin.list.events') }}" class="nav-link  {{ request()->url() == route('admin.list.events') ? "active" : "" }}">
               <i class="far fa-circle nav-icon"></i>
               <p>
                 Events List
@@ -83,7 +83,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="{{ route('admin.list.subscriptionplans') }}" class="nav-link {{ request()->url() == route('admin.list.payments') ? "active" : "" }}">
+            <a href="{{ route('admin.list.subscriptionplans') }}" class="nav-link {{ request()->url() == route('admin.list.subscriptionplans') ? "active" : "" }}">
               <i class="far fa-circle nav-icon"></i>
               <p>
                 Subscriptions

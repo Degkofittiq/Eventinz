@@ -70,7 +70,7 @@ class EventController extends Controller
                     'start_date' => 'required|date_format:d/m/Y',
                     'aprx_budget' => 'required|numeric|between:0,999999.99',
                     'guest_number' => 'required|integer',
-                    'travel' => 'required|string|min:3',
+                    'travel' => 'required|string|min:2',
                     'country' => 'required|string',
                     'state' => 'required|string',
                     'city' => 'required|string',
@@ -175,11 +175,11 @@ class EventController extends Controller
 
             return response()->json([
                 'message'=> 'Success',
-                 'All events ('. count($events) .')' => count($events) > 0 ? $events : 0,
-                 'Past Events ('. count($pastEvents) .')'=> count($pastEvents) > 0 ? $pastEvents : 0,
-                 'Future Events ('. count($futureEvents) .')'=> count($futureEvents) > 0 ? $futureEvents : 0,
-                 'Current Events ('. count($currentEvents) .')'=> count($currentEvents) > 0 ? $currentEvents : 0,
-                 'Active Events ('. count($activeEvents) .')'=> count($activeEvents) > 0 ? $activeEvents : 0
+                 'All events:' => count($events) > 0 ? ["Events" =>$events,  "Number" =>count($events)] : 0,
+                 'Past Events:'=> count($pastEvents) > 0 ? ["Events" =>$pastEvents,  "Number" =>count($pastEvents)] : 0,
+                 'Future Events: '=> count($futureEvents) > 0 ? ["Events" =>$futureEvents,  "Number" =>count($futureEvents)] : 0,
+                 'Current Events: '=> count($currentEvents) > 0 ? ["Events" =>$currentEvents,  "Number" =>count($currentEvents)] : 0,
+                 'Active Events: '=> count($activeEvents) > 0 ? ["Events" =>$activeEvents,  "Number" =>count($activeEvents)]: 0
              ], 200);
         }else{
             return response()->json([

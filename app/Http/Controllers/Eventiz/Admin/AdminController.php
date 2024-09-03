@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Eventiz\Admin;
 
 use App\Models\User;
+use App\Models\Event;
 use App\Models\Company;
 use App\Models\Services;
 use App\Rules\SameSizeAs;
@@ -231,7 +232,9 @@ class AdminController extends Controller
         // }
 
         $companyServices = Services::where('company_id',$companyId)->get();
-                 
+                // foreach ($companyServices as $companyService) {
+                //     dd($companyService['servicename']);
+                // }
         $servicenames = [
             "Photoshoot",
             "Videography",
@@ -302,7 +305,6 @@ class AdminController extends Controller
         return back()->with('success', 'Company\'s service(s) list has been updated!');
 
     }
-
 
     // Companies Services Categories Management
     public function servicesCategoriesList(){
@@ -391,4 +393,15 @@ class AdminController extends Controller
         }
     }
 
+    // Event Management
+
+    public function adminEventList(){
+        $events = Event::all();
+        return view('eventinz_admin.events.list_events', compact('events'));
+    }
+
+    public function adminEventDetails(){
+        $event = Event::find(1);
+        return view('eventinz_admin.events.details_event', compact('event'));
+    }
 }
