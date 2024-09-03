@@ -50,7 +50,7 @@
         </div>
         <div class="form-group">
           <label for="duration">Duration <span style="color: red"><strong>*</strong></span></label>
-          <input name="duration" type="number" step="3" max="12" min="1" id="duration" class="form-control  @error('duration') is-invalid @enderror">
+          <input name="duration" type="number" max="12" min="1" id="duration" class="form-control  @error('duration') is-invalid @enderror">
           @error('duration') <p> {{ $message }} </p> @enderror
         </div>
 
