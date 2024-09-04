@@ -339,7 +339,9 @@ class CompanyController extends Controller
     public function companyInformation(){
         $user = Auth::user();
         $company = Company::where('users_id', $user->id)->first();
-        $companyServices = Services::where('company_id',$company->id)->get();
+        if ($company) {
+            $companyServices = Services::where('company_id',$company->id)->get();
+        }
         
         if ($company) {
             $companyWithoutUser = $company->makeHidden(['user']);
