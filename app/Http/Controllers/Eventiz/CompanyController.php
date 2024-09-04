@@ -429,7 +429,7 @@ class CompanyController extends Controller
     public function viewMyReviews(){
         $user = Auth::user();
         // $myReview = Review::where('review_cible', $user->id)->groupBy('start_for_cibe')->get();
-        $myReview = DB::select("select * from `reviews` where `review_cible` = ? group by `start_for_cibe`",$user->id);
+        $myReview = DB::select("select * from `reviews` where `review_cible` = ? group by `start_for_cibe`",[$user->id]);
 
 
         if(count($myReview) > 0){
