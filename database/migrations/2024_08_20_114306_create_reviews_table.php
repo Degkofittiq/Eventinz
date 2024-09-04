@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('review_content');
             $table->date('date_review'); //Carbon date and time 
             $table->Integer('start_for_cibe'); // Rate
-            $table->string('status'); // Hide or Show
+            $table->string('status')->nullable(); // Hide or Show
             $table->timestamps();
         });
     }
