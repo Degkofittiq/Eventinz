@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Eventiz\Admin;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Company;
@@ -67,7 +68,9 @@ class AdminController extends Controller
             return redirect()->route('admin.dashboard');
         } else {
             // Déconnecter l'utilisateur et mettre à jour le statut
-            $user->update(['is_user_online' => 'no']);
+            $user->update(['is_user_online' => 'no',
+                'last_time_user_online' => Carbon::now()
+            ]);
             Auth::logout();
             return redirect()->route('/')->with('error', 'You\'re not authorized');
         }
@@ -86,7 +89,7 @@ class AdminController extends Controller
 
         // Récupérer le token actuel depuis l'en-tête Authorization
         // $token = $request->bearerToken();
-        $user->update(['is_user_online' => 'no']);
+        $user->update(['is_user_online' => 'no','last_time_user_online' => Carbon::now()]);
 
         Auth::logout($user);
         return redirect()->route('login')->with('success', 'Logged out successfully');

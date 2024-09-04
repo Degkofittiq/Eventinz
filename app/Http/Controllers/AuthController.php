@@ -240,7 +240,10 @@ class AuthController extends Controller
 
         // Récupérer le token actuel depuis l'en-tête Authorization
         $token = $request->bearerToken();
-        $user->update(['is_user_online' => 'no']);
+        $user->update([
+            'is_user_online' => 'no',
+            'last_time_user_online' => Carbon::now()
+        ]);
 
         if ($token) {
             // Trouver et révoquer le token actuel

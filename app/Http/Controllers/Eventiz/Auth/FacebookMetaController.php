@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Eventiz\Auth;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Company;
 use Illuminate\Support\Str;
@@ -68,7 +69,7 @@ class FacebookMetaController extends Controller
     
             // Connecter l'utilisateur
             Auth::login($user);
-            $user->update(['is_user_online' => 'yes']);
+            $user->update(['is_user_online' => 'yes','last_time_user_online' => Carbon::now()]);
             if ($user->role_id == 2) {
             
                 $userHaveCompanyYet = false;
