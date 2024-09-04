@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Eventiz;
 use App\Models\User;
 use App\Models\Review;
 use App\Models\Company;
+use App\Models\Services;
 use Illuminate\Http\Request;
 use App\Models\VendorCategories;
 use App\Http\Controllers\Controller;
@@ -66,7 +67,16 @@ class VendorController extends Controller
         // dd($id);
         $company = Company::find($id);
         $companyReviews = Review::where('user_id', $company->users_id)->get();
+        $companyServices = Services::where('company_id', $company->id)->get();
         $companyVendor = User::where('id', $company->users_id)->first();
+
+        $vendorCategoryIds = json_decode($company->vendor_categories_id, true);
+        // Récupération des noms des catégories de vendeur
+        $company->vendorCategories = VendorCategories::whereIn('id', $vendorCategoryIds)->get();
+
+        if ($company->vendorCategories->isNotEmpty()) {
+            $companyServicesArray = $company->vendorCategories->pluck('name')->implode(', ');
+        }
 
         return response()->json([
             'company:' => $company->name,
@@ -75,8 +85,9 @@ class VendorController extends Controller
             'company State:' => $company->state,
             'company City:' => $company->city,
             'company Images:' => $company->images,
-            'company Service:' => $company->vendor_service_types_id == 1 ?"Single Service" : "Multiple Services",
-            'company Service(s) Categorie:' => $company->vendor_categories_id,
+            'company Service Type:' => $company->vendor_service_types_id == 1 ?"Single Service" : "Multiple Services",
+            'company Services List:' => $companyServices,
+            'company Service(s) Categorie:' => $companyServicesArray,
             'company Reviews' => $companyReviews,
             'company Vendor' => $companyVendor->username
         ]);

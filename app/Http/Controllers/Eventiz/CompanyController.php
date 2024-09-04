@@ -102,6 +102,52 @@ class CompanyController extends Controller
         }
     }
 
+    //update Company Location
+    public function updateCompanyLocation(Request $request){
+        
+        // Récupérer l'utilisateur authentifié
+        $user = $request->user();
+        $userCompany = Company::where('users_id',$user->id)->first();
+
+        if($user && $user->role_id != 1){
+            try{
+                $locationValidation = $request->validate([
+                    'country' => 'required|string|max:100',
+                    'state' => 'required|string|max:100',
+                    'city' => 'required|string|max:100',
+                ]);
+                
+                $userCompany->update([
+                    'country' => $locationValidation['country'],
+                    'state' => $locationValidation['state'],
+                    'city' => $locationValidation['city']
+                ]);
+               
+                // */
+            } catch (Exception $e) {
+                return response()->json([
+                    'message'=> 'Error',
+                    'error'=> $e->getMessage(),
+                ], 500);
+            }
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'You\'re been update company\'s Location!.'
+            ]); 
+        }elseif ($user && $user->role_id != 2) {
+            return response()->json([
+               'status' => 401,
+               'message' => 'Unauthorized, you need to be a vendor!'
+            ], 401);  // Unauthorized
+        }else{
+            return response()->json([
+               'status' => 401,
+               'message' => 'Unauthorized, you need to be connected!'
+            ], 401);  // Unauthorized
+        }
+    }
+
     // Store Company Images for the profiles    
     public function storeCompanyImages(Request $request){
     
@@ -170,6 +216,49 @@ class CompanyController extends Controller
             ], 401);  // Unauthorized
         }
     }
+
+    public function storeCompanyTagline(Request $request){
+
+        // Récupérer l'utilisateur authentifié
+        $user = $request->user();
+        $userCompany = Company::where('users_id',$user->id)->first();
+
+        if($user && $user->role_id != 1){
+            try{
+
+                $taglineValidation = $request->validate([
+                    'tagline' => 'required|string|max:30', // Validation pour Tagline
+                ]);
+                
+
+                $userCompany->update([
+                    'tagline' => $taglineValidation['tagline']
+                ]);
+               
+                // */
+            } catch (Exception $e) {
+                return response()->json([
+                    'message'=> 'Error',
+                    'error'=> $e->getMessage(),
+                ], 500);
+            }
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'You\'re been update company\'s Tagline!.'
+            ]); 
+        }elseif ($user && $user->role_id != 2) {
+            return response()->json([
+               'status' => 401,
+               'message' => 'Unauthorized, you need to be a vendor!'
+            ], 401);  // Unauthorized
+        }else{
+            return response()->json([
+               'status' => 401,
+               'message' => 'Unauthorized, you need to be connected!'
+            ], 401);  // Unauthorized
+        }
+    }
     
     //Company's services list
     public function storeCompanyServices(Request $request)
@@ -191,14 +280,14 @@ class CompanyController extends Controller
                         'type.*' => 'bail|required|string', // Valider chaque élément du tableau
                         'rate' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
                         'rate.*' => 'bail|required|numeric|regex:/^\d+(\.\d{1,2})?$/', // Valider chaque élément du tableau
-                        'duration' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
-                        'duration.*' => 'bail|required|string', // Valider chaque élément du tableau
-                        'service_price' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
-                        'service_price.*' => 'bail|required|numeric|regex:/^\d+(\.\d{1,2})?$/', // Valider chaque élément du tableau
-                        'is_pay_by_hour' => ['bail', 'array', new SameSizeAs('servicename')], // yes or no
-                        'is_pay_by_hour.*' => 'bail|required|string|min:2', // Valider chaque élément du tableau
+                        // 'duration' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
+                        // 'duration.*' => 'bail|required|string', // Valider chaque élément du tableau
+                        // 'service_price' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
+                        // 'service_price.*' => 'bail|required|numeric|regex:/^\d+(\.\d{1,2})?$/', // Valider chaque élément du tableau
+                        // 'is_pay_by_hour' => ['bail', 'array', new SameSizeAs('servicename')], // yes or no
+                        // 'is_pay_by_hour.*' => 'bail|required|string|min:2', // Valider chaque élément du tableau
                         'subdetails' => 'bail|string|nullable',
-                        'travel' => 'bail|string|nullable',
+                        // 'travel' => 'bail|string|nullable',
                     ]);
     
                     // Accéder aux valeurs avec une valeur par défaut vide si la clé n'existe pas
@@ -220,11 +309,11 @@ class CompanyController extends Controller
                         'servicename' => $service,
                         'type' => $dataValidate['type'][$index],
                         'rate' => $dataValidate['rate'][$index],
-                        'duration' => $dataValidate['duration'][$index],
-                        'service_price' => $dataValidate['service_price'][$index],
-                        'is_pay_by_hour' => $dataValidate['is_pay_by_hour'][$index],
+                        // 'duration' => $dataValidate['duration'][$index],
+                        // 'service_price' => $dataValidate['service_price'][$index],
+                        // 'is_pay_by_hour' => $dataValidate['is_pay_by_hour'][$index],
                         'subdetails' => $subdetails, // Utilisation de la valeur par défaut si la clé n'existe pas
-                        'travel' => $travel, // Utilisation de la valeur par défaut si la clé n'existe pas
+                        // 'travel' => $travel, // Utilisation de la valeur par défaut si la clé n'existe pas
                     ]);
                 }
     
@@ -250,6 +339,7 @@ class CompanyController extends Controller
     public function companyInformation(){
         $user = Auth::user();
         $company = Company::where('users_id', $user->id)->first();
+        $companyServices = Services::where('company_id',$company->id)->get();
         
         if ($company) {
             $companyWithoutUser = $company->makeHidden(['user']);
@@ -266,6 +356,7 @@ class CompanyController extends Controller
                'message' => 'Company summary information',
                'company' => [
                 'Company Name:' => $companyWithoutUser['name'],
+                'Company Tagline:' => $companyWithoutUser['tagline'],
                 'Company country:' => $companyWithoutUser['country'],
                 'Company State:' => $companyWithoutUser['state'],
                 'Company Service type:' => $companyWithoutUser['vendor_service_types_id'] != 1 ? 'Multiple Service' : 'Single Service', //single or multiple
@@ -274,6 +365,7 @@ class CompanyController extends Controller
                 'Company Subscription start date:' => $companyWithoutUser['subscription_start_date'],
                 'Company Subscription end date:' => $companyWithoutUser['subscription_end_date'],
                 'Company Images:' => $filesPath,
+                'Company Services:' => $companyServices
             ],
                'Company Vendor' => [
                 'username' => $companyUser['username'],
@@ -296,7 +388,59 @@ class CompanyController extends Controller
     }
 
     // View my reviews
+    public function viewMyTopReviews(){
+        $user = Auth::user();
+        $myReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')->limit(4)->get();
+
+        $reviewStarts = DB::table('reviews')
+            ->where('review_cible', $user->id)
+            ->select('start_for_cibe')
+            ->get();
+
+        $reviewMoyenne = $reviewStarts->sum('start_for_cibe') / count($myReview);
+        // $myTopReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')limit(5)->get();
+
+        if(count($myReview) > 0){
+            return response()->json([
+               'status' => 200,
+               'message' => 'My Reviews',
+                'Reviews' => $myReview,
+                'Moyenne' => $reviewMoyenne
+            ]);
+        }else{
+            return response()->json([
+                'status' => 200,
+                'message' => 'My Reviews',
+                 'Reviews' => 'No reviews yet !'
+            ], 200);  // Not Found
+        }
+
+    }
+    
+    // View my reviews
     public function viewMyReviews(){
+        $user = Auth::user();
+        // $myReview = Review::where('review_cible', $user->id)->groupBy('start_for_cibe')->get();
+        $myReview = DB::select("select * from `reviews` where `review_cible` = ? group by `start_for_cibe`",$user->id);
+
+
+        if(count($myReview) > 0){
+            return response()->json([
+               'status' => 200,
+               'message' => 'My Reviews',
+                'Reviews' => $myReview
+            ]);
+        }else{
+            return response()->json([
+                'status' => 200,
+                'message' => 'My Reviews',
+                 'Reviews' => 'No reviews yet !'
+            ], 200);  // Not Found
+        }
+
+    }
+
+    public function updateMyReviewsStatus(){
         $user = Auth::user();
         $myReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')->get();
 
@@ -324,7 +468,6 @@ class CompanyController extends Controller
         }
 
     }
-
     
     public function myEventStatistics(){
         // Récupérer l'utilisateur authentifié

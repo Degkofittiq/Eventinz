@@ -265,6 +265,9 @@ class AuthController extends Controller
         $pastEvents = Event::where('user_id', $userFound->id)->whereDate('start_date', '<', now()->format('Y-m-d'))->get();
         $futureEvents = Event::where('user_id', $userFound->id)->whereDate('start_date', '>', now()->format('Y-m-d'))->get();
         $canceledEvents = Event::where('user_id', $userFound->id)->where('cancelstatus', 'Canceled')->get();
+
+         $userFound['user_genders_id'] = json_decode($userFound['user_genders_id'], true); 
+         $userFound['age'] = json_decode($userFound['age'], true); 
          
         return response()->json([
             'user found' => $userFound,
@@ -308,9 +311,17 @@ class AuthController extends Controller
                 // Update user profile image
                 $userValidation['profile_image'] = $filePath;
             }
-
+            // Structurer les données dans le format souhaité
+            $data = [
+                'user_genders_id' => json_encode($userValidation['user_genders_id']), // Encodage en JSON
+                'occupation' => $userValidation['occupation'],
+                'location' => $userValidation['location'],
+                'age' => json_encode($userValidation['age']), // Encodage en JSON
+                'profile_image' => $userValidation['profile_image'] ?? $user->profile_image
+            ];
+            
             // Mettre à jour les informations de l'utilisateur
-            $user->update($userValidation);
+            $user->update($data);
 
             return response()->json([
                 'message' => 'Success',

@@ -60,7 +60,9 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     Route::post('/storecompany', [CompanyController::class, 'storeCompany']);
     Route::post('/storecompanyimages', [CompanyController::class, 'storeCompanyImages']);
     Route::post('/storecompanyservices', [CompanyController::class, 'storeCompanyServices']);
-
+    Route::post('/storecompanytagline', [CompanyController::class, 'storeCompanyTagline']);
+    Route::post('/updatecompanylocation', [CompanyController::class, 'updateCompanyLocation']);
+    
     // Vendor self company details
     Route::get('/companyinformation', [CompanyController::class, 'companyInformation']);
     
@@ -87,6 +89,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
 
     //Review storeReview
     Route::post('addreview/{eventId}', [EventController::class, 'storeReview']);
+    Route::get('/viewmytopreview', [CompanyController::class, 'viewMyTopReviews']);
     Route::get('/viewmyreview', [CompanyController::class, 'viewMyReviews']);
 
     // Quote & Bids for events
