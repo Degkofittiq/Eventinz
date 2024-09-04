@@ -10,6 +10,7 @@ use App\Models\Services;
 use App\Mail\SuccessMail;
 use App\Rules\SameSizeAs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -299,11 +300,20 @@ class CompanyController extends Controller
         $user = Auth::user();
         $myReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')->get();
 
+        $reviewStarts = DB::table('reviews')
+            ->where('review_cible', $user->id)
+            ->select('start_for_cibe')
+            ->get();
+
+        $reviewMoyenne = $reviewStarts->sum('start_for_cibe') / count($myReview);
+        // $myTopReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')limit(5)->get();
+
         if(count($myReview) > 0){
             return response()->json([
                'status' => 200,
                'message' => 'My Reviews',
-                'Reviews' => $myReview
+                'Reviews' => $myReview,
+                'Moyenne' => $reviewMoyenne
             ]);
         }else{
             return response()->json([
