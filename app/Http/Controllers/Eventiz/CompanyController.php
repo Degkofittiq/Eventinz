@@ -347,8 +347,10 @@ class CompanyController extends Controller
             $companyWithoutUser = $company->makeHidden(['user']);
             $companyUser =  $user;
             $filesPath = [];
-            foreach ($companyWithoutUser['images'] as $files) {
-                $filesPath[] = asset('storage/'. $files['file_path']);
+            if ($company->images) {
+                foreach ($companyWithoutUser['images'] as $files) {
+                    $filesPath[] = asset('storage/'. $files['file_path']);
+                }
             }
         }
 
@@ -366,7 +368,7 @@ class CompanyController extends Controller
                 'Company Current subscriptions:' => $companyWithoutUser['subscriptions_id'],
                 'Company Subscription start date:' => $companyWithoutUser['subscription_start_date'],
                 'Company Subscription end date:' => $companyWithoutUser['subscription_end_date'],
-                'Company Images:' => $filesPath,
+                'Company Images:' => !empty($filesPath) ? $filePath : "No files yet",
                 'Company Services:' => $companyServices
             ],
                'Company Vendor' => [
