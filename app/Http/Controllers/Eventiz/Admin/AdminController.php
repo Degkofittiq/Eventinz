@@ -259,25 +259,25 @@ class AdminController extends Controller
         try {
             // Validation des données
             $dataValidate = $request->validate([
-                'servicename' => 'bail|array|min:1', 
-                'servicename.*' => 'bail|string|min:1|required', 
-                'type' => ['bail', 'array', new SameSizeAs('servicename')], 
-                'type.*' => 'bail|required|string', 
-                'rate' => ['bail', 'array', new SameSizeAs('servicename')], 
-                'rate.*' => 'bail|required|numeric|regex:/^\d+(\.\d{1,2})?$/', 
-                'duration' => ['bail', 'array', new SameSizeAs('servicename')], 
-                'duration.*' => 'bail|required|string', 
-                'service_price' => ['bail', 'array', new SameSizeAs('servicename')], 
-                'service_price.*' => 'bail|required|numeric|regex:/^\d+(\.\d{1,2})?$/', 
-                'is_pay_by_hour' => ['bail', 'array', new SameSizeAs('servicename')], 
-                'is_pay_by_hour.*' => 'bail|required|string|min:1', 
+                'servicename' => 'bail|array|min:1', // Le tableau doit contenir au moins 1 élément
+                'servicename.*' => 'bail|string|min:1|required', // Valider chaque élément du tableau
+                'type' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
+                'type.*' => 'bail|required|string', // Valider chaque élément du tableau
+                'rate' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
+                'rate.*' => 'bail|required|numeric|regex:/^\d+(\.\d{1,2})?$/', // Valider chaque élément du tableau
+                // 'duration' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
+                // 'duration.*' => 'bail|required|string', // Valider chaque élément du tableau
+                // 'service_price' => ['bail', 'array', new SameSizeAs('servicename')], // Le tableau doit contenir au moins 1 élément
+                // 'service_price.*' => 'bail|required|numeric|regex:/^\d+(\.\d{1,2})?$/', // Valider chaque élément du tableau
+                // 'is_pay_by_hour' => ['bail', 'array', new SameSizeAs('servicename')], // yes or no
+                // 'is_pay_by_hour.*' => 'bail|required|string|min:2', // Valider chaque élément du tableau
                 'subdetails' => 'bail|string|nullable',
-                'travel' => 'bail|string|nullable',
+                // 'travel' => 'bail|string|nullable',
             ]);
 
             // Accéder aux valeurs avec une valeur par défaut vide si la clé n'existe pas
             $subdetails = $dataValidate['subdetails'] ?? "";
-            $travel = $dataValidate['travel'] ?? "No";
+            // $travel = $dataValidate['travel'] ?? "No";
 
         } catch (ValidationException $e) {
             // Retourner les erreurs de validation
@@ -289,16 +289,12 @@ class AdminController extends Controller
 
         // Boucle sur les services pour créer de nouvelles entrées
         foreach ($dataValidate['servicename'] as $index => $serviceName) {
-            Services::create([
+            Services::create([ //servicename-type-rate-subdetails
                 'company_id' => $companyId,
                 'servicename' => $serviceName,
                 'type' => $dataValidate['type'][$index],
                 'rate' => $dataValidate['rate'][$index],
-                'duration' => $dataValidate['duration'][$index],
-                'service_price' => $dataValidate['service_price'][$index],
-                'is_pay_by_hour' => $dataValidate['is_pay_by_hour'][$index],
-                'subdetails' => $subdetails,
-                'travel' => $travel,
+                'subdetails' => $subdetails
             ]);
         }
 

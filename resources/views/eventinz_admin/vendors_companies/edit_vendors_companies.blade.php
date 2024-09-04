@@ -110,9 +110,6 @@
                                     <th>Name</th>
                                     <th>Type</th>
                                     <th>Rate</th>
-                                    <th>Duration</th>
-                                    <th>Service Price</th>
-                                    <th>Pay by Hour</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -139,22 +136,7 @@
                                         <td>
                                             <input type="text" name="rate[]" class="form-control" placeholder="Rate" value="{{ $companyService->rate }}">
                                         </td>
-                                        <td>
-                                            <input type="text" name="duration[]" class="form-control" placeholder="Duration" value="{{ $companyService->duration }}">
-                                        </td>
-                                        <td>
-                                            <input type="number" step="0.01" name="service_price[]" class="form-control" placeholder="Service Price" value="{{ $companyService->service_price }}">
-                                        </td>
-                                        <td>
-                                            <select name="is_pay_by_hour[]" class="form-control">
-                                                <option value="Yes" @if ($companyService->is_pay_by_hour == 'Yes') selected @endif>Yes</option>
-                                                <option value="No" @if ($companyService->is_pay_by_hour == 'No') selected @endif>No</option>
-                                            </select>
-                                        </td>
-                                        <td>
-
-                                        </td>
-                                        {{-- <td><button type="button" class="btn btn-danger btn-remove-service">Remove</button></td> --}}
+                                        <td><button type="button" class="btn btn-danger btn-remove-service">Remove</button></td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -169,11 +151,11 @@
                         <label>Subdetails</label>
                         <textarea class="form-control" rows="3" placeholder="Enter subdetails..." style="height: 100px;" name="subdetails">{{ $companyService->subdetails }}</textarea>
                     </div>
-                
+{{--                 
                     <div class="form-check mt-3">
                         <input type="checkbox" class="form-check-input" id="travel" name="travel" value="yes" @if ($companyService->travel == "yes") checked @endif>
                         <label class="form-check-label" for="travel">Travel</label>
-                    </div>
+                    </div> --}}
                 
                     <div class="btn-group mt-3">  
                         <button type="submit" class="btn btn-info mx-2">
@@ -220,19 +202,7 @@
                     </select>
                 </td>
                 <td>
-                    <input type="text" name="rate[]" class="form-control" placeholder="Rate">
-                </td>
-                <td>
-                    <input type="text" name="duration[]" class="form-control" placeholder="Duration">
-                </td>
-                <td>
-                    <input type="number" step="0.01" name="service_price[]" class="form-control" placeholder="Service Price">
-                </td>
-                <td>
-                    <select name="is_pay_by_hour[]" class="form-control">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <input type="number" name="rate[]" class="form-control" placeholder="Rate">
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger btn-remove-service">Remove</button>

@@ -324,7 +324,7 @@ class CompanyController extends Controller
             } else {
                 return response()->json([
                     'message' => 'Unauthorized',
-                    'error' => 'You need to be a vendor to add a service list!'
+                    'error' => 'You need have a company before add a service list!'
                 ], 403);
             }
         } else {
@@ -390,21 +390,25 @@ class CompanyController extends Controller
     // View my reviews
     public function viewMyTopReviews(){
         $user = Auth::user();
-        $myReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')->limit(4)->get();
+        $myTopReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')->limit(4)->get();
 
         $reviewStarts = DB::table('reviews')
             ->where('review_cible', $user->id)
             ->select('start_for_cibe')
             ->get();
 
-        $reviewMoyenne = $reviewStarts->sum('start_for_cibe') / count($myReview);
+        $allMyReviews = Review::where('review_cible', $user->id)->get() ;
+        $reviewMoyenne = 0;
+        if (count($allMyReviews)) {
+            $reviewMoyenne = $reviewStarts->sum('start_for_cibe') / count($allMyReviews);
+        }
         // $myTopReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')limit(5)->get();
 
-        if(count($myReview) > 0){
+        if(count($myTopReview) > 0){
             return response()->json([
                'status' => 200,
                'message' => 'My Reviews',
-                'Reviews' => $myReview,
+                'Reviews' => $myTopReview,
                 'Moyenne' => $reviewMoyenne
             ]);
         }else{
@@ -440,25 +444,41 @@ class CompanyController extends Controller
 
     }
 
-    public function updateMyReviewsStatus(){
+    public function updateMyReviewsStatus(Request $request){
         $user = Auth::user();
-        $myReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')->get();
+        $myReviews = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')->limit(4)->get();
+        $myfirstTopReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')->first();
 
-        $reviewStarts = DB::table('reviews')
-            ->where('review_cible', $user->id)
-            ->select('start_for_cibe')
-            ->get();
+        // dd($myfirstTopReview->status);
 
-        $reviewMoyenne = $reviewStarts->sum('start_for_cibe') / count($myReview);
-        // $myTopReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')limit(5)->get();
+        if(count($myReviews) > 0){
+            if ($myfirstTopReview->status == "" || $myfirstTopReview->status == "hide" ) {
 
-        if(count($myReview) > 0){
-            return response()->json([
-               'status' => 200,
-               'message' => 'My Reviews',
-                'Reviews' => $myReview,
-                'Moyenne' => $reviewMoyenne
-            ]);
+                foreach ($myReviews as $myReview) {
+                    $myReview->update([
+                        "status" => "show"
+                    ]);
+                }
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Top reviews are been hide',
+                    'myfirstTopReview'=> $myfirstTopReview
+                ]);
+            } else {
+
+                foreach ($myReviews as $myReview) {
+                    $myReview->update([
+                        "status" => "hide"
+                    ]);
+                }
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Top reviews are been hide',
+                    'myfirstTopReview'=> $myfirstTopReview
+                ]);
+            }
+            
         }else{
             return response()->json([
                 'status' => 200,

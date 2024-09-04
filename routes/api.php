@@ -91,6 +91,8 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     Route::post('addreview/{eventId}', [EventController::class, 'storeReview']);
     Route::get('/viewmytopreview', [CompanyController::class, 'viewMyTopReviews']);
     Route::get('/viewmyreview', [CompanyController::class, 'viewMyReviews']);
+    // Hide | Show top reviews
+    Route::post('/statustopreviews', [CompanyController::class,'updateMyReviewsStatus']);
 
     // Quote & Bids for events
     Route::post('addquote/{eventId}', [EventController::class, 'storeQuote']); // Add Quote 
