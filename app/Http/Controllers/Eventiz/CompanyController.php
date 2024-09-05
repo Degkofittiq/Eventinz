@@ -397,7 +397,7 @@ class CompanyController extends Controller
         $myTopReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')->limit(4)->get();
 
         $reviewStarts = DB::table('reviews')
-            ->where('review_cible', $user->id)
+            ->where('review_cible', [$user->id])
             ->select('start_for_cibe')
             ->get();
 
