@@ -15,7 +15,7 @@ class Event extends Model
     
     public function eventOwner()
     {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function eventType()

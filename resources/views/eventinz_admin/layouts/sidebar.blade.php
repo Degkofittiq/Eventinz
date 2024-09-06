@@ -9,14 +9,12 @@
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="{{ asset('AdminTemplate/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+        <div class="image" style="position: relative; display: inline-block;">
+          <img src="{{ asset('AdminTemplate/dist/img/user-avatars-thumbnail_2.png') }}" class="img-circle elevation-2 bg-white" alt="User Image" style="border: none"> 
+          <span style="position: absolute; bottom: 1px; right: 1px; background-color: #00ff00; color: white; border: none; border-radius: 50%; padding: 5px; cursor: pointer;"></span>
         </div>
         <div class="info">
           <a href="{{ route('admin.dashboard') }}" class="d-block">@UserAdmin</a>
-          <div class="small">
-            <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-          </div>
         </div>
       </div>
 

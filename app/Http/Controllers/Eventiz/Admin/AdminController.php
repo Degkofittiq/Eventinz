@@ -121,8 +121,70 @@ class AdminController extends Controller
 
     public function userDetails(Request $request, $userId){
         $userFound = User::find($userId);
+         
+        
+        if($userFound->role_id == 1){
+            $allEvents = Event::where('user_id',$userFound->id)->get(); // All 
 
-        return view('eventinz_admin.hosts_and_vendors.details_users', compact('userFound'));
+            $futureEvents = Event::where('user_id',$userFound->id)->where('cancelstatus',$userFound->id)->get(); // Upcomming
+
+            $completedEvents = Event::where('user_id',$userFound->id)->where('cancelstatus','completed')->get(); // completed
+
+            $canceledEvents = Event::where('user_id',$userFound->id)->where('cancelstatus','canceled')->get(); // Canceled
+
+            $activeEvents = Event::where('user_id',$userFound->id)->where('status', 'Yes')->get(); // Active
+
+            $eventStatistics = [
+                'message'=> 'Success',
+                 'All Events'=> count($allEvents) > 0 ? $allEvents : [],
+                 'Future Events'=> count($futureEvents) > 0 ? $futureEvents : [],
+                 'Completed Events'=> count($completedEvents) > 0 ? $completedEvents : [],
+                 'Canceled Events'=> count($canceledEvents) > 0 ? $canceledEvents : [],
+                 'Active Events'=> count($activeEvents) > 0 ? $activeEvents : []
+             ];
+        }
+        if($userFound->role_id == 2){
+            $allEvents = Event::where(function($query) use ($userFound) {
+                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($userFound->id)])
+                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($userFound->id)]);
+            })->get(); // All 
+
+            $futureEvents = Event::whereDate('start_date', '>', now()->format('Y-m-d'))
+            ->where(function($query) use ($userFound) {
+                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($userFound->id)])
+                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($userFound->id)]);
+            })->get(); // Upcomming
+
+            $completedEvents = Event::where('cancelstatus','completed')
+            ->where(function($query) use ($userFound) {
+                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($userFound->id)])
+                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($userFound->id)]);
+            })->get(); // completed
+
+            $canceledEvents = Event::where('cancelstatus','canceled')
+            ->where(function($query) use ($userFound) {
+                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($userFound->id)])
+                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($userFound->id)]);
+            })->get(); // Canceled
+
+            $activeEvents = Event::where('status', 'Yes')
+            ->where(function($query) use ($userFound) {
+                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($userFound->id)])
+                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($userFound->id)]);
+            })->get(); // Active
+
+            $eventStatistics = [
+                'message'=> 'Success',
+                 'All Events'=> count($allEvents) > 0 ? $allEvents : [],
+                 'Future Events'=> count($futureEvents) > 0 ? $futureEvents : [],
+                 'Completed Events'=> count($completedEvents) > 0 ? $completedEvents : [],
+                 'Canceled Events'=> count($canceledEvents) > 0 ? $canceledEvents : [],
+                 'Active Events'=> count($activeEvents) > 0 ? $activeEvents : []
+             ];
+        }
+
+
+        return view('eventinz_admin.hosts_and_vendors.details_users', compact('userFound','eventStatistics'));
     }
     // Add Category
     public function addCategory(){
@@ -404,8 +466,8 @@ class AdminController extends Controller
         return view('eventinz_admin.events.list_events', compact('events'));
     }
 
-    public function adminEventDetails(){
-        $event = Event::find(1);
+    public function adminEventDetails(Request $request, $eventId){
+        $event = Event::find($eventId);
         return view('eventinz_admin.events.details_event', compact('event'));
     }
 }

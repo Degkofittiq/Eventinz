@@ -53,7 +53,7 @@
             <td>{{ $user->role_id == 1 ? "Host" : "Vendor" }}</td>
             <td>
                 @if ($user->profile_image == "")
-                    <img src="{{ asset('AdminTemplate/dist/img/user2-160x160.jpg') }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black">
+                    <img src="{{ asset('AdminTemplate/dist/img/user-avatars-thumbnail_2.png') }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black">
                 @else
                     <img src="{{ asset('storage/'. $user->profile_image) }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black">
                 @endif
