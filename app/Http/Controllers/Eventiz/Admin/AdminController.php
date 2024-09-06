@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Eventiz\Admin;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Event;
+use App\Models\Review;
 use App\Models\Company;
 use App\Models\Services;
 use App\Rules\SameSizeAs;
@@ -469,5 +470,21 @@ class AdminController extends Controller
     public function adminEventDetails(Request $request, $eventId){
         $event = Event::find($eventId);
         return view('eventinz_admin.events.details_event', compact('event'));
+    }
+
+    public function adminReviewsList(){
+        $allReviews = Review::all();
+        return view('eventinz_admin.hosts_vendors_reviews.list_reviews', compact('allReviews'));
+    }
+
+    public function adminReviewDetails(Request $request, $reviewId){
+        $reviewFound = Review::find($reviewId);
+
+        return view('eventinz_admin.hosts_vendors_reviews.details_reviews', compact('reviewFound'));
+    }
+
+    public function adminReviewUpdate(){
+        
+        return back()->with('success', 'Review has been update');
     }
 }

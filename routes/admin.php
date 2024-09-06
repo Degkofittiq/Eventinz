@@ -75,4 +75,10 @@ Route::prefix('admin')->middleware('auth')->group(function() {
     Route::get('/admineventlist', [AdminController::class, 'adminEventList'])->name('admin.list.events');
     Route::get('/admineventdetail/{eventId}', [AdminController::class, 'adminEventDetails'])->name('admin.details.event');
 
+    // Reviews 
+    Route::get('/adminreviewlist', [AdminController::class, 'adminReviewsList'])->name('admin.list.reviews');
+    Route::get('/adminreviewdetails/{reviewId}', [AdminController::class, 'adminReviewDetails'])->name('admin.show.review');
+    Route::post('/adminreviewupdate/{reviewId}', [AdminController::class, 'adminReviewUpdate'])->name('admin.update.review'); //Only the status
+    
+
 });

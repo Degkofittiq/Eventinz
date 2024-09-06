@@ -89,6 +89,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="{{ route('admin.list.reviews') }}" class="nav-link {{ request()->url() == route('admin.list.subscriptionplans') ? "active" : "" }}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Reviews
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="{{ route('admin.list.payments') }}" class="nav-link {{ request()->url() == route('admin.list.payments') ? "active" : "" }}">
               <i class="far fa-circle nav-icon"></i>
               <p>
