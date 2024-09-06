@@ -71,7 +71,7 @@
                 List:
             </strong> 
             @foreach ($eventStatistics['All Events'] as $item)
-                <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a>
+                <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
             @endforeach
         </td>
     </tr>
@@ -83,7 +83,7 @@
                 List:
             </strong> 
             @foreach ($eventStatistics['Active Events'] as $item)
-                <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a>
+                <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
             @endforeach
         </td>
     </tr>
@@ -95,7 +95,7 @@
                 List:
             </strong> 
             @foreach ($eventStatistics['Completed Events'] as $item)
-                <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a>
+                <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
             @endforeach
         </td>
     </tr>
@@ -107,7 +107,7 @@
                 List:
             </strong> 
             @foreach ($eventStatistics['Future Events'] as $item)
-                <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a>
+                <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
             @endforeach
         </td>
     </tr>
@@ -119,7 +119,7 @@
                 List:
             </strong> 
             @foreach ($eventStatistics['Canceled Events'] as $item)
-                <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a>
+                <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
             @endforeach
         </td>
     </tr>

@@ -20,7 +20,7 @@ class Event extends Model
 
     public function eventType()
     {
-        return $this->belongsTo(EventType::class, 'id');
+        return $this->belongsTo(EventType::class, 'event_type_id');
     }
 
     public function vendorTypes()
