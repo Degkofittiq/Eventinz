@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Models\VendorCategories;
 
 class CompanyController extends Controller
 {
@@ -347,11 +348,21 @@ class CompanyController extends Controller
             $companyWithoutUser = $company->makeHidden(['user']);
             $companyUser =  $user;
             $filesPath = [];
+
             if ($company->images) {
                 foreach ($companyWithoutUser['images'] as $files) {
                     $filesPath[] = asset('storage/'. $files['file_path']);
                 }
             }
+            
+            $vendorCategoryIds = json_decode($company->vendor_categories_id, true);
+            // Récupération des noms des catégories de vendeur
+            $company->vendorCategories = VendorCategories::whereIn('id', $vendorCategoryIds)->get();
+
+            if ($company->vendorCategories->isNotEmpty()) {
+                $companyServicesArray = $company->vendorCategories->pluck('name')->toArray();
+            }
+
         }
 
         if($user->role_id != 1 && $company){
@@ -359,17 +370,17 @@ class CompanyController extends Controller
                'status' => 200,
                'message' => 'Company summary information',
                'company' => [
-                'Company Name:' => $companyWithoutUser['name'],
-                'Company Tagline:' => $companyWithoutUser['tagline'],
-                'Company country:' => $companyWithoutUser['country'],
-                'Company State:' => $companyWithoutUser['state'],
-                'Company Service type:' => $companyWithoutUser['vendor_service_types_id'] != 1 ? 'Multiple Service' : 'Single Service', //single or multiple
-                'Company Vendor categories:' => $companyWithoutUser['vendor_categories_id'],
-                'Company Current subscriptions:' => $companyWithoutUser['subscriptions_id'],
-                'Company Subscription start date:' => $companyWithoutUser['subscription_start_date'],
-                'Company Subscription end date:' => $companyWithoutUser['subscription_end_date'],
-                'Company Images:' => !empty($filesPath) ? $filePath : "No files yet",
-                'Company Services:' => $companyServices
+                'Company Name' => $companyWithoutUser['name'],
+                'Company Tagline' => $companyWithoutUser['tagline'],
+                'Company country' => $companyWithoutUser['country'],
+                'Company State' => $companyWithoutUser['state'],
+                'Company Service type' => $companyWithoutUser['vendor_service_types_id'] != 1 ? 'Multiple Service' : 'Single Service', //single or multiple
+                'Company Vendor categories' => $companyServicesArray,
+                'Company Current subscriptions' => $companyWithoutUser['subscriptions_id'],
+                'Company Subscription start date' => $companyWithoutUser['subscription_start_date'],
+                'Company Subscription end date' => $companyWithoutUser['subscription_end_date'],
+                'Company Images' => !empty($filesPath) ? $filePath : "No files yet",
+                'Company Services' => $companyServices
             ],
                'Company Vendor' => [
                 'username' => $companyUser['username'],

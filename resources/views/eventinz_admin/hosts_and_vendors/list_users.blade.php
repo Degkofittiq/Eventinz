@@ -35,6 +35,7 @@
             <th scope="col">Credits</th>
             <th scope="col">User Type</th>
             <th scope="col">Profile Image</th>
+            <th scope="col">Last time Online</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -56,6 +57,13 @@
                 @else
                     <img src="{{ asset('storage/'. $users->profile_image) }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black">
                 @endif
+            </td>
+            <td>
+              @if ($users->last_time_user_online == null)
+                  <span>N/A</span>
+              @else
+                {{ \Carbon\Carbon::now()->diffForHumans($users->last_time_user_online) }}ago
+              @endif
             </td>
             <td>
               <a href="#"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
