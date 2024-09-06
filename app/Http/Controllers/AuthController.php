@@ -144,7 +144,8 @@ class AuthController extends Controller
 
         if ($user->otp == $otpValidation['otp']) {
             $user->update([
-                'is_otp_valid' => 'yes'
+                'is_otp_valid' => 'yes',
+                'is_user_online' => 'yes'
             ]);
         
 
