@@ -41,38 +41,38 @@
         </thead>
         <tbody>
           <?php  $count = 1;  ?>
-          @forelse ($users as $users)
+          @forelse ($users as $user)
               
           <tr>
             <th scope="row">{{ $count++ }}</th>
-            <td>{{ $users->generic_id }}</td>
-            <td>{{ $users->name }}</td>
-            <td>{{ $users->username }}</td>
-            <td>{{ $users->email }}</td>
-            <td>{{ $users->credit }}</td>
-            <td>{{ $users->role_id == 1 ? "Host" : "Vendor" }}</td>
+            <td>{{ $user->generic_id }}</td>
+            <td>{{ $user->name }}</td>
+            <td>{{ $user->username }}</td>
+            <td>{{ $user->email }}</td>
+            <td>{{ $user->credit }}</td>
+            <td>{{ $user->role_id == 1 ? "Host" : "Vendor" }}</td>
             <td>
-                @if ($users->profile_image == "")
+                @if ($user->profile_image == "")
                     <img src="{{ asset('AdminTemplate/dist/img/user2-160x160.jpg') }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black">
                 @else
-                    <img src="{{ asset('storage/'. $users->profile_image) }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black">
+                    <img src="{{ asset('storage/'. $user->profile_image) }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black">
                 @endif
             </td>
             <td>
-              @if ($users->last_time_user_online == null)
+              @if ($user->last_time_user_online == null)
                   <span>N/A</span>
               @else
-                {{ \Carbon\Carbon::now()->diffForHumans($users->last_time_user_online) }}ago
+                {{ \Carbon\Carbon::now()->diffForHumans($user->last_time_user_online) }}ago
               @endif
             </td>
             <td>
-              <a href="#"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
-              {{-- <a href="{{ route('admin.deleteform.users', $users->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a> --}}
+              <a href="{{ route('admin.details.user',$user->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
+              {{-- <a href="{{ route('admin.deleteform.user', $user->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a> --}}
             </td>
           </tr>
           @empty
               <div class="alert alert-warning">
-                No users yet
+                No user yet
               </div>
           @endforelse
         </tbody>

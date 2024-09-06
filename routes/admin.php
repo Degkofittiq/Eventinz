@@ -21,6 +21,7 @@ Route::prefix('admin')->middleware('auth')->group(function() {
 
     // Autres routes d'administration
     Route::get('/userslist', [AdminController::class, 'usersList'])->name('admin.userslist.index');
+    Route::get('/userdetails/{userId}', [AdminController::class, 'userDetails'])->name('admin.details.user');
 
     // Categories Management
     Route::get('/addcategory', [AdminController::class, 'addCategory'])->name('admin.add.category');

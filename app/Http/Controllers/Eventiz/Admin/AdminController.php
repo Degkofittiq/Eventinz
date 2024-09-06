@@ -119,6 +119,11 @@ class AdminController extends Controller
         return view('eventinz_admin.hosts_and_vendors.list_users', compact('users'));
     }
 
+    public function userDetails(Request $request, $userId){
+        $userFound = User::find($userId);
+
+        return view('eventinz_admin.hosts_and_vendors.details_users', compact('userFound'));
+    }
     // Add Category
     public function addCategory(){
         $categories= VendorCategories::all();
