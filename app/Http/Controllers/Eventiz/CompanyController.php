@@ -402,6 +402,55 @@ class CompanyController extends Controller
         }
     }
 
+    public function storeCompanySubdetails(Request $request){
+
+            // Récupérer l'utilisateur authentifié
+            $user = Auth::user();
+        
+            if ($user && $user->role_id != 1) {
+                // Récupération de l'entreprise de l'utilisateur
+                $userCompany = Company::where('users_id', $user->id)->first();
+                
+                if ($userCompany) {
+                    try {
+                        // Validation des données
+                        $dataValidate = $request->validate([
+                            'subdetails' => 'bail|string|nullable|max:255'
+                        ]);
+        
+                    } catch (ValidationException $e) {
+                        // Retourner les erreurs de validation
+                        return response()->json([
+                            'message' => 'Validation Error',
+                            'errors' => $e->errors(),
+                        ], 422);
+                    }
+                        
+                    $companyServices = Services::where('company_id', $userCompany->id)->get();
+                    foreach ($companyServices as $companyService) {       
+                        $companyService->update([
+                            'subdetails' => $dataValidate['subdetails']
+                        ]);
+                    }
+
+                    return response()->json([
+                        'message' => 'Success',
+                        'error' => 'Your services subdetails has been registered!'
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'message' => 'Unauthorized',
+                        'error' => 'You need have a company before add a service subdetails!'
+                    ], 403);
+                }
+            } else {
+                return response()->json([
+                    'message' => 'Unauthorized',
+                    'error' => 'You need to be a vendor to add a service subdetails!'
+                ], 403);
+            }
+        }
+
     // View my reviews
     public function viewMyTopReviews(){
         $user = Auth::user();

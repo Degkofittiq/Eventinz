@@ -60,6 +60,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     Route::post('/storecompany', [CompanyController::class, 'storeCompany']);
     Route::post('/storecompanyimages', [CompanyController::class, 'storeCompanyImages']);
     Route::post('/storecompanyservices', [CompanyController::class, 'storeCompanyServices']);
+    Route::post('/storecompanysubdetails', [CompanyController::class, 'storeCompanySubdetails']);
     Route::post('/storecompanytagline', [CompanyController::class, 'storeCompanyTagline']);
     Route::post('/updatecompanylocation', [CompanyController::class, 'updateCompanyLocation']);
     
