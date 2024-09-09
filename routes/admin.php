@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Eventiz\Admin\AdminController;
 use App\Http\Controllers\Eventiz\Admin\SubscriptionPlanController;
 
@@ -81,4 +82,7 @@ Route::prefix('admin')->middleware('auth')->group(function() {
     Route::post('/adminreviewupdate/{reviewId}', [AdminController::class, 'adminReviewUpdate'])->name('admin.update.review'); //Only the status
     
 
+    // user OTP management 
+    Route::get('/userresendotp', [AuthController::class, 'userResendOTPForm'])->name('admin.resendform.otp');
+    Route::post('/userresendotp', [AuthController::class, 'resendOTP'])->name('admin.resend.otp'); //send the new otp
 });

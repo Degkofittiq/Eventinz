@@ -479,12 +479,27 @@ class AdminController extends Controller
 
     public function adminReviewDetails(Request $request, $reviewId){
         $reviewFound = Review::find($reviewId);
-
-        return view('eventinz_admin.hosts_vendors_reviews.details_reviews', compact('reviewFound'));
+        if ($reviewFound) {
+            return view('eventinz_admin.hosts_vendors_reviews.details_reviews', compact('reviewFound'));
+        } else {
+            return back()->with('error', 'Review not found');
+        }
+        
     }
 
-    public function adminReviewUpdate(){
+    public function adminReviewUpdate(Request $request, $reviewId){
+
+        $reviewFound = Review::where('id', $reviewId)->first();
+        if ($reviewFound) {
+
+            $reviewFound->update([
+                "status" => $request->status
+            ]);
+            return back()->with('success', 'Review\'s status has been update');
+
+        } else {
+            return back()->with('error', 'Review not found');
+        }
         
-        return back()->with('success', 'Review has been update');
     }
 }

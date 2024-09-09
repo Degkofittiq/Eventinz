@@ -167,6 +167,47 @@ class AuthController extends Controller
 
     }
 
+
+    //Resend OTP | Only the Admin is able to do this actions
+
+    public function userResendOTPForm(){
+        $allusers = User::where('role_id',1)->orWhere('role_id',2)->get();
+        return view('eventinz_admin.otps_management.resend_otp', compact('allusers'));
+    }
+
+    public function resendOTP(Request $request){
+        try{
+            $request->validate([
+                'email' => 'required|string|email'
+            ]);
+            // Trouver l'utilisateur par son email
+            $user = User::where('email', $request->email)->first();
+        }catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $e->errors(),
+            ], 422);
+        }
+
+        if ($user) {
+
+            // Génération de l'OTP
+            $otp = rand(100000, 999999);
+    
+            // Envoi de l'OTP par email
+            Mail::to($request->email)->send(new OTPMail($otp));     
+            
+            // On desactive l'acces au compte en attente de la validation du nouveau OTP
+            $user->update(['otp' => $otp, 'is_otp_valid' => 'no']);
+            return back()->with('success', 'New OTP sent successfully.');
+        } else {
+            return back()->with('error', 'User not found');
+        }
+        
+        
+    }
+
+
     // public function showLoginForm(){
     //     // return view('auth.login');
     //     return 'Show login form';

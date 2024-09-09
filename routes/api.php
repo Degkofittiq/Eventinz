@@ -36,8 +36,14 @@ Route::get('/session/{role_id}', function () {
 // Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 // Auth routes
 Route::post('register', [AuthController::class, 'register']);
+// Route::post('resendotp', [AuthController::class, 'resendOTP']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
 Route::post('/login', [AuthController::class, 'login']);
+
+// Forgot password and reset password
+Route::post('password/email', [AuthController::class, 'forgotPassword']);
+Route::post('password/resetOTP', [AuthController::class, 'verifyResetOTP']);
+Route::post('password/reset', [AuthController::class, 'resetPassword']);
 
 Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     // Route::post('/send-otp', [OtpController::class, 'sendOtp']); Hors Service
@@ -49,11 +55,6 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
 
     // // Update password
     // Route::patch('/password', [AuthController::class, 'updatePassword']);
-    
-    // Forgot password and reset password
-    Route::post('password/email', [AuthController::class, 'forgotPassword']);
-    Route::post('password/resetOTP', [AuthController::class, 'verifyResetOTP']);
-    Route::post('password/reset', [AuthController::class, 'resetPassword']);
 
     // Store a company
     Route::get('/storecompany', [CompanyController::class, 'createCompanyForm']);

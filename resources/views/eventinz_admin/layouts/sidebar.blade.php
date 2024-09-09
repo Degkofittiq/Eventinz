@@ -44,6 +44,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="{{ route('admin.resendform.otp') }}" class="nav-link {{ request()->url() == route('admin.resendform.otp') ? "active" : "" }}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Resend OTP
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="{{ route('admin.list.events') }}" class="nav-link  {{ request()->url() == route('admin.list.events') ? "active" : "" }}">
               <i class="far fa-circle nav-icon"></i>
               <p>
@@ -89,7 +97,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('admin.list.reviews') }}" class="nav-link {{ request()->url() == route('admin.list.subscriptionplans') ? "active" : "" }}">
+            <a href="{{ route('admin.list.reviews') }}" class="nav-link {{ request()->url() == route('admin.list.reviews') ? "active" : "" }}">
               <i class="far fa-circle nav-icon"></i>
               <p>
                 Reviews
