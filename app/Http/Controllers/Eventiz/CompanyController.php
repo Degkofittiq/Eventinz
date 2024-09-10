@@ -125,7 +125,7 @@ class CompanyController extends Controller
                 
             return response()->json([
                 'status' => 200,
-                'Subscription choose' => $singleServiceSubscriptions
+                'Subscription choose' => $subcription
             ]);
         } else {
             return response()->json([
@@ -268,7 +268,7 @@ class CompanyController extends Controller
             try{
 
                 $taglineValidation = $request->validate([
-                    'tagline' => 'required|string|max:30', // Validation pour Tagline
+                    'tagline' => 'required|string|max:25', // Validation pour Tagline
                 ]);
                 
 
