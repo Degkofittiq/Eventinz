@@ -9,12 +9,13 @@ use App\Models\Company;
 use App\Models\Services;
 use App\Mail\SuccessMail;
 use App\Rules\SameSizeAs;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
+use App\Models\VendorCategories;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use App\Models\VendorCategories;
 
 class CompanyController extends Controller
 {
@@ -103,6 +104,19 @@ class CompanyController extends Controller
         }
     }
 
+    // Subscription
+    public function subscriptionList(){
+        // get all subscription list
+        $singleServiceSubscriptions = Subscription::where('vendor_service_types_id', 1)->get();
+        $multipleServiceSubscriptions = Subscription::where('vendor_service_types_id', 2)->get();
+
+        return response()->json([
+            'status' => 200,
+            'Single Service' => $singleServiceSubscriptions,
+            'Multiple Service' => $multipleServiceSubscriptions
+        ]);
+    }
+
     //update Company Location
     public function updateCompanyLocation(Request $request){
         
@@ -169,7 +183,9 @@ class CompanyController extends Controller
                 if ($request->hasFile('images')) {
                     foreach ($request->file('images') as $file) {
                         $fileName = $companyName . '_' . time() . '_' . $file->getClientOriginalName();
-                        $filePath = $file->storeAs('companiesImages', $fileName, 'public');
+                        // $file = $request->file('images');
+                        // $filePath = $file->storeAs('companiesImages', $fileName, 'public');
+                        $filePath = Storage::disk('s3')->putFileAs('companiesImages', $file, $fileName);
 
                         // $imageData[] = [
                         //     'file_name' => $fileName,

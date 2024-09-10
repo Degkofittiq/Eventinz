@@ -203,10 +203,45 @@ class AuthController extends Controller
         } else {
             return back()->with('error', 'User not found');
         }
-        
-        
     }
 
+    public function userResendOTP(Request $request){
+        try{
+            $request->validate([
+                'email' => 'required|string|email'
+            ]);
+            // Trouver l'utilisateur par son email
+            $user = User::where('email', $request->email)->first();
+        }catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $e->errors(),
+            ], 422);
+        }
+
+        if ($user) {
+
+            // Génération de l'OTP
+            $otp = rand(100000, 999999);
+    
+            // Envoi de l'OTP par email
+            Mail::to($request->email)->send(new OTPMail($otp));     
+            
+            // On desactive l'acces au compte en attente de la validation du nouveau OTP
+            $user->update(['otp' => $otp, 'is_otp_valid' => 'no']);
+            // return back()->with('success', 'New OTP sent successfully.');
+            return response()->json([
+                'message' => 'success',
+                'success' => 'New OTP sent successfully to:'.$request->email
+            ], 200);
+        } else {
+            // return back()->with('error', 'User not found');
+            return response()->json([
+                'message' => 'error',
+                'error' => 'User not found',
+            ], 400);
+        }
+    }
 
     // public function showLoginForm(){
     //     // return view('auth.login');
@@ -350,8 +385,9 @@ class AuthController extends Controller
                 $userName = preg_replace('/\s+/', '_', $user->name);
                 $file = $request->file('profile_image');
                 $fileName = $userName . '_' . time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('usersProfileImages', $fileName, 'public');
+                // $filePath = $file->storeAs('usersProfileImages', $fileName, 'public');
 
+                $filePath = Storage::disk('s3')->putFileAs('usersProfileImages', $file, $fileName);
 
                 // Update user profile image
                 $userValidation['profile_image'] = $filePath;

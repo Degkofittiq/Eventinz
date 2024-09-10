@@ -16,6 +16,7 @@ use App\Models\VendorCategories;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
@@ -213,7 +214,10 @@ class AdminController extends Controller
             $categoryName = preg_replace('/\s+/', '_', $request->name);
             $file = $request->file('category_file');
             $fileName = $categoryName . '_' . time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('categoriesImages', $fileName, 'public');
+            // $filePath = $file->storeAs('categoriesImages', $fileName, 'public');
+
+            // Enregistrer l'image sur S3
+            $filePath = Storage::disk('s3')->put('categoriesImages', $request->file('category_file'));
 
             // Update category image
             $categoryValidation['category_file'] = $filePath;
@@ -224,7 +228,7 @@ class AdminController extends Controller
             'category_file' => $categoryValidation['category_file'] ?? null,  // Ajout de la gestion de l'absence de fichier
         ]);
 
-        return back()->with('success', 'The new category is been add');
+        return back()->with('success', 'The new category is been add'.$filePath);
     }
 
     // Edit Category
@@ -241,24 +245,31 @@ class AdminController extends Controller
             'description' =>'required|string|max:255',
             'category_file' =>'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
-
+        $filePath = null;
         
         if ($request->hasFile('category_file')) {
-            // dd(1);
             $categoryName = preg_replace('/\s+/', '_', $request->name);
             $file = $request->file('category_file');
             $fileName = $categoryName . '_' . time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('categoriesImages', $fileName, 'public');
+
+            // Stocker le fichier sur S3 avec le nom de fichier généré
+            $filePath = Storage::disk('s3')->putFileAs('categoriesImages', $file, $fileName);
 
             // Update category image
             $categoryValidation['category_file'] = $filePath;
         }
 
-        // dd($categoryValidation);
+        // Si le chemin est correct, renvoyez-le, sinon une erreur
+        if ($filePath) {
 
-        $category->update($categoryValidation);
+            $category->update($categoryValidation);
+            return back()->with('success', 'The category is been update'.$filePath);
 
-        return back()->with('success', 'The category is been update');
+        } else {
+
+            $category->update($categoryValidation);
+            return back()->with('error', 'Failed to upload the file.');
+        }
     }
 
     // Delete Category form

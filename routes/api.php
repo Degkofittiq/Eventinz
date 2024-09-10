@@ -42,7 +42,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Resend OTP
 
-Route::post('/resendotp', [AuthController::class, 'resendOTP']);//send the new otp
+Route::post('/userresendotp', [AuthController::class, 'userResendOTP']);//send the new otp
 
 // Forgot password and reset password
 Route::post('password/email', [AuthController::class, 'forgotPassword']);
@@ -69,6 +69,10 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     Route::post('/storecompanytagline', [CompanyController::class, 'storeCompanyTagline']);
     Route::post('/updatecompanylocation', [CompanyController::class, 'updateCompanyLocation']);
     
+    // Subscription
+    Route::get('/vendorssubscriptions', [CompanyController::class, 'subscriptionList']);
+
+
     // Vendor self company details
     Route::get('/companyinformation', [CompanyController::class, 'companyInformation']);
     

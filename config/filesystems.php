@@ -51,6 +51,8 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'throw' => false,
+            'suppress_php_deprecation_warning' => env('AWS_SUPPRESS_PHP_DEPRECATION_WARNING', true)
         ],
 
     ],
