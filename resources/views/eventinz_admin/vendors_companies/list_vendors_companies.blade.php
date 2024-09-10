@@ -54,7 +54,7 @@
                 @endif
             </td> 
             <td>{{ $company->serviceType->name ?? "No company yet"}}</td>
-            <td>{{ $company->subscriptionPlan->name ?? "No company yet"}}</td>
+            <td>{{ $company->subscriptionPlan->name ?? "No Subscribed yet"}}</td>
             <td>
               <a href="{{ route('admin.edit.company', $company->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-pen"></i> Edit</a>
               {{-- <a href="{{ route('admin.delete.company', $company->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a> --}}

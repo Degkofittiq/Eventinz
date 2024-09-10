@@ -43,7 +43,8 @@
                 <div class="info-box shadow">
     
                   <div class="info-box-content">
-                    <img src="{{ asset("storage/".$category->category_file) }}" alt="">
+                    {{-- <img src="{{ asset("storage/".$category->category_file) }}" alt=""> --}}
+                    <img src="{{ Storage::disk('s3')->url($category->category_file) }}" alt="">
                   </div>
                   <!-- /.info-box-content -->
                 </div>

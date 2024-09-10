@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -117,6 +118,24 @@ class CompanyController extends Controller
         ]);
     }
 
+    public function subscriptionChoose(Request $request, $subscriptionId){
+        $subcription = Subscription::where('id',  $subscriptionId);
+        
+        if ($subcription) {
+                
+            return response()->json([
+                'status' => 200,
+                'Subscription choose' => $singleServiceSubscriptions
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'error' =>  'Subscription not found'
+            ],400);
+        }
+        
+    }
+
     //update Company Location
     public function updateCompanyLocation(Request $request){
         
@@ -164,75 +183,80 @@ class CompanyController extends Controller
     }
 
     // Store Company Images for the profiles    
-    public function storeCompanyImages(Request $request){
-    
+    public function storeCompanyImages(Request $request)
+    {
         // Récupérer l'utilisateur authentifié
         $user = $request->user();
-        $userCompany = Company::where('users_id',$user->id)->first();
-
-        if($user && $user->role_id != 1){
-            try{
-
+        $userCompany = Company::where('users_id', $user->id)->first();
+    
+        // Vérifier que l'utilisateur est connecté et qu'il n'a pas un rôle administrateur (role_id != 1)
+        if ($user && $user->role_id != 1) {
+            try {
+                // Valider les fichiers d'images
                 $request->validate([
                     'images.*' => 'bail|required|image|mimes:jpeg,png,jpg,gif|max:5120', // Validation pour plusieurs images
                 ]);
-
-                // /*
-                $imageData = [];
+    
                 $companyName = preg_replace('/\s+/', '_', $user->name);
+    
+                // Récupérer les images existantes de l'entreprise (si elles existent)
+                $existingImages = json_decode($userCompany->images, true) ?? [];
+    
+                // Vérifier la présence d'images
                 if ($request->hasFile('images')) {
                     foreach ($request->file('images') as $file) {
-                        $fileName = $companyName . '_' . time() . '_' . $file->getClientOriginalName();
-                        // $file = $request->file('images');
-                        // $filePath = $file->storeAs('companiesImages', $fileName, 'public');
+                        $fileName = $companyName . '_' . uniqid() . '_' . $file->getClientOriginalName();
+    
+                        // Stocker l'image dans S3
                         $filePath = Storage::disk('s3')->putFileAs('companiesImages', $file, $fileName);
-
-                        // $imageData[] = [
-                        //     'file_name' => $fileName,
-                        //     'file_path' => $filePath,
-                        //     'file_type' => $file->getClientMimeType(),
-                        //     'file_size' => $file->getSize(),
-                        // ];
-
-                        
-                        $imageData[] = [
+    
+                        // Ajouter les données de l'image aux existantes
+                        $existingImages[] = [
                             'file_path' => $filePath
                         ];
                     }
-
+    
+                    // Mettre à jour le champ `images` de la compagnie avec toutes les images (anciennes + nouvelles) en JSON
                     $userCompany->update([
-                        'images' => $imageData
+                        'images' => json_encode($existingImages) // Encodage en JSON
                     ]);
-                }else {
+    
+                    // Réponse de succès
                     return response()->json([
-                        'message'=> 'Error',
-                        'error'=> 'Upload error, check your file(s) and try again',
-                    ], 500);
+                        'status' => 200,
+                        'message' => 'Images uploadées avec succès pour votre entreprise !'
+                    ], 200);
+                } else {
+                    // Aucune image n'a été trouvée dans la requête
+                    return response()->json([
+                        'status' => 400,
+                        'message' => 'Aucune image à télécharger. Veuillez vérifier vos fichiers.'
+                    ], 400);
                 }
-                // */
             } catch (Exception $e) {
+                // Gestion des erreurs
                 return response()->json([
-                    'message'=> 'Error',
-                    'error'=> $e->getMessage(),
+                    'status' => 500,
+                    'message' => 'Erreur lors du téléchargement des images.',
+                    'error' => $e->getMessage(),
                 ], 500);
             }
-
+        } elseif ($user && $user->role_id != 2) {
+            // L'utilisateur n'est pas un vendeur (vendor)
             return response()->json([
-                'status' => 200,
-                'message' => 'You\'re been upload your company\'s images!.'
-            ]); 
-        }elseif ($user && $user->role_id != 2) {
+                'status' => 401,
+                'message' => 'Accès non autorisé. Vous devez être un vendeur !'
+            ], 401); // Unauthorized
+        } else {
+            // L'utilisateur n'est pas connecté
             return response()->json([
-               'status' => 401,
-               'message' => 'Unauthorized, you need to be a vendor!'
-            ], 401);  // Unauthorized
-        }else{
-            return response()->json([
-               'status' => 401,
-               'message' => 'Unauthorized, you need to be connected!'
-            ], 401);  // Unauthorized
+                'status' => 401,
+                'message' => 'Accès non autorisé. Vous devez être connecté !'
+            ], 401); // Unauthorized
         }
     }
+    
+    
 
     public function storeCompanyTagline(Request $request){
 

@@ -29,9 +29,9 @@ class Company extends Model
     }
 
     
-    public function subscriptionPlan(): HasOne
+    public function subscriptionPlan()
     {
-        return $this->hasOne(Subscription::class, 'id');
+        return $this->belongsTo(Subscription::class, 'subscriptions_id');
     }
     
     public function vendorCategory()

@@ -71,6 +71,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     
     // Subscription
     Route::get('/vendorssubscriptions', [CompanyController::class, 'subscriptionList']);
+    Route::get('/subscriptionchoose/{subscriptionId}', [CompanyController::class, 'subscriptionChoose']);
 
 
     // Vendor self company details

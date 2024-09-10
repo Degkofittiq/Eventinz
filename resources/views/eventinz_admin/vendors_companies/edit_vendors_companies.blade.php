@@ -88,8 +88,35 @@
     </tr>
     <tr>
         <th>Plan d'abonnement</th>
-        <td>{{ $company->subscriptionPlan->name ?? ""}}</td>
+        <td>
+            <a href="{{ route('admin.details.subscriptionplan', $company->subscriptions_id) }}">
+                {{ $company->subscriptionPlan->name ?? ""}}
+            </a>
+        </td>
     </tr>
+    <tr>
+        <th colspan="2">
+            <center>
+                Gallery
+            </center>
+        </th>
+    </tr>
+    <tr>
+        <th colspan="2">
+            <!-- Dynamic Features Section -->
+            <div class="form-group">
+                @if (!empty($company->images))
+                    @foreach (json_decode($company->images, true) as $item)
+                        <img src="{{ Storage::disk('s3')->url($item['file_path']) }}" alt="" width="100px" height="100px" class="shadow mx-2 my-2" style="">
+                    @endforeach
+                @else
+                    {{ "No images files for this company yet" }}
+                @endif 
+            </div>
+        </th>
+    </tr>
+
+
     <tr>
         <th colspan="2">
             <center>
@@ -163,7 +190,7 @@
                         <label>Subdetails</label>
                         <textarea class="form-control" rows="3" placeholder="Enter subdetails..." style="height: 100px;" name="subdetails">{{ $companyService->subdetails }}</textarea>
                     </div>
-{{--                 
+            {{--                 
                     <div class="form-check mt-3">
                         <input type="checkbox" class="form-check-input" id="travel" name="travel" value="yes" @if ($companyService->travel == "yes") checked @endif>
                         <label class="form-check-label" for="travel">Travel</label>
