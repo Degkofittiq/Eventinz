@@ -53,12 +53,24 @@
         <td>{{ $company->name }}</td>
     </tr>
     <tr>
+        <th>Tagline de la compagnie</th>
+        <td>{{ $company->tagline }}</td>
+    </tr>
+    <tr>
         <th>Nom d'utilisateur</th>
         <td>{{ $company->user->username }}</td>
     </tr>
     <tr>
         <th>Pays</th>
         <td>{{ $company->country }}</td>
+    </tr>
+    <tr>
+        <th>State</th>
+        <td>{{ $company->state }}</td>
+    </tr>
+    <tr>
+        <th>City</th>
+        <td>{{ $company->city }}</td>
     </tr>
     <tr>
         <th>Catégories</th>
