@@ -119,7 +119,7 @@ class CompanyController extends Controller
     }
 
     public function subscriptionChoose(Request $request, $subscriptionId){
-        $subcription = Subscription::where('id',  $subscriptionId);
+        $subcription = Subscription::where('id',  $subscriptionId)->first();
         
         if ($subcription) {
                 
