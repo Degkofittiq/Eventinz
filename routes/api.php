@@ -40,6 +40,10 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
 Route::post('/login', [AuthController::class, 'login']);
 
+// Resend OTP
+
+Route::post('/resendotp', [AuthController::class, 'resendOTP']);//send the new otp
+
 // Forgot password and reset password
 Route::post('password/email', [AuthController::class, 'forgotPassword']);
 Route::post('password/resetOTP', [AuthController::class, 'verifyResetOTP']);
