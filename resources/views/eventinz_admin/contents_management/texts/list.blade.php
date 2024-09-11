@@ -30,8 +30,8 @@
               <th scope="col">#</th>
               <th scope="col">Content Name</th>
               <th scope="col">Page</th>
-              <th scope="col">French Content</th>
               <th scope="col">English Content</th>
+              <th scope="col">French Content</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -43,8 +43,12 @@
                     <th scope="row">{{ $count++ }}</th>
                     <td>{{ $textContent->name  ?? "" }}</td>
                     <td>{{ $textContent->page }}</td>
-                    <td>{{ $textContent->content_fr }}</td>
-                    <td>{{ $textContent->content_en }}</td>
+                    <td>
+                      <p class="limited-text" data-limit="10">{!! $textContent->content_en !!}</p>
+                    </td>
+                    <td>
+                      <p class="limited-text" data-limit="10">{!! $textContent->content_fr !!}</p>
+                    </td>
                     <td>
                         <a href="{{ route('admin.show.contenttext', $textContent->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Edit</a>
                     </td>
@@ -59,5 +63,4 @@
       </div>
 
 </div>
-
 @endsection

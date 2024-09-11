@@ -535,8 +535,8 @@ class AdminController extends Controller
         $fieldValidation = $request->validate([
             'name' =>'required|string|max:1000|min:1',
             'page' =>'required|string|max:1000|min:1',
-            'content_fr' =>'required|string|max:1000|min:1',
-            'content_en' =>'required|string|max:1000|min:1',
+            'content_fr' =>'required|string|max:5000|min:1',
+            'content_en' =>'required|string|max:5000|min:1',
         ]);
 
         $storing = contentTextManagement::create([
@@ -578,8 +578,8 @@ class AdminController extends Controller
         $fieldValidation = $request->validate([
             // 'name' =>'required|string|max:1000|min:1',
             'page' =>'required|string|max:1000|min:1',
-            'content_fr' =>'required|string|max:1000|min:1',
-            'content_en' =>'required|string|max:1000|min:1',
+            'content_fr' =>'required|string|max:5000|min:1',
+            'content_en' =>'required|string|max:5000|min:1',
         ]);
 
         $contentTextFound->update([

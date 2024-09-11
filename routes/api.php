@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AppContentController;
 use App\Http\Controllers\Eventiz\OtpController;
 use App\Http\Controllers\Eventiz\EventController;
 use App\Http\Controllers\Eventiz\VendorController;
@@ -48,6 +49,8 @@ Route::post('/userresendotp', [AuthController::class, 'userResendOTP']);//send t
 Route::post('password/email', [AuthController::class, 'forgotPassword']);
 Route::post('password/resetOTP', [AuthController::class, 'verifyResetOTP']);
 Route::post('password/reset', [AuthController::class, 'resetPassword']);
+
+Route::get('/allappcontent', [AppContentController::class, 'allAppContent']);
 
 Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     // Route::post('/send-otp', [OtpController::class, 'sendOtp']); Hors Service

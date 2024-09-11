@@ -21,6 +21,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
       border: 1px solid white !important;
       color: white !important;
     }
+
+    .limited-text{
+      white-space: nowrap; 
+      width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   </style>
 </head>
 <body class="hold-transition sidebar-mini">
