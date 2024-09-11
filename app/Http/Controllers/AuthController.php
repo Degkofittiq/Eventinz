@@ -396,13 +396,23 @@ class AuthController extends Controller
                 $userValidation['profile_image'] = $fullUrl;
             }
             // Structurer les données dans le format souhaité
-            $data = [
-                'user_genders_id' => json_encode($userValidation['user_genders_id']), // Encodage en JSON
-                'occupation' => $userValidation['occupation'],
-                'location' => $userValidation['location'],
-                'age' => json_encode($userValidation['age']), // Encodage en JSON
-                'profile_image' => $userValidation['profile_image'] ?? $user->profile_image
-            ];
+            $data = [];
+            
+            if (!empty($request->profile_image)) {
+                $data['profile_image'] = $userValidation['profile_image'] ?? $user->profile_image;
+            }
+            if (!empty($request->user_genders_id)) {
+                $data['user_genders_id'] = json_encode($userValidation['user_genders_id']);
+            }
+            if (!empty($request->occupation)) {
+                $data['occupation'] = $userValidation['occupation'];
+            }
+            if (!empty($request->location)) {
+                $data['location'] = $userValidation['location'];
+            }
+            if (!empty($request->age)) {
+                $data['age'] = json_encode($userValidation['age']);
+            }
             
             // Mettre à jour les informations de l'utilisateur
             $user->update($data);

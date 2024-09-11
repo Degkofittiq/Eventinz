@@ -755,10 +755,18 @@ class AdminController extends Controller
     }
     
     public function addPaymentTaxe(Request $request){
-        $request->validate([
-        'name' => 'required|string|max:255',
-        'value' => 'required|numeric|between:0,100', // La valeur doit être un nombre entre 0 et 100 pour représenter un pourcentage
-    ]);
+        $dataValidate = $request->validate([
+            'name' => 'required|string|max:255',
+            'value' => 'required|numeric|between:0,100', // La valeur doit être un nombre entre 0 et 100 pour représenter un pourcentage
+        ]);
+
+        $storing = PaymentTaxe::create($dataValidate);
+
+        if (!$storing) {
+            return back()->with('error', 'Error adding taxe');
+        }
+        
+        return back()->with('success', 'Taxe has been added !');
 
     }
     
