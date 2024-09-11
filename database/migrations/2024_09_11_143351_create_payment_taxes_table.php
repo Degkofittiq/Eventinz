@@ -12,13 +12,11 @@ return new class extends Migration
      * @return void
      */
     public function up()
-    { // Vendor services type(Single or Murtiple)
-        Schema::create('vendor_service_types', function (Blueprint $table) {
+    {
+        Schema::create('payment_taxes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description');
-            $table->integer('service_number');
-            $table->json('features')->nullable();
+            $table->string('name'); // Var name
+            $table->float('value'); // in %
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vendor_service_types');
+        Schema::dropIfExists('payment_taxes');
     }
 };

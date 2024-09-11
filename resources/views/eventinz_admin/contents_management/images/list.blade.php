@@ -45,7 +45,8 @@
             <td>{{ $imageContent->name }}</td>
             <td>{{ $imageContent->type }}</td>
             <td>
-              <img src="{{ Storage::disk('s3')->url($imageContent->path) }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2">
+              {{-- <img src="{{ Storage::disk('s3')->url($imageContent->path) }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2"> --}}
+              <img src="{{ $imageContent->path }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2">
             </td>
             <td>
               <a href="{{ route('admin.show.contentimage', $imageContent->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-pen"></i> Edit</a>

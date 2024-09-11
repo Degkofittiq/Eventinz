@@ -389,9 +389,11 @@ class AuthController extends Controller
                 // $filePath = $file->storeAs('usersProfileImages', $fileName, 'public');
 
                 $filePath = Storage::disk('s3')->putFileAs('usersProfileImages', $file, $fileName);
+                // Récupérer l'URL complète du fichier sur S3
+                $fullUrl = Storage::disk('s3')->url($filePath);
 
                 // Update user profile image
-                $userValidation['profile_image'] = $filePath;
+                $userValidation['profile_image'] = $fullUrl;
             }
             // Structurer les données dans le format souhaité
             $data = [

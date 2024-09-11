@@ -9,10 +9,12 @@ use App\Models\Review;
 use App\Models\Company;
 use App\Models\Services;
 use App\Rules\SameSizeAs;
+use App\Models\PaymentTaxe;
 use Illuminate\Http\Request;
 use App\Models\Paymenthistory;
 use App\Models\ServicesCategory;
 use App\Models\VendorCategories;
+use App\Models\VendorServiceType;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -220,9 +222,11 @@ class AdminController extends Controller
 
             // Enregistrer l'image sur S3
             $filePath = Storage::disk('s3')->put('categoriesImages', $request->file('category_file'));
+            // Récupérer l'URL complète du fichier sur S3
+            $fullUrl = Storage::disk('s3')->url($filePath);
 
             // Update category image
-            $categoryValidation['category_file'] = $filePath;
+            $categoryValidation['category_file'] = $fullUrl;
         }
         $categoryCreation = VendorCategories::create([
             'name' => $categoryValidation['name'],
@@ -256,9 +260,11 @@ class AdminController extends Controller
 
             // Stocker le fichier sur S3 avec le nom de fichier généré
             $filePath = Storage::disk('s3')->putFileAs('categoriesImages', $file, $fileName);
+            // Récupérer l'URL complète du fichier sur S3
+            $fullUrl = Storage::disk('s3')->url($filePath);
 
             // Update category image
-            $categoryValidation['category_file'] = $filePath;
+            $categoryValidation['category_file'] = $fullUrl;
         }
 
         // Si le chemin est correct, renvoyez-le, sinon une erreur
@@ -609,9 +615,11 @@ class AdminController extends Controller
 
             // Enregistrer l'image sur S3
             $filePath = Storage::disk('s3')->putFileAs('contentsImages', $file, $fileName);
+            // Récupérer l'URL complète du fichier sur S3
+            $fullUrl = Storage::disk('s3')->url($filePath);
 
             // Update category image
-            $fieldsValidations['path'] = $filePath;
+            $fieldsValidations['path'] = $fullUrl;
         }
 
         if (!$filePath) {
@@ -655,9 +663,11 @@ class AdminController extends Controller
 
             // Enregistrer l'image sur S3
             $filePath = Storage::disk('s3')->putFileAs('contentsImages', $file, $fileName);
+            // Récupérer l'URL complète du fichier sur S3
+            $fullUrl = Storage::disk('s3')->url($filePath);
 
             // Update category image
-            $fieldsValidations['path'] = $filePath;
+            $fieldsValidations['path'] = $fullUrl;
 
             if (!$filePath) {
                 return back()->with('error', 'Image update error, please try again !');
@@ -668,4 +678,128 @@ class AdminController extends Controller
         $imageContentFound->update($fieldsValidations);
         return back()->with('success', 'The Image has been updated !');    
     }
+
+    // listVendorClass-addVendorClassForm-addVendorClass-showVendorClass-updateVendorClass
+    // VendorServiceType == Vendor class
+
+    public function listVendorClass(Request $request){
+        $vendorClasses = VendorServiceType::all();
+        return view('eventinz_admin.vendors_classes.list', compact('vendorClasses'));
+    }
+    
+    public function addVendorClassForm(Request $request){
+        return view('eventinz_admin.vendors_classes.create');
+    }
+
+    public function addVendorClass(Request $request){
+        $fieldValidation = $request->validate([
+            'name' =>'required|string|max:255|min:1',
+            'description' =>'required|string|min:1|max:255',
+            'service_number' =>'required|integer|min:1|max:255',
+            'features' => 'required|array',  // Valide que 'features' est un tableau
+            'features.*' => 'required|string|max:255'  // Valide chaque élément du tableau 'features'
+        ]);
+        
+        $fieldValidation['features'] = json_encode($fieldValidation['features']);
+        
+        $storing = VendorServiceType::create($fieldValidation);
+        if (!$storing) {
+            return back()->with('error', 'Add error, try again !');
+        }
+        return back()->with('success', 'The vendor class has been added');
+    }
+
+    public function showVendorClass(Request $request, $vendorClassId){
+        $vendorClassFound = VendorServiceType::find($vendorClassId);
+        if (!$vendorClassFound) {
+            return back()->with('error', 'Vendor class not found');
+        }
+        return view('eventinz_admin.vendors_classes.edit', compact('vendorClassFound'));
+    }
+
+    public function updateVendorClass(Request $request, $vendorClassId){
+
+        $vendorClassFound = VendorServiceType::find($vendorClassId);
+
+        if (!$vendorClassFound) {
+            return back()->with('error', 'Vendor class not found');
+        }
+
+        $fieldValidation = $request->validate([
+            'name' =>'required|string|max:255|min:1',
+            'description' =>'required|string|min:1|max:255',
+            'service_number' =>'required|integer|min:1|max:255',
+            'features' => 'required|array',  // Valide que 'features' est un tableau
+            'features.*' => 'required|string|max:255'  // Valide chaque élément du tableau 'features'
+        ]);
+
+        $fieldValidation['features'] = json_encode($fieldValidation['features']);
+
+
+        $vendorClassFound->update($fieldValidation);
+        return back()->with('success', 'The vendor class');
+    }
+
+    // Taxe TVA management | listPaymentTaxe-addPaymentTaxeForm-addPaymentTaxe-showPaymentTaxe-updatePaymentTaxe-deletePaymentTaxeForm-deletePaymentTaxe
+
+    public function listPaymentTaxe(Request $request){
+
+        $paymentTaxes = PaymentTaxe::all();
+
+        return view('eventinz_admin.payment_taxes.list', compact('paymentTaxes'));
+    }
+    
+    public function addPaymentTaxeForm(Request $request){
+        
+        return view('eventinz_admin.payment_taxes.create');
+    }
+    
+    public function addPaymentTaxe(Request $request){
+        $request->validate([
+        'name' => 'required|string|max:255',
+        'value' => 'required|numeric|between:0,100', // La valeur doit être un nombre entre 0 et 100 pour représenter un pourcentage
+    ]);
+
+    }
+    
+    public function showPaymentTaxe(Request $request, $paymentTaxeId){
+
+        $taxeFound = PaymentTaxe::find($paymentTaxeId);
+
+        if (!$taxeFound) {
+            return back()->with('error', 'Taxe not found');
+        }
+
+    }
+    
+    public function updatePaymentTaxe(Request $request, $paymentTaxeId){
+        $request->validate([
+        'name' => 'required|string|max:255',
+        'value' => 'required|numeric|between:0,100', // La valeur doit être un nombre entre 0 et 100 pour représenter un pourcentage
+    ]);
+
+        $taxeFound = PaymentTaxe::find($paymentTaxeId);
+        
+        if (!$taxeFound) {
+            return back()->with('error', 'Taxe not found');
+        }
+
+        return back()->with('success', 'Taxe has been updated');
+    }
+    
+    public function deletePaymentTaxeForm(Request $request, $paymentTaxeId){
+
+        $taxeFound = PaymentTaxe::find($paymentTaxeId);
+
+        if (!$taxeFound) {
+            return back()->with('error', 'Taxe not found');
+        }
+
+        return view('eventinz_admin.payment_taxes.delete', compact('paymentTaxeId'));
+    }
+    
+    public function deletePaymentTaxe(Request $request, $paymentTaxeId){
+        
+    }
+
 }

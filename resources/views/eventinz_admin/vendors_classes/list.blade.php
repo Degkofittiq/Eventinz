@@ -16,7 +16,7 @@
     <div class="card-header">
       <h3 class="card-title">Subscription Plan List</h3>
       <div class="card-tools">
-        <a href="{{ route('admin.add.subscriptionplan') }}" class="btn bg-default">
+        <a href="{{ route('admin.add.vendorclassform') }}" class="btn bg-default">
           <i class="fas fa-plus"></i>
           Add New
         </a>
@@ -29,26 +29,22 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Names</th>
-            <th scope="col">Vendors Types</th>
-            <th scope="col">Prices</th>
-            <th scope="col">Durations</th>
+            <th scope="col">Description</th>
+            <th scope="col">Service Number</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
           <?php  $count = 1;  ?>
-          @forelse ($subscriptionPlans as $subscriptionPlan)
+          @forelse ($vendorClasses as $vendorClasse)
               
           <tr>
             <th scope="row">{{ $count++ }}</th>
-            <td>{{ $subscriptionPlan->name ?? "" }}</td>
-            <td>{{ $subscriptionPlan->vendorType->name ?? "" }}</td>
-            <td>{{ $subscriptionPlan->price ?? "" }}</td>
-            <td>{{ ($subscriptionPlan->duration == 3 ||  $subscriptionPlan->duration == 6) ?  $subscriptionPlan->duration . " Months" :  "1 Year" }}</td>
+            <td>{{ $vendorClasse->name ?? "" }}</td>
+            <td>{{ $vendorClasse->description ?? "" }}</td>
+            <td>{{ $vendorClasse->service_number ?? "" }}</td>
             <td>
-              <a href="{{ route('admin.details.subscriptionplan', $subscriptionPlan->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
-              {{-- <a href="{{ route('admin.edit.subscriptionplan', $subscriptionPlan->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-pen"></i> Edit</a> --}}
-              <a href="{{ route('admin.deleteform.subscriptionplan', $subscriptionPlan->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>
+              <a href="{{ route('admin.show.vendorclass', $vendorClasse->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
             </td>
           </tr>
           @empty

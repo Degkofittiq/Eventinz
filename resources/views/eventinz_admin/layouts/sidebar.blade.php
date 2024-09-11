@@ -59,6 +59,46 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('admin.list.reviews') }}" class="nav-link {{ request()->url() == route('admin.list.reviews') ? "active" : "" }}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Reviews
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('admin.list.vendorclass') }}" class="nav-link {{ request()->url() == route('admin.list.vendorclass') ? "active" : "" }}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Vendors Classes
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('admin.list.subscriptionplans') }}" class="nav-link {{ request()->url() == route('admin.list.subscriptionplans') ? "active" : "" }}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Subscriptions
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('admin.list.payments') }}" class="nav-link {{ request()->url() == route('admin.list.payments') ? "active" : "" }}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Payments Stories
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('admin.list.paymenttaxe') }}" class="nav-link {{ request()->url() == route('admin.list.paymenttaxe') ? "active" : "" }}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Taxes management
+              </p>
+            </a>
+          </li>
           <li class="nav-item menu-open">
             <a href="#" class="nav-link">
               <i class="nav-icon far fa-plus-square"></i>
@@ -87,30 +127,6 @@
                 </a>
               </li>
             </ul>
-          </li>
-          <li class="nav-item">
-            <a href="{{ route('admin.list.subscriptionplans') }}" class="nav-link {{ request()->url() == route('admin.list.subscriptionplans') ? "active" : "" }}">
-              <i class="far fa-circle nav-icon"></i>
-              <p>
-                Subscriptions
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{ route('admin.list.reviews') }}" class="nav-link {{ request()->url() == route('admin.list.reviews') ? "active" : "" }}">
-              <i class="far fa-circle nav-icon"></i>
-              <p>
-                Reviews
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{ route('admin.list.payments') }}" class="nav-link {{ request()->url() == route('admin.list.payments') ? "active" : "" }}">
-              <i class="far fa-circle nav-icon"></i>
-              <p>
-                Payments Stories
-              </p>
-            </a>
           </li>
           <li class="nav-item menu-open">
             <a href="#" class="nav-link">

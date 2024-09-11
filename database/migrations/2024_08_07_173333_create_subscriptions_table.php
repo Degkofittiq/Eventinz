@@ -20,7 +20,6 @@ return new class extends Migration
             $table->unsignedBigInteger('vendor_service_types_id'); // Single or Multiples 
             $table->decimal('price');
             $table->Integer('duration'); // Preriod in months
-            $table->text('features'); // Array
             $table->timestamps();
         });
     }

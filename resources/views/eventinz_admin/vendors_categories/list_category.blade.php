@@ -43,7 +43,8 @@
             <td>{{ $category->name }}</td>
             <td>{{ $category->description }}</td>
             <td>
-              <img src="{{ Storage::disk('s3')->url($category->category_file) }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2">
+              {{-- <img src="{{ Storage::disk('s3')->url($category->category_file) }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2"> --}}
+              <img src="{{ $category->category_file }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2">
             </td>
             <td>
               <a href="{{ route('admin.edit.category', $category->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-pen"></i> Edit</a>

@@ -100,4 +100,20 @@ Route::prefix('admin')->middleware('auth')->group(function() {
     Route::get('/contentimage/{contentImageId}', [AdminController::class, 'showContentImage'])->name('admin.show.contentimage'); // View details and edit
     Route::post('/contentimage/{contentImageId}', [AdminController::class, 'updateContentImage'])->name('admin.update.contentimage'); // Edit POST action
 
+    // Vendor class management | listVendorClass-addVendorClassForm-addVendorClass-showVendorClass-updateVendorClass
+    Route::get('/listvendorclass', [AdminController::class, 'listVendorClass'])->name('admin.list.vendorclass'); // Add form
+    Route::get('/addvendorclass', [AdminController::class, 'addVendorClassForm'])->name('admin.add.vendorclassform'); // Add form
+    Route::post('/addvendorclass', [AdminController::class, 'addVendorClass'])->name('admin.add.vendorclass'); // Add POST
+    Route::get('/showvendorclass/{vendorClassId}', [AdminController::class, 'showVendorClass'])->name('admin.show.vendorclass'); // Show vendor class and edit form
+    Route::post('/updatevendorclass/{vendorClassId}', [AdminController::class, 'updateVendorClass'])->name('admin.update.vendorclass'); // Update
+
+    // Taxe management |  listPaymentTaxe-addPaymentTaxeForm-addPaymentTaxe-showPaymentTaxe-updatePaymentTaxe-deletePaymentTaxeForm-deletePaymentTaxe
+    Route::get('/listpaymenttaxe', [AdminController::class, 'listPaymentTaxe'])->name('admin.list.paymenttaxe'); // Add form
+    Route::get('/addpaymenttaxe', [AdminController::class, 'addPaymentTaxeForm'])->name('admin.add.paymenttaxe'); // Add form
+    Route::post('/addpaymenttaxe', [AdminController::class, 'addPaymentTaxe'])->name('admin.add.paymenttaxe'); // Add POST
+    Route::get('/showpaymenttaxe/{paymentTaxeId}', [AdminController::class, 'showPaymentTaxe'])->name('admin.show.paymenttaxe'); // Show vendor class and edit form
+    Route::post('/updatepaymenttaxe/{PaymentTaxeId}', [AdminController::class, 'updatePaymentTaxe'])->name('admin.update.paymenttaxe'); // Update
+    Route::get('/deletepaymenttaxeform/{PaymentTaxeId}', [AdminController::class, 'deletePaymentTaxeForm'])->name('admin.deleteform.paymenttaxe'); // delete form
+    Route::post('/deletepaymenttaxe/{PaymentTaxeId}', [AdminController::class, 'deletePaymentTaxe'])->name('admin.delete.paymenttaxe'); // delete
+
 });

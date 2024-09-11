@@ -46,7 +46,8 @@
                 <div class="info-box shadow">
     
                   <div class="info-box-content">
-                    <img src="{{ Storage::disk('s3')->url($imageContentFound->path) }}" alt="">
+                    {{-- <img src="{{ Storage::disk('s3')->url($imageContentFound->path) }}" alt=""> --}}
+                    <img src="{{ $imageContentFound->path }}" alt="">
                   </div>
                   <!-- /.info-box-content -->
                 </div>

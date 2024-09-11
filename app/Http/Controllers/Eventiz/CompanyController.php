@@ -209,10 +209,12 @@ class CompanyController extends Controller
     
                         // Stocker l'image dans S3
                         $filePath = Storage::disk('s3')->putFileAs('companiesImages', $file, $fileName);
+                        // Récupérer l'URL complète du fichier sur S3
+                        $fullUrl = Storage::disk('s3')->url($filePath);
     
                         // Ajouter les données de l'image aux existantes
                         $existingImages[] = [
-                            'file_path' => $filePath
+                            'file_path' => $fullUrl
                         ];
                     }
     
