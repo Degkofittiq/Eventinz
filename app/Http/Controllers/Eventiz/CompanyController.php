@@ -380,6 +380,9 @@ class CompanyController extends Controller
     public function companyInformation(){
         $user = Auth::user();
         $company = Company::where('users_id', $user->id)->first();
+        $companyServices = [];
+        $companyServicesArray = [];
+        $filesPath = [];
         if ($company) {
             $companyServices = Services::where('company_id',$company->id)->get();
         }
@@ -387,7 +390,6 @@ class CompanyController extends Controller
         if ($company) {
             $companyWithoutUser = $company->makeHidden(['user']);
             $companyUser =  $user;
-            $filesPath = [];
 
             if ($company->images) {
                 foreach ($companyWithoutUser['images'] as $files) {
@@ -419,7 +421,7 @@ class CompanyController extends Controller
                 'Company Current subscriptions' => $companyWithoutUser['subscriptions_id'],
                 'Company Subscription start date' => $companyWithoutUser['subscription_start_date'],
                 'Company Subscription end date' => $companyWithoutUser['subscription_end_date'],
-                'Company Images' => !empty($filesPath) ? $filePath : "No files yet",
+                'Company Images' => !empty($filesPath) ? $filesPath : "No files yet",
                 'Company Services' => $companyServices
             ],
                'Company Vendor' => [

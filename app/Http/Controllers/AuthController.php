@@ -15,6 +15,7 @@ use App\Mail\ForgotPasswordMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Password;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Auth\Events\PasswordReset;
@@ -366,13 +367,13 @@ class AuthController extends Controller
         try {       
             $userValidation = $request->validate([
                 'user_genders_id' => 'nullable|array',  // Valide un tableau
-                'user_genders_id.gender' => 'string|max:255', // Valide la clé 'gender'
-                'user_genders_id.status' => 'string|in:show,hide', // Valide la clé 'status' avec des valeurs spécifiques            
+                'user_genders_id.gender' => 'nullable|string|max:255', // Valide la clé 'gender'
+                'user_genders_id.status' => 'nullable|string|in:show,hide', // Valide la clé 'status' avec des valeurs spécifiques            
                 'occupation' => 'nullable|string|max:255',
                 'location' => 'nullable|string|max:255',
                 'age' => 'nullable|array',  // Valide un tableau
-                'age.age' => 'integer|min:0',  // Valide la clé 'age'
-                'age.status' => 'string|in:show,hide', // Valide la clé 'status' avec des valeurs spécifiques            
+                'age.age' => 'nullable|integer|min:0',  // Valide la clé 'age'
+                'age.status' => 'nullable|string|in:show,hide', // Valide la clé 'status' avec des valeurs spécifiques            
                 'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120'
             ]);
 
