@@ -112,6 +112,29 @@
               </p>
             </a>
           </li>
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-plus-square"></i>
+              <p>
+                Content management
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.list.contenttext') }}" class="nav-link {{ request()->url() == route('admin.list.contenttext') ? "active" : "" }}">
+                  <i class="far fa-dot-circle nav-icon"></i>
+                  <p>Content Text</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.list.contentimage') }}" class="nav-link {{ request()->url() == route('admin.list.contentimage') ? "active" : "" }}">
+                  <i class="far fa-dot-circle nav-icon"></i>
+                  <p>Content Images / Icons</p>
+                </a>
+              </li>
+            </ul>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

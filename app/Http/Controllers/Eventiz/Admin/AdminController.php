@@ -16,6 +16,8 @@ use App\Models\VendorCategories;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\contentTextManagement;
+use App\Models\contentImagesManagement;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
@@ -512,5 +514,158 @@ class AdminController extends Controller
             return back()->with('error', 'Review not found');
         }
         
+    }
+
+
+    
+    // Content management | addContentTextForm-addContentText-contentTextList-showContentText-updateContentText
+
+    public function addContentTextForm(Request $request){
+
+        return view('eventinz_admin.contents_management.texts.create');
+    }
+
+    public function addContentText(Request $request){
+        $fieldValidation = $request->validate([
+            'name' =>'required|string|max:1000|min:1',
+            'page' =>'required|string|max:1000|min:1',
+            'content_fr' =>'required|string|max:1000|min:1',
+            'content_en' =>'required|string|max:1000|min:1',
+        ]);
+
+        $storing = contentTextManagement::create([
+            'name' =>  str_replace(" ", "_", strtolower($fieldValidation['name'])),
+            'page' => $fieldValidation['page'],
+            'content_fr' => $fieldValidation['content_fr'],
+            'content_en' => $fieldValidation['content_en'],
+        ]);
+
+        if (!$storing) {
+            return back()->with('error', 'Add error, try again !');
+        }
+
+        return back()->with('success', 'The text has been added !');
+    }
+    
+    public function contentTextList(Request $request){
+
+        $textContents = contentTextManagement::all();
+        return view('eventinz_admin.contents_management.texts.list', compact('textContents'));
+    }
+    
+    public function showContentText(Request $request, $contentTextId){
+
+        $contentTextFound = contentTextManagement::find($contentTextId);        
+        if (!$contentTextFound) {
+            return back()->with('error', 'Content text not found');
+        }
+        return view('eventinz_admin.contents_management.texts.edit', compact('contentTextFound'));        
+    }
+    
+    public function updateContentText(Request $request, $contentTextId){
+
+        $contentTextFound = contentTextManagement::find($contentTextId);
+        if (!$contentTextFound) {
+            return back()->with('error', 'Content text not found');
+        }
+
+        $fieldValidation = $request->validate([
+            // 'name' =>'required|string|max:1000|min:1',
+            'page' =>'required|string|max:1000|min:1',
+            'content_fr' =>'required|string|max:1000|min:1',
+            'content_en' =>'required|string|max:1000|min:1',
+        ]);
+
+        $contentTextFound->update([
+            // 'name' =>  str_replace(" ", "_", strtolower($fieldValidation['name'])),
+            'page' => $fieldValidation['page'],
+            'content_fr' => $fieldValidation['content_fr'],
+            'content_en' => $fieldValidation['content_en'],
+        ]);
+        
+        return back()->with('success', 'The text has been updated !');    
+    }
+
+
+    // addContentImageForm-addContentImage-contentImageList-showContentImage-updateContentImage
+
+    public function addContentImageForm(Request $request){
+
+        return view('eventinz_admin.contents_management.images.create');
+    }
+
+    public function addContentImage(Request $request){
+        $fieldsValidations = $request->validate([
+            'name' =>'required|string|max:255',
+            'page' =>'required|string|max:255',
+            'type' =>'required|string|max:255',
+            'path' =>'required|image|mimes:jpeg,png,jpg,gif|max:5120',
+        ]);
+        
+        if ($request->hasFile('path')) {
+            $imageName = preg_replace('/\s+/', '_', $request->name);
+            $file = $request->file('path');
+            $fileName = $imageName . '_' . time() . '_' . $file->getClientOriginalName();
+
+            // Enregistrer l'image sur S3
+            $filePath = Storage::disk('s3')->putFileAs('contentsImages', $file, $fileName);
+
+            // Update category image
+            $fieldsValidations['path'] = $filePath;
+        }
+
+        if (!$filePath) {
+            return back()->with('error', 'Image update error, please try again !');
+        }
+
+        $contentImagesManagement = contentImagesManagement::create($fieldsValidations);
+        return back()->with('success', 'The Image has been added !');
+    }
+    
+    public function contentImageList(Request $request){
+        $imageContents = contentImagesManagement::all();
+        return view('eventinz_admin.contents_management.images.list', compact('imageContents'));
+    }
+    
+    public function showContentImage(Request $request, $contentImageId){
+
+        $imageContentFound = contentImagesManagement::find($contentImageId);
+        return view('eventinz_admin.contents_management.images.edit', compact('imageContentFound'));        
+    }
+    
+    public function updateContentImage(Request $request, $contentImageId){
+
+        $imageContentFound = contentImagesManagement::find($contentImageId);
+        if (!$imageContentFound) {
+            return back()->with('error', 'Content Image not found');
+        }
+        $fieldsValidations = $request->validate([
+            // 'name' =>'required|string|max:255',
+            'page' =>'required|string|max:255',
+            'type' =>'required|string|max:255'
+        ]);
+        
+        if ($request->path != ""  && $request->hasFile('path')) {
+            $fieldsValidations['path'] = $request->validate([
+                'path' =>'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            ]);
+            $imageName = preg_replace('/\s+/', '_', $request->name);
+            $file = $request->file('path');
+            $fileName = $imageName . '_' . time() . '_' . $file->getClientOriginalName();
+
+            // Enregistrer l'image sur S3
+            $filePath = Storage::disk('s3')->putFileAs('contentsImages', $file, $fileName);
+
+            // Update category image
+            $fieldsValidations['path'] = $filePath;
+
+            if (!$filePath) {
+                return back()->with('error', 'Image update error, please try again !');
+            }
+        }
+
+
+        $imageContentFound->update($fieldsValidations);
+        return back()->with('success', 'The Image has been updated !');    
     }
 }

@@ -85,4 +85,19 @@ Route::prefix('admin')->middleware('auth')->group(function() {
     // user OTP management 
     Route::get('/userresendotp', [AuthController::class, 'userResendOTPForm'])->name('admin.resendform.otp');
     Route::post('/userresendotp', [AuthController::class, 'resendOTP'])->name('admin.resend.otp'); //send the new otp
+
+    // Content management | addContentTextForm-addContentText-contentTextList-showContentText-updateContentText
+    Route::get('/contenttext', [AdminController::class, 'addContentTextForm'])->name('admin.add.contenttextform'); // Add form
+    Route::post('/contenttext', [AdminController::class, 'addContentText'])->name('admin.add.contenttext'); // Add POST action
+    Route::get('/contentstextlist', [AdminController::class, 'contentTextList'])->name('admin.list.contenttext'); // List
+    Route::get('/contenttext/{contentTextId}', [AdminController::class, 'showContentText'])->name('admin.show.contenttext'); // View details and edit
+    Route::post('/contenttext/{contentTextId}', [AdminController::class, 'updateContentText'])->name('admin.update.contenttext'); // Edit POST action
+    
+    // addContentImageForm-addContentImage-contentImageList-showContentImage-updateContentImage
+    Route::get('/contentimage', [AdminController::class, 'addContentImageForm'])->name('admin.add.contentimageform'); // Add form
+    Route::post('/contentimage', [AdminController::class, 'addContentImage'])->name('admin.add.contentimage'); // Add POST action
+    Route::get('/contentsimagelist', [AdminController::class, 'contentImageList'])->name('admin.list.contentimage'); // List
+    Route::get('/contentimage/{contentImageId}', [AdminController::class, 'showContentImage'])->name('admin.show.contentimage'); // View details and edit
+    Route::post('/contentimage/{contentImageId}', [AdminController::class, 'updateContentImage'])->name('admin.update.contentimage'); // Edit POST action
+
 });
