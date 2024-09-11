@@ -755,6 +755,7 @@ class AdminController extends Controller
     }
     
     public function addPaymentTaxe(Request $request){
+
         $dataValidate = $request->validate([
             'name' => 'required|string|max:255',
             'value' => 'required|numeric|between:0,100', // La valeur doit être un nombre entre 0 et 100 pour représenter un pourcentage
@@ -778,10 +779,11 @@ class AdminController extends Controller
             return back()->with('error', 'Taxe not found');
         }
 
+        return view('eventinz_admin.payment_taxes.edit', compact('taxeFound'));
     }
     
     public function updatePaymentTaxe(Request $request, $paymentTaxeId){
-        $request->validate([
+        $validateData = $request->validate([
         'name' => 'required|string|max:255',
         'value' => 'required|numeric|between:0,100', // La valeur doit être un nombre entre 0 et 100 pour représenter un pourcentage
     ]);
@@ -791,6 +793,8 @@ class AdminController extends Controller
         if (!$taxeFound) {
             return back()->with('error', 'Taxe not found');
         }
+        
+        $taxeFound->update($validateData);
 
         return back()->with('success', 'Taxe has been updated');
     }
@@ -803,11 +807,20 @@ class AdminController extends Controller
             return back()->with('error', 'Taxe not found');
         }
 
-        return view('eventinz_admin.payment_taxes.delete', compact('paymentTaxeId'));
+        return view('eventinz_admin.payment_taxes.delete', compact('taxeFound'));
     }
     
     public function deletePaymentTaxe(Request $request, $paymentTaxeId){
         
+        $taxeFound = PaymentTaxe::find($paymentTaxeId);
+        
+        if (!$taxeFound) {
+            return back()->with('error', 'Taxe not found');
+        }
+        
+        $taxeFound->delete();
+        
+        return redirect()->route('admin.list.paymenttaxe');
     }
 
 }

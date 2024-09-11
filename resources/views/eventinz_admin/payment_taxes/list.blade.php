@@ -13,13 +13,13 @@
       </div>
   @endif
     <div class="card-header">
-      <h3 class="card-title">Payments List</h3>
-      {{-- <div class="card-tools">
-        <a href="{{ route('admin.add.servicescategory') }}" class="btn bg-default">
+      <h3 class="card-title">Payments Taxe List</h3>
+      <div class="card-tools">
+        <a href="{{ route('admin.add.paymenttaxeForm') }}" class="btn bg-default">
           <i class="fas fa-plus"></i>
           Add New
         </a>
-      </div> --}}
+      </div>
     </div>
     <!-- /.card-header -->
     <div class="card">
@@ -28,29 +28,22 @@
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Users Generic Ids</th>
-              <th scope="col">Types</th>
-              <th scope="col">Dates</th>
-              <th scope="col">Amounts</th>
-              <th scope="col">Methods</th>
-              <th scope="col">Currencies</th>
+              <th scope="col"  style="width: 40%">Name</th>
+              <th scope="col"  style="width: 30%">Value(%)</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
             <?php  $count = 1;  ?>
-            @forelse ($paymentsStories as $paymentsstorie)
+            @forelse ($paymentTaxes as $paymentTaxe)
                 
                 <tr>
                 <th scope="row">{{ $count++ }}</th>
-                <td>{{ $paymentsstorie->user->generic_id  ?? "" }}</td>
-                <td>{{ $paymentsstorie->payment_type }}</td>
-                <td>{{ $paymentsstorie->payment_date }}</td>
-                <td>{{ $paymentsstorie->amount }}</td>
-                <td>{{ $paymentsstorie->paymentmethod }}</td>
-                <td>{{ $paymentsstorie->currency }}</td>
+                <td>{{ $paymentTaxe->name  ?? "" }}</td>
+                <td>{{ $paymentTaxe->value  ?? "" }}</td>
                 <td>
-                    <a href="{{ route('admin.show.payment', $paymentsstorie->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
+                    <a href="{{ route('admin.show.paymenttaxe', $paymentTaxe->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
+                    <a href="{{ route('admin.deleteform.paymenttaxe', $paymentTaxe->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>
                 </td>
                 </tr>
             @empty
