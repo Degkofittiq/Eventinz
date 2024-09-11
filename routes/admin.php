@@ -109,7 +109,7 @@ Route::prefix('admin')->middleware('auth')->group(function() {
 
     // Taxe management |  listPaymentTaxe-addPaymentTaxeForm-addPaymentTaxe-showPaymentTaxe-updatePaymentTaxe-deletePaymentTaxeForm-deletePaymentTaxe
     Route::get('/listpaymenttaxe', [AdminController::class, 'listPaymentTaxe'])->name('admin.list.paymenttaxe'); // Add form
-    Route::get('/addpaymenttaxe', [AdminController::class, 'addPaymentTaxeForm'])->name('admin.add.paymenttaxe'); // Add form
+    Route::get('/addpaymenttaxe', [AdminController::class, 'addPaymentTaxeForm'])->name('admin.add.paymenttaxeForm'); // Add form
     Route::post('/addpaymenttaxe', [AdminController::class, 'addPaymentTaxe'])->name('admin.add.paymenttaxe'); // Add POST
     Route::get('/showpaymenttaxe/{paymentTaxeId}', [AdminController::class, 'showPaymentTaxe'])->name('admin.show.paymenttaxe'); // Show vendor class and edit form
     Route::post('/updatepaymenttaxe/{PaymentTaxeId}', [AdminController::class, 'updatePaymentTaxe'])->name('admin.update.paymenttaxe'); // Update
