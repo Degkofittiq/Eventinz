@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\Review;
 use App\Models\Company;
 use App\Models\Services;
+use App\Models\EventType;
 use App\Rules\SameSizeAs;
 use App\Models\PaymentTaxe;
 use Illuminate\Http\Request;
@@ -488,31 +489,37 @@ class AdminController extends Controller
 
     public function adminEventDetails(Request $request, $eventId){
         $event = Event::find($eventId);
-        if (!$event) {
-            return back()->with('error', 'Event not found');
-        }
-        return view('eventinz_admin.events.details_event', compact('event'));
-    }
 
-    public function adminEventUpdate(Request $request, $eventId){
-
-        $event = Event::find($eventId);
         $eventTypes = EventType::all();
         $vendorCategories = VendorCategories::all();
         $privateOrPublic = [
             'Private',
             'Public'
         ];
-
         $status = [
-            'Active'
+            'Active',
+            'No'
         ];
-        
+        $canceledEvents = [
+            "Canceled", //'cancelstatus' if event canceled
+            "Completed" //'cancelstatus' if event completed
+        ];
+
+        // dd(json_decode($event->vendor_type_id));
         if (!$event) {
             return back()->with('error', 'Event not found');
         }
+        if (!$event) {
+            return back()->with('error', 'Event not found');
+        }
+        return view('eventinz_admin.events.details_event', compact('event','eventTypes','vendorCategories','privateOrPublic','status','canceledEvents'));
+    }
+
+    public function adminEventUpdate(Request $request, $eventId){
+
+        $event = Event::find($eventId);
         dd();
-        return back()->with('success', 'Eventnt has been updated!');
+        return back()->with('success', 'Event has been updated!');
     }
 
     public function adminReviewsList(){

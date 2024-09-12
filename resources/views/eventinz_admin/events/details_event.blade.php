@@ -1,3 +1,4 @@
+{{-- 'eventTypes','vendorCategories','privateOrPublic','status','canceledEvents' --}}
 @extends('eventinz_admin.layouts.app')
 @section('content_admin') 
 <div class="card card-primary">
@@ -29,22 +30,35 @@
             </tr>
             <tr>
                 <th>Event type </th>
-                <td>{{ $event->eventType->name ?? ""}}</td>
+                <td>
+                    <select name="xxxxxx" id="xxxxxxx" class="form-control">
+                        @foreach ($eventTypes as $eventType)
+                            <option value="{{ $eventType->id }}" {{ $event->event_type_id == $eventType->id ? "selected" : ""}}>{{ $eventType->name }}</option>                            
+                        @endforeach
+                    </select>
+                </td>
             </tr>
             <tr>
                 <th>Vendor(s) Type</th>
                 <td>
                     @if (is_array(json_decode($event->vendor_type_id)))
-                        @foreach (json_decode($event->vendor_type_id) as $vendorTypeId)
-                            @php
-                                // Récupérer le nom du type de fournisseur par son ID
-                                $vendorType = \App\Models\VendorCategories::find($vendorTypeId);
-                            @endphp
-                            
-                            @if ($vendorType)
-                                {{ $vendorType->name }},
-                            @endif
-                        @endforeach
+                        {{--
+                            @foreach (json_decode($event->vendor_type_id) as $vendorTypeId)
+                                @php
+                                    // Récupérer le nom du type de fournisseur par son ID
+                                    $vendorType = \App\Models\VendorCategories::find($vendorTypeId);
+                                @endphp
+                                
+                                @if ($vendorType)
+                                    {{ $vendorType->name }},
+                                @endif
+                            @endforeach 
+                        --}}
+                        <select name="cccccccccccc" id="cccccccccccc" class="form-control">
+                            @foreach ($vendorCategories as $vendorCategorie)
+                                <option value="{{ $vendorCategorie->id }}" {{ in_array($vendorCategorie->id, json_decode($event->vendor_type_id)) ? "selected" : ""}}>{{ $vendorCategorie->name }}</option>
+                            @endforeach
+                        </select>
                     @else
                         "No Vendor "
                     @endif            

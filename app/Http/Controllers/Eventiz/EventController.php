@@ -532,7 +532,7 @@ class EventController extends Controller
             // On vérifie que cet évènement appartient bien à l'utilisateur authentifié
             if ($foundEvent->user_id == $user->id) {
                 $foundEvent->update([
-                    'cancelstatus' => 'Event Completed'
+                    'cancelstatus' => 'Completed'
                 ]);
                 return response()->json([
                    'message' => 'Success',
