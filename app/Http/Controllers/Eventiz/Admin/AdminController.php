@@ -701,7 +701,7 @@ class AdminController extends Controller
         ]);
         
         $fieldValidation['features'] = json_encode($fieldValidation['features']);
-        
+        // dd($fieldValidation['features']);
         $storing = VendorServiceType::create($fieldValidation);
         if (!$storing) {
             return back()->with('error', 'Add error, try again !');

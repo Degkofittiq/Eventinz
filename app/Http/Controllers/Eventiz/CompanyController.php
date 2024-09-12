@@ -24,9 +24,14 @@ class CompanyController extends Controller
     //
 
     public function vendorClasses(){
-        
+        $data = [];
         $vendorClasses = VendorServiceType::all();
-        return response()->json($vendorClasses);
+        foreach ($vendorClasses as $vendorClass) {
+            $vendorClassData = $vendorClass->toArray(); // Convertir en tableau
+            $vendorClassData['features'] = json_decode($vendorClass->features); // Décoder les 'features'
+            $data[] = $vendorClassData;
+        }
+        return response()->json($data);
     }
 
 
