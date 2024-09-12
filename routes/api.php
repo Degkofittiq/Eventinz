@@ -65,6 +65,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
 
     // Store a company 
     Route::get('/vendorclasses', [CompanyController::class, 'vendorClasses']);
+    Route::get('/vendorclass/{vendorClassId}', [CompanyController::class, 'vendorClass']);
     Route::get('/storecompany', [CompanyController::class, 'createCompanyForm']);
     Route::post('/storecompany', [CompanyController::class, 'storeCompany']);
     Route::post('/storecompanyimages', [CompanyController::class, 'storeCompanyImages']);

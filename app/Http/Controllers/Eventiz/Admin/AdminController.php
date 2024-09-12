@@ -488,7 +488,31 @@ class AdminController extends Controller
 
     public function adminEventDetails(Request $request, $eventId){
         $event = Event::find($eventId);
+        if (!$event) {
+            return back()->with('error', 'Event not found');
+        }
         return view('eventinz_admin.events.details_event', compact('event'));
+    }
+
+    public function adminEventUpdate(Request $request, $eventId){
+
+        $event = Event::find($eventId);
+        $eventTypes = EventType::all();
+        $vendorCategories = VendorCategories::all();
+        $privateOrPublic = [
+            'Private',
+            'Public'
+        ];
+
+        $status = [
+            'Active'
+        ];
+        
+        if (!$event) {
+            return back()->with('error', 'Event not found');
+        }
+        dd();
+        return back()->with('success', 'Eventnt has been updated!');
     }
 
     public function adminReviewsList(){

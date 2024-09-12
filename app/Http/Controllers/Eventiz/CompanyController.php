@@ -25,13 +25,26 @@ class CompanyController extends Controller
 
     public function vendorClasses(){
         $data = [];
-        $vendorClasses = VendorServiceType::all();
+        $vendorClasses = VendorServiceType::all()->makeHidden(['created_at', 'updated_at','id']);
         foreach ($vendorClasses as $vendorClass) {
             $vendorClassData = $vendorClass->toArray(); // Convertir en tableau
             $vendorClassData['features'] = json_decode($vendorClass->features); // Décoder les 'features'
             $data[] = $vendorClassData;
         }
         return response()->json($data);
+    }
+
+    public function vendorClass(Request $request, $vendorClassId){
+        $vendorClass = VendorServiceType::find($vendorClassId);
+        if($vendorClass){
+            $vendorClassData = $vendorClass->makeHidden(['created_at', 'updated_at','id'])->toArray(); // Convertir en tableau
+            $vendorClassData['features'] = json_decode($vendorClass->features); // Décoder les 'features'
+            return response()->json($vendorClassData);
+        }else{
+            return response()->json([
+                'error' => 'Vendor class not found'
+            ]);
+        }
     }
 
 

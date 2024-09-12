@@ -75,6 +75,7 @@ Route::prefix('admin')->middleware('auth')->group(function() {
     // Events Management
     Route::get('/admineventlist', [AdminController::class, 'adminEventList'])->name('admin.list.events');
     Route::get('/admineventdetail/{eventId}', [AdminController::class, 'adminEventDetails'])->name('admin.details.event');
+    Route::post('/updateevent/{eventId}', [AdminController::class, 'adminEventUpdate'])->name('admin.update.event');
 
     // Reviews 
     Route::get('/adminreviewlist', [AdminController::class, 'adminReviewsList'])->name('admin.list.reviews');
