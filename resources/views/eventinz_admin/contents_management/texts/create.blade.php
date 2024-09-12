@@ -62,17 +62,16 @@
   </div>
   
   <script>
-    $('#content_fr').summernote({
-      placeholder: 'Put the French content',
-      tabsize: 2,
-      height: 200
-    });
-  </script>
-  <script>
-    $('#content_en').summernote({
-      placeholder: 'Put the English content',
-      tabsize: 2,
-      height: 200
-    });
+    // $('#content_fr').summernote({
+    //   placeholder: 'Put the French content',
+    //   tabsize: 2,
+    //   height: 200
+    // });
+
+    // $('#content_en').summernote({
+    //   placeholder: 'Put the English content',
+    //   tabsize: 2,
+    //   height: 200
+    // });
   </script>
 @endsection

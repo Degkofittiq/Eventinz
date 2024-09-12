@@ -23,7 +23,7 @@
     </div>
     <!-- /.card-header -->
     {{-- {{ $servicesCategories }} --}}
-    <div class="card">
+    <div class="card"  id="responsive">
 
         <table class="table">
           <thead>

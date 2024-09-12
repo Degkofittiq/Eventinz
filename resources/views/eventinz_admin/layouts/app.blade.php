@@ -28,6 +28,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
+      
+    @media (max-width: 768px) {
+      #responsive {
+        max-width: 100%;
+        overflow-x: auto; /* Permet le défilement horizontal */
+        -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur mobile */
+      }
+      #responsive .dt-layout-row{
+        width: 100% !important;
+      }
+      
+      table {
+        width: 100%; /* S'assure que le tableau occupe tout l'espace disponible */
+        table-layout: auto; /* Ajuste automatiquement la largeur des colonnes */
+      }
+    }
   </style>
 </head>
 <body class="hold-transition sidebar-mini">

@@ -44,9 +44,9 @@
               
           <tr>
             <th scope="row">{{ $count++ }}</th>
-            <td>{{ $event->generic_id }}</td>
-            <td>{{ $event->eventOwner->username }}</td>
-            <td>{{ $event->eventType->name }}</td>
+            <td>{{ $event->generic_id ?? ""}}</td>
+            <td>{{ $event->eventOwner->username ?? ""}}</td>
+            <td>{{ $event->eventType->name ?? ""}}</td>
             <td>
                 @if (is_array(json_decode($event->vendor_type_id)))
                     @foreach (json_decode($event->vendor_type_id) as $vendorTypeId)
@@ -56,19 +56,19 @@
                         @endphp
                         
                         @if ($vendorType)
-                            {{ $vendorType->name }},
+                            {{ $vendorType->name ?? ""}},
                         @endif
                     @endforeach
                 @else
                     "No Vendor "
                 @endif
             </td>
-            <td>{{ $event->aprx_budget }}</td>
-            <td>{{ $event->is_pay_done == 1 ? "Yes" : "Not yet" }}</td>
-            <td>{{ $event->public_or_private == 1 ? "Private" : "Public" }}</td>
+            <td>{{ $event->aprx_budget ?? ""}}</td>
+            <td>{{ $event->is_pay_done == 1 ? "Yes" : "Not yet" ?? ""}}</td>
+            <td>{{ $event->public_or_private == 1 ? "Private" : "Public" ?? ""}}</td>
             <td>
-              <a href="{{ route('admin.details.event', $event->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
-              {{-- <a href="{{ route('admin.deleteform.event', $event->id) }}"   class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a> --}}
+              <a href="{{ route('admin.details.event', $event->id) ?? ""}}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
+              {{-- <a href="{{ route('admin.deleteform.event', $event->id) ?? ""}}"   class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a> --}}
             </td>
           </tr>
           @empty

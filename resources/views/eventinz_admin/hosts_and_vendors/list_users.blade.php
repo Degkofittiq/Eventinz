@@ -1,5 +1,34 @@
 @extends('eventinz_admin.layouts.app')
-
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+<style>
+  #dt-length-0{
+    margin: 5px !important;
+  }
+  .dt-length label{
+    text-transform: uppercase;
+  }
+  #padding{
+    padding: 5px !important;
+    width: 100%;
+  }
+  @media (max-width: 768px) {
+    #responsive {
+      max-width: 100%;
+      overflow-x: auto; /* Permet le défilement horizontal */
+      -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur mobile */
+    }
+    #responsive .dt-layout-row{
+      width: 100% !important;
+    }
+    
+    table {
+      width: 100%; /* S'assure que le tableau occupe tout l'espace disponible */
+      table-layout: auto; /* Ajuste automatiquement la largeur des colonnes */
+    }
+  }
+</style>
 @section('content_admin') 
 <div class="card card-primary">
   @if(session('success'))
@@ -23,17 +52,17 @@
       </div>
     </div>
     <!-- /.card-header -->
-    <div class="card">
-      <table class="table">
+    <div class="card" id="responsive">
+      <table class="table" id="myTable">
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Generic Ids</th>
-            <th scope="col">Names</th>
+            <th scope="col">Generic</th>
+            {{-- <th scope="col">Names</th> --}}
             <th scope="col">Usernames</th>
             <th scope="col">Emails</th>
             <th scope="col">Credits</th>
-            <th scope="col">User Type</th>
+            <th scope="col">Type</th>
             <th scope="col">Profile Image</th>
             <th scope="col">Last time Online</th>
             <th scope="col">Actions</th>
@@ -46,16 +75,16 @@
           <tr>
             <th scope="row">{{ $count++ }}</th>
             <td>{{ $user->generic_id }}</td>
-            <td>{{ $user->name }}</td>
+            {{-- <td>{{ $user->name }}</td> --}}
             <td>{{ $user->username }}</td>
             <td>{{ $user->email }}</td>
             <td>{{ $user->credit }}</td>
             <td>{{ $user->role_id == 1 ? "Host" : "Vendor" }}</td>
             <td>
                 @if ($user->profile_image == "")
-                    <img src="{{ asset('AdminTemplate/dist/img/user-avatars-thumbnail_2.png') }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black">
+                    <img src="{{ asset('AdminTemplate/dist/img/user-avatars-thumbnail_2.png') }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black; min-width:50px;min-height:50px;">
                 @else
-                    <img src="{{ asset('storage/'. $user->profile_image) }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black">
+                    <img src="{{ $user->profile_image }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black; min-width:50px;min-height:50px;">
                 @endif
             </td>
             <td>
@@ -79,4 +108,15 @@
       </table>
     </div>
 </div>
-@endsection
+
+
+<script>
+  let table = new DataTable('#myTable', {
+    responsive: true, // Ajoute la réactivité
+    columnDefs: [
+      { orderable: false, targets: [7] } // 7 est l'index de la colonne 'Actions', car les index commencent à 0
+    ]
+  }
+  );
+</script>
+@endsection 

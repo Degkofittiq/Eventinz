@@ -22,7 +22,7 @@
       </div> --}}
     </div>
     <!-- /.card-header -->
-    <div class="card">
+    <div class="card" id="responsive">
 
         <table class="table">
           <thead>
