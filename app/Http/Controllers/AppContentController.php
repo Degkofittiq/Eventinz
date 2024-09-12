@@ -22,9 +22,9 @@ class AppContentController extends Controller
         $paymentTaxes = PaymentTaxe::all()->makeHidden(['created_at', 'updated_at','name'])->keyBy('name');
 
         return response()->json([
-            'contentTexts' => json_decode($contentTexts),
-            'contentImages' => json_decode($contentImages),
-            'paymentTaxes' => json_decode($paymentTaxes)
+            'contentTexts' => $contentTexts,
+            'contentImages' => $contentImages,
+            'paymentTaxes' => $paymentTaxes
         ]);
     }
 }

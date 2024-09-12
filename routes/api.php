@@ -63,7 +63,8 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     // // Update password
     // Route::patch('/password', [AuthController::class, 'updatePassword']);
 
-    // Store a company
+    // Store a company 
+    Route::get('/vendorclasses', [CompanyController::class, 'vendorClasses']);
     Route::get('/storecompany', [CompanyController::class, 'createCompanyForm']);
     Route::post('/storecompany', [CompanyController::class, 'storeCompany']);
     Route::post('/storecompanyimages', [CompanyController::class, 'storeCompanyImages']);

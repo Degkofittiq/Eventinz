@@ -12,6 +12,7 @@ use App\Rules\SameSizeAs;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use App\Models\VendorCategories;
+use App\Models\VendorServiceType;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,13 @@ use Illuminate\Support\Facades\Storage;
 class CompanyController extends Controller
 {
     //
+
+    public function vendorClasses(){
+        
+        $vendorClasses = VendorServiceType::all();
+        return response()->json($vendorClasses);
+    }
+
 
     public function createCompanyForm(Request $request){
         

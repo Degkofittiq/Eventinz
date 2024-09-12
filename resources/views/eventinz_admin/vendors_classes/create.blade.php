@@ -17,11 +17,11 @@
     @endif
 
     <div class="card-header">
-      <h3 class="card-title">Add new Service Category</h3>
+      <h3 class="card-title">Add new Vendor class</h3>
     </div>
     <!-- /.card-header -->
     <!-- form start -->
-    <form method="POST" action="{{ route('admin.store.subscriptionplan') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.add.vendorclass') }}" enctype="multipart/form-data">
         @csrf
       <div class="card-body">
         <div class="form-group">
