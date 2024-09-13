@@ -27,7 +27,7 @@ return new class extends Migration
             $table->unsignedBigInteger('google_id')->nullable();
             $table->string('password'); //
             $table->unsignedBigInteger('role_id');
-            $table->text('rights');
+            $table->text('rights')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('profile_image')->nullable();
             $table->Integer('credit')->default(0);

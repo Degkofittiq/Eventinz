@@ -16,34 +16,41 @@
     </div>
     <!-- /.card-header -->
     <table class="table">
-        <tr>
-            <th>Generic Id</th>
-            <td>{{ $adminUserFound->generic_id }}</td>
-        </tr>  
+    <tr>
+        <th>Generic Id</th>
+        <td>{{ $adminUserFound->generic_id }}</td>
+    </tr>  
+
     <tr>
         <th>Name</th>
         <td>{{ $adminUserFound->name }}</td>
     </tr>
+
     <tr>
         <th>Username</th>
         <td>{{ $adminUserFound->username }}</td>
     </tr>
+
     <tr>
         <th>Email</th>
         <td>{{ $adminUserFound->email }}</td>
     </tr>
+
     <tr>
         <th>Gender</th>
         <td>{{ $adminUserFound->user_genders_id ?? "Not set yet"}}</td>
     </tr>    
+
     <tr>
         <th>Occupation</th>
         <td>{{ $adminUserFound->occupation ?? "Not set yet"}}</td>
     </tr>
+
     <tr>
         <th>Location</th>
         <td>{{ $adminUserFound->location ?? "Not set yet"}}</td>
     </tr>
+
     <tr>
         <th>Age</th>
         <td>
@@ -58,17 +65,21 @@
             @endif
         </td>
     </tr>
+
     <tr>
         <th>Last time online</th>
         <td>{{ $adminUserFound->last_time_user_online }} ({{ str_replace('after', 'Ago',\Carbon\Carbon::now()->diffForHumans($adminUserFound->last_time_user_online)) }})</td>
     </tr>
+
     <tr>
         <th colspan="2">
             <center>
                 Right(s)
             </center>
         </th>
-        <td>
+    </tr>
+    <tr>
+        <td colspan="2">
             @if ($adminUserFound->admin_rights)
                 @php
                     $adminUserFoundRights = json_decode($adminUserFound->admin_rights);
@@ -77,9 +88,11 @@
                     <span class="badge badge-success">{{$right->name}}</span>
                 @endforeach
             @else
-                No Right Set Yet
+                <center>
+                    No Right(s) set yet.
+                </center>
             @endif
-        </td>
+        </td>            
     </tr>
 </table>
 </div>
