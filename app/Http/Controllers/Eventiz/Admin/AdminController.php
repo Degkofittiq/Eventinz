@@ -493,16 +493,20 @@ class AdminController extends Controller
         $eventTypes = EventType::all();
         $vendorCategories = VendorCategories::all();
         $privateOrPublic = [
-            'Private',
-            'Public'
+            1, //'Private'
+            0, 'Public'
         ];
         $status = [
-            'Active',
+            'Yes',
             'No'
         ];
         $canceledEvents = [
             "Canceled", //'cancelstatus' if event canceled
             "Completed" //'cancelstatus' if event completed
+        ];
+        $is_pay_dones = [
+            0, // 'Not yet',
+            1 // 'Yes'  // paid
         ];
 
         // dd(json_decode($event->vendor_type_id));
@@ -512,15 +516,56 @@ class AdminController extends Controller
         if (!$event) {
             return back()->with('error', 'Event not found');
         }
-        return view('eventinz_admin.events.details_event', compact('event','eventTypes','vendorCategories','privateOrPublic','status','canceledEvents'));
+        return view('eventinz_admin.events.details_event', compact('event','eventTypes','vendorCategories','privateOrPublic','status','canceledEvents','is_pay_dones'));
     }
 
     public function adminEventUpdate(Request $request, $eventId){
 
         $event = Event::find($eventId);
-        dd();
+    
+        if (!$event) {
+            return back()->with('error', 'Event not found');
+        }
+    
+        $dataValidate =  $request->validate([
+            'event_type_id' => 'required|integer',
+            'vendor_type_id' => [
+                'required',
+                'array',
+                'min:1',
+            ],
+            'duration' => 'required|string',
+            'start_date' => 'required|date',
+            'aprx_budget' => 'required|numeric|between:0,999999.99',
+            'guest_number' => 'required|integer',
+            'travel' => !empty($request->input('travel')) 
+                ? 'required|string|min:2' 
+                : 'nullable|string',
+            'country' => 'required|string',
+            'state' => 'required|string',
+            'city' => 'required|string',
+            'subcategory' => 'nullable|string',
+            'public_or_private' => 'required|integer',
+            'description' => 'required|string|max:255',
+            'is_pay_done' => 'nullable|boolean',
+            'total_amount' => count($request->input('vendor_type_id')) > 1 
+                ? 'required|numeric|regex:/^\d+(\.\d{1,2})?$/' 
+                : 'nullable',
+            'vendor_poke' => $request->input('public_or_private') == 0 
+                ? 'nullable' 
+                : 'required',
+                'cancelstatus' => 'required|string',
+                'status' => 'required|string',
+        ]);
+
+        
+        // dd($dataValidate);
+    
+        $update = $event->update($dataValidate);
+    
         return back()->with('success', 'Event has been updated!');
     }
+    
 
     public function adminReviewsList(){
         $allReviews = Review::all();

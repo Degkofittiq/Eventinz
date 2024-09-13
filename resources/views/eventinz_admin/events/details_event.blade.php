@@ -1,4 +1,3 @@
-{{-- 'eventTypes','vendorCategories','privateOrPublic','status','canceledEvents' --}}
 @extends('eventinz_admin.layouts.app')
 @section('content_admin') 
 <div class="card card-primary">
@@ -17,7 +16,7 @@
       <h3 class="card-title">Event Found Details</h3>
     </div>
     <!-- /.card-header -->
-    <form action="{{ route('admin.update.event',$event->id) }}" method="post">
+    <form action="{{ route('admin.update.event', $event->id) }}" method="post">
         @csrf
         <table class="table">
             <tr>
@@ -31,18 +30,19 @@
             <tr>
                 <th>Event type </th>
                 <td>
-                    <select name="xxxxxx" id="xxxxxxx" class="form-control">
+                    <select name="event_type_id" id="event_type_id" class="form-control @error('event_type_id') is-invalid @enderror">
                         @foreach ($eventTypes as $eventType)
                             <option value="{{ $eventType->id }}" {{ $event->event_type_id == $eventType->id ? "selected" : ""}}>{{ $eventType->name }}</option>                            
                         @endforeach
                     </select>
+                    @error('event_type_id') <p> {{ $message }} </p> @enderror
                 </td>
             </tr>
             <tr>
                 <th>Vendor(s) Type</th>
                 <td>
                     @if (is_array(json_decode($event->vendor_type_id)))
-                        {{--
+                        <strong>Current choice: </strong>
                             @foreach (json_decode($event->vendor_type_id) as $vendorTypeId)
                                 @php
                                     // Récupérer le nom du type de fournisseur par son ID
@@ -53,12 +53,13 @@
                                     {{ $vendorType->name }},
                                 @endif
                             @endforeach 
-                        --}}
-                        <select name="cccccccccccc" id="cccccccccccc" class="form-control">
+                       
+                        <select name="vendor_type_id[]" id="vendor_type_id" class="form-control  @error('vendor_type_id') is-invalid @enderror" multiple >
                             @foreach ($vendorCategories as $vendorCategorie)
                                 <option value="{{ $vendorCategorie->id }}" {{ in_array($vendorCategorie->id, json_decode($event->vendor_type_id)) ? "selected" : ""}}>{{ $vendorCategorie->name }}</option>
                             @endforeach
                         </select>
+                        @error('vendor_type_id') <p> {{ $message }} </p> @enderror
                     @else
                         "No Vendor "
                     @endif            
@@ -66,92 +67,157 @@
             </tr>
             <tr>
                 <th>Duration</th>
-                <td>{{ $event->duration ?? ""}}</td>
+                <td>
+                    <input type="text" name="duration" id="duration" value="{{ $event->duration ?? ""}}" class="form-control  @error('duration') is-invalid @enderror">
+                    @error('duration') <p> {{ $message }} </p> @enderror
+                </td>
             </tr>
             <tr>
                 <th>Date</th>
-                <td>{{ $event->start_date ?? ""}}</td>
+                <td>
+                    <input type="date" name="start_date" id="start_date" value="{{ $event->start_date ?? ""}}" class="form-control  @error('start_date') is-invalid @enderror">
+                    @error('start_date') <p> {{ $message }} </p> @enderror
+                </td>
             </tr>
             <tr>
-                <th>Approximate Budget</th>
-                <td>{{ $event->aprx_budget ?? ""}} $</td>
+                <th>Approximate Budget <strong>($)</strong> </th>
+                <td>
+                    <input class="form-control  @error('aprx_budget') is-invalid @enderror" type="number" name="aprx_budget" id="aprx_budget" step="0.01" value="{{ $event->aprx_budget ?? ""}}">
+                    @error('total_amount') <p> {{ $message }} </p> @enderror
+                </td>
+            </tr>
+            <tr>
+                <th>Total Amount <strong>($)</strong> </th>
+                {{-- If select more vendors than 1 --}}
+                <td>
+                    <input class="form-control  @error('total_amount') is-invalid @enderror" type="number" name="total_amount" id="total_amount" step="0.01" value="{{ $event->total_amount ?? ""}}">
+                    @error('total_amount') <p> {{ $message }} </p> @enderror
+                </td>
             </tr>
             <tr>
                 <th>Guests Number</th>
-                <td>{{ $event->guest_number ?? ""}}</td>
+                <td>
+                    <input class="form-control  @error('guest_number') is-invalid @enderror" type="number" name="guest_number" id="guest_number" value="{{ $event->guest_number ?? ""}}">
+                    @error('guest_number') <p> {{ $message }} </p> @enderror
+                </td>
             </tr>
             <tr>
                 <th>Country</th>
-                <td>{{ $event->country ?? ""}}</td>
+                <td>
+                    <input class="form-control  @error('country') is-invalid @enderror" type="text" name="country" id="country" value="{{ $event->country ?? ""}}">
+                    @error('country') <p> {{ $message }} </p> @enderror                    
+                </td>
             </tr>
             <tr>
                 <th>State</th>
-                <td>{{ $event->state ?? ""}}</td>
+                <td>
+                    <input class="form-control  @error('state') is-invalid @enderror" type="text" name="state" id="state" value="{{ $event->state ?? ""}}">
+                    @error('state') <p> {{ $message }} </p> @enderror                    
+                </td>
             </tr>
             <tr>
                 <th>City</th>
-                <td>{{ $event->city ?? ""}}</td>
+                <td>
+                    <input class="form-control  @error('city') is-invalid @enderror" type="text" name="city" id="city" value="{{ $event->city ?? ""}}">
+                    @error('city') <p> {{ $message }} </p> @enderror                                        
+                </td>
             </tr>
             <tr>
                 <th>Subcategory</th>
-                <td>{{ $event->subcategory ?? ""}}</td>
+                <td>
+                    <input class="form-control  @error('subcategory') is-invalid @enderror" type="text" name="subcategory" id="subcategory" value="{{ $event->subcategory ?? ""}}">
+                    @error('subcategory') <p> {{ $message }} </p> @enderror                    
+                </td>
             </tr>
             <tr>
                 <th>Private or Public</th>
-                <td>{{ $event->public_or_private == 0 ? "Public" : "Private"}}</td>
+                <td>
+                    <select class="form-control  @error('public_or_private') is-invalid @enderror" name="public_or_private" id="public_or_private">
+                        @foreach ($privateOrPublic as $item)
+                            <option value="{{ $item }}" {{ $event->public_or_private == $item ? "selected" : ""}}>{{ $item  == 0 ? "Public" : "Private"}}</option>
+                        @endforeach
+                    </select>
+                    @error('public_or_private') <p> {{ $message }} </p> @enderror                    
+                </td>
             </tr>
             <tr>
                 <th>Additional</th>
                 <td>
-                    <textarea name="description" id="" cols="30" rows="5" class="form-control">{{ $event->description ?? ""}}</textarea>
+                    <textarea name="description" id="" cols="30" rows="5" class="form-control  @error('description') is-invalid @enderror">{{ $event->description ?? ""}}</textarea>
+                    @error('description') <p> {{ $message }} </p> @enderror 
                 </td>
             </tr>
             <tr>
-            @if ($event->public_or_private == 1 && $event->vendor_poke)
-                <tr>
-                    <th>Vendor Poke</th>
-                    <td>
-                        @if (is_array(json_decode($event->vendor_poke)))
-                            @foreach (json_decode($event->vendor_poke) as $vendorPokeId)
-                                @php
-                                    // Récupérer le nom du type de fournisseur par son ID
-                                    $vendorPoke = \App\Models\VendorCategories::find($vendorPokeId);
-                                @endphp
-                                
-                                @if ($vendorPoke)
-                                    {{ $vendorPoke->name }},
-                                @endif
-                            @endforeach
-                        @else
-                            No Vendor Found
-                        @endif                         
-                    </td>
-                </tr>                
-            @endif 
+                @if ($event->public_or_private == 1 && $event->vendor_poke)
+                    <tr>
+                        <th>Vendor Poke</th>
+                        <td>
+                            @if (is_array(json_decode($event->vendor_poke)))
+                                @foreach (json_decode($event->vendor_poke) as $vendorPokeId)
+                                    @php
+                                        // Récupérer le nom du type de fournisseur par son ID
+                                        $vendorPoke = \App\Models\VendorCategories::find($vendorPokeId);
+                                    @endphp
+                                    
+                                    @if ($vendorPoke)
+                                        {{ $vendorPoke->name }},
+                                    @endif
+                                @endforeach
+
+                                <select name="vendor_poke[]" id="vendor_poke[]" class="form-control  @error('vendor_poke') is-invalid @enderror" multiple >
+                                    @foreach ($vendorCategories as $vendorCategorie)
+                                        <option value="{{ $vendorCategorie->id }}" {{ in_array($vendorCategorie->id, json_decode($event->vendor_poke)) ? "selected" : ""}}>{{ $vendorCategorie->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('vendor_poke') <p> {{ $message }} </p> @enderror
+                            @else
+                                No Vendor Found
+                            @endif                         
+                        </td>
+                    </tr>                
+                @endif 
             <tr>
                 <th>Status</th>
-                <td>{{ $event->status == "Yes" ? "Active" : "Not Active yet"}}</td>
+                <td>
+                    <select name="status" id="status" class="form-control  @error('status') is-invalid @enderror">
+                        @foreach ($status as $item)
+                            <option value="{{  $item }}" {{ $event->status == "Yes" ? "Active" : "Not Active yet"}}>{{  $item == "Yes" ? "Active" : "Not Active yet"}}</option>
+                        @endforeach
+                    </select>
+                    @error('status') <p> {{ $message }} </p> @enderror
+                </td>
             </tr>
             <tr>
                 <th>Canceled or Completed</th>
-                <td>{{ $event->cancelstatus == "no" ? "No yet" : $event->cancelstatus}}</td>
+                <td>
+                    <select name="cancelstatus" id="cancelstatus" class="form-control  @error('cancelstatus') is-invalid @enderror">
+                        <option value="no" {{ $event->cancelstatus == "no" ? "selected" : "" }}>Not chage value this</option>
+                        @foreach ($canceledEvents as $item)                                                                                
+                            <option value="{{ $item }}" {{ $event->cancelstatus == $item ? "selected" : "" }}>
+                                    {{ $item }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('cancelstatus') <p> {{ $message }} </p> @enderror
+                </td>
             </tr>
             <tr>
                 <th>Is paid</th>
-                {{--  pending  --}}
-                @if ($event->is_pay_done == 0)
-                    <td class="text-warning">
-                        <strong>
-                            Not Yet
-                        </strong>
-                    </td>
-                @else
-                    <strong>
-                        <td class="text-success">
-                            Yes
-                        </td>              
-                    </strong>          
-                @endif
+                <td>
+                    <select name="is_pay_done" id="is_pay_done" class="form-control  @error('is_pay_done') is-invalid @enderror">
+                        @foreach ($is_pay_dones as $item)
+                            <option value="{{ $item }}" {{ $event->is_pay_done == $item ? "selected" : "" }}> {{ $item == 0 ? "Not yet" : "Yes" }}</option>
+                        @endforeach
+                    </select>
+                    @error('is_pay_done') <p> {{ $message }} </p> @enderror
+                </td>
+            </tr>
+            <tr>
+                <th>Travel</th>
+                <td>
+                    <input type="checkbox" name="travel" id="travel" class=" @error('travel') is-invalid @enderror">
+                    @error('travel') <p> {{ $message }} </p> @enderror
+                </td>
             </tr>
             <tr>
                 <th>Action</th>

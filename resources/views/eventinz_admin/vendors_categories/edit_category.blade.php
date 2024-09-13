@@ -29,9 +29,7 @@
         </div>
         <div class="form-group">
           <label for="description">Description <span style="color: red"><strong>*</strong></label>
-        <textarea name="description" id="description" class="form-control  @error('description') is-invalid @enderror" cols="30" rows="10">
-          {{ $category->description }}
-        </textarea>
+        <textarea name="description" id="description" class="form-control  @error('description') is-invalid @enderror" cols="30" rows="10">{{ $category->description }}</textarea>
         @error('description') <p> {{ $message }} </p> @enderror
         </div>
         <div class="form-group">
@@ -43,8 +41,8 @@
                 <div class="info-box shadow">
     
                   <div class="info-box-content">
-                    {{-- <img src="{{ asset("storage/".$category->category_file) }}" alt=""> --}}
-                    <img src="{{ Storage::disk('s3')->url($category->category_file) }}" alt="">
+                    <img src="{{ $category->category_file }}" alt="">
+                    {{-- <img src="{{ Storage::disk('s3')->url($category->category_file) }}" alt=""> --}}
                   </div>
                   <!-- /.info-box-content -->
                 </div>
