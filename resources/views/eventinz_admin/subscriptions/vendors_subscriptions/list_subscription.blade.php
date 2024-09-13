@@ -78,7 +78,7 @@
 <script>
   let table = new DataTable('#myTable', {
     columnDefs: [
-      { orderable: false, targets: [7] } // 7 est l'index de la colonne 'Actions', car les index commencent à 0
+      { orderable: false, targets: [5] } // 5 est l'index de la colonne 'Actions', car les index commencent à 0
     ]
   }
   );

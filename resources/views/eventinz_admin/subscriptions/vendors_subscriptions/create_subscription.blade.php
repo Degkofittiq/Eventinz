@@ -55,7 +55,7 @@
         </div>
 
         <!-- Dynamic Features Section -->
-        <div class="form-group">
+        {{-- <div class="form-group">
             <label for="features">Features</label>
             <div id="features-wrapper">
                 <div class="feature-group d-flex align-items-center mb-2">
@@ -67,7 +67,7 @@
             <button type="button" class="btn btn-success mt-3" id="btn-add-feature">
                 <i class="fa fa-plus"> Add Features</i>
             </button>
-        </div>
+        </div> --}}
 
       </div>
       <!-- /.card-body -->
@@ -77,7 +77,7 @@
       </div>
     </form>
   </div>
-  
+{{--   
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const featuresWrapper = document.getElementById('features-wrapper');
@@ -104,5 +104,5 @@
                 });
             });
         });
-    </script>
+    </script> --}}
 @endsection

@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Models\Services;
 use App\Mail\SuccessMail;
 use App\Rules\SameSizeAs;
+use App\Models\PaymentTaxe;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use App\Models\VendorCategories;
@@ -145,10 +146,15 @@ class CompanyController extends Controller
     }
 
     public function subscriptionChoose(Request $request, $subscriptionId){
-        $subcription = Subscription::where('id',  $subscriptionId)->first();
-        
+        $subcription = Subscription::where('id',  $subscriptionId)->first()->makeHidden(['created_at', 'updated_at']);
+        $taxe = PaymentTaxe::where('id',1)->first();
+        // dd($taxe->value);
         if ($subcription) {
-                
+            if ($taxe) {
+                $subcription['taxe'] = round($subcription['price'] * ($taxe->value / 100), 2);
+            }else {
+                $subcription['taxe'] = $subcription['price'] * 1;
+            }
             return response()->json([
                 'status' => 200,
                 'Subscription choose' => $subcription
