@@ -35,13 +35,30 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item">
-            <a href="{{ route('admin.userslist.index') }}" class="nav-link  {{ request()->url() == route('admin.userslist.index') ? "active" : "" }}">
-              <i class="far fa-circle nav-icon"></i>
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-plus-square"></i>
               <p>
-                Hosts & Vendors List
+                Users Management
+                <i class="right fas fa-angle-left"></i>
               </p>
             </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.userslist.index') }}" class="nav-link  {{ request()->url() == route('admin.userslist.index') ? "active" : "" }}">
+                  <i class="far fa-dot-circle nav-icon"></i>
+                  <p>
+                    Hosts & Vendors List
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.list.adminusers') }}" class="nav-link {{ request()->url() == route('admin.list.adminusers') ? "active" : "" }}">
+                  <i class="far fa-dot-circle nav-icon"></i>
+                  <p>Amin Users List</p>
+                </a>
+              </li>
+            </ul>
           </li>
           <li class="nav-item">
             <a href="{{ route('admin.resendform.otp') }}" class="nav-link {{ request()->url() == route('admin.resendform.otp') ? "active" : "" }}">
@@ -99,7 +116,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item menu-open">
+          <li class="nav-item ">
             <a href="#" class="nav-link">
               <i class="nav-icon far fa-plus-square"></i>
               <p>
@@ -128,7 +145,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item menu-open">
+          <li class="nav-item ">
             <a href="#" class="nav-link">
               <i class="nav-icon far fa-plus-square"></i>
               <p>

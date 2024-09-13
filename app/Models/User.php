@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Role;
 use App\Models\Company;
 use App\Models\Subscription;
 use App\Models\Paymenthistory;
@@ -56,6 +57,12 @@ class User extends Authenticatable
         // 'profile_image' => 'array', // Cast la colonne images comme tableau
     ];
     
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     public function company(): HasOne
     {
         return $this->hasOne(Company::class, 'users_id');

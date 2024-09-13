@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Eventiz\Admin\AdminController;
+use App\Http\Controllers\Eventiz\Admin\AdminUsersController;
 use App\Http\Controllers\Eventiz\Admin\SubscriptionPlanController;
 
 // Préfixe toutes les routes avec "admin"
@@ -117,4 +118,12 @@ Route::prefix('admin')->middleware('auth')->group(function() {
     Route::get('/deletepaymenttaxeform/{PaymentTaxeId}', [AdminController::class, 'deletePaymentTaxeForm'])->name('admin.deleteform.paymenttaxe'); // delete form
     Route::post('/deletepaymenttaxe/{PaymentTaxeId}', [AdminController::class, 'deletePaymentTaxe'])->name('admin.delete.paymenttaxe'); // delete
 
+    // Admin user Management 
+    Route::get('/adminuserlist', [AdminUsersController::class, 'adminUserList'])->name('admin.list.adminusers'); // List admin users
+    Route::get('/addadminuser', [AdminUsersController::class, 'addAdminUserForm'])->name('admin.add.adminuserform'); // Add form
+    Route::post('/addadminuser', [AdminUsersController::class, 'addAdminUser'])->name('admin.add.adminuser'); // Add POST action
+    Route::get('/editadminuser/{adminUserId}', [AdminUsersController::class, 'editAdminUserForm'])->name('admin.edit.adminuserform'); // Edit form
+    Route::post('/updateadminUser/{adminUserId}', [AdminUsersController::class, 'updateAdminUser'])->name('admin.update.adminuser'); // Edit POST action
+    Route::get('/deleteadminuserform/{adminUserId}', [AdminUsersController::class, 'deleteAdminUserForm'])->name('admin.deleteform.adminuser');
+    Route::get('/deleteadminuser/{adminUserId}', [AdminUsersController::class, 'deleteAdminUser'])->name('admin.delete.adminuser');
 });

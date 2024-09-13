@@ -1,4 +1,11 @@
-
+<style>
+  #no-hover:hover{
+    text-decoration: none;
+  }
+  #no-hover{
+    text-decoration: none;
+  }
+</style>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -134,11 +141,11 @@
             <i class="fas fa-user mr-2"></i> My Profile
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a href="#" class="dropdown-item" id="no-hover">
             <form action="{{ route('admin.logout') }}" method="post">
               @csrf
-              <button type="submit">
-                <i class="fas fa-sign-out-alt" style="text-decoration: none"></i> 
+              <button type="submit" class="btn" style="padding-left: 0px !important">
+                <i class="fas fa-sign-out-alt mr-2" style="text-decoration: none"></i> 
                 Loggout
               </button>
             </form>

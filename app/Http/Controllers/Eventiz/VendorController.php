@@ -68,7 +68,7 @@ class VendorController extends Controller
         $company = Company::find($id);
         $companyReviews = Review::where('user_id', $company->users_id)->get();
         $companyServices = Services::where('company_id', $company->id)->get();
-        $companyVendor = User::where('id', $company->users_id)->first();
+        $companyVendor = User::where('id', $company->users_id)->first()->makeHidden(['created_at', 'updated_at', 'credit','otp','is_otp_valid','email_verified_at','facebook_id','google_id']);
 
         $vendorCategoryIds = json_decode($company->vendor_categories_id, true);
         // Récupération des noms des catégories de vendeur
@@ -89,7 +89,7 @@ class VendorController extends Controller
             'company Services List:' => $companyServices,
             'company Service(s) Categorie:' => $companyServicesArray,
             'company Reviews' => $companyReviews,
-            'company Vendor' => $companyVendor->username
+            'company Vendor' => $companyVendor
         ]);
     }
 }

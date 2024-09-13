@@ -43,12 +43,12 @@
       </div>
   @endif
     <div class="card-header">
-      <h3 class="card-title">Hosts & Vendors List</h3>
+      <h3 class="card-title">Admin Users List</h3>
       <div class="card-tools">
-        {{-- <a href="{{ route('admin.add.users') }}" class="btn bg-default">
+        <a href="{{ route('admin.add.adminuserform') }}" class="btn bg-default">
           <i class="fas fa-plus"></i>
           Add New
-        </a> --}}
+        </a>
       </div>
     </div>
     <!-- /.card-header -->
@@ -58,9 +58,9 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Generic</th>
+            {{-- <th scope="col">Names</th> --}}
             <th scope="col">Usernames</th>
             <th scope="col">Emails</th>
-            <th scope="col">Credits</th>
             <th scope="col">Type</th>
             <th scope="col">Profile Image</th>
             <th scope="col">Last time Online</th>
@@ -69,7 +69,7 @@
         </thead>
         <tbody>
           <?php  $count = 1;  ?>
-          @forelse ($users as $user)
+          @forelse ($adminUsers as $user)
               
           <tr>
             <th scope="row">{{ $count++ }}</th>
@@ -77,8 +77,7 @@
             {{-- <td>{{ $user->name }}</td> --}}
             <td>{{ $user->username }}</td>
             <td>{{ $user->email }}</td>
-            <td>{{ $user->credit }}</td>
-            <td>{{ $user->role->name ?? "" }}</td>
+            <td>{{ $user->role->name }}</td>
             <td>
                 @if ($user->profile_image == "")
                     <img src="{{ asset('AdminTemplate/dist/img/user-avatars-thumbnail_2.png') }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black; min-width:50px;min-height:50px;">
@@ -94,7 +93,7 @@
               @endif
             </td>
             <td>
-              <a href="{{ route('admin.details.user',$user->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
+              <a href="{{ route('admin.edit.adminuserform',$user->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
               {{-- <a href="{{ route('admin.deleteform.user', $user->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a> --}}
             </td>
           </tr>
@@ -113,7 +112,7 @@
   let table = new DataTable('#myTable', {
     responsive: true, // Ajoute la réactivité
     columnDefs: [
-      { orderable: false, targets: [8] } // 7 est l'index de la colonne 'Actions', car les index commencent à 0
+      { orderable: false, targets: [6] } // 6 est l'index de la colonne 'Actions', car les index commencent à 0
     ]
   }
   );

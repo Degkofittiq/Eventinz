@@ -25,18 +25,18 @@ class UserSeeder extends Seeder
             'password' => Hash::make('eventinzAdmin@'),
             'is_otp_valid' => "yes",
             'role_id' => '4',
-            'otp' => '879809',
+            'otp' => '100529',
         ]);
 
-        // DB::table('users')->insert([
-        //     'generic_id' => 'EVT-000001',
-        //     'name' => 'Basit',
-        //     'username' => '@BI',
-        //     'email' => 'basitadmin@gmail.com',
-        //     'password' => Hash::make('basitAdmin123@'),
-        //     'is_otp_valid' => "yes",
-        //     'role_id' => '4',
-        //     'otp' => '879809',
-        // ]);
+        DB::table('users')->insert([
+            'generic_id' => 'EVT-000002',
+            'name' => 'Basit',
+            'username' => '@BI',
+            'email' => 'basitadmin@gmail.com',
+            'password' => Hash::make('basitAdmin123@'),
+            'is_otp_valid' => "yes",
+            'role_id' => '3',
+            'otp' => '879809',
+        ]);
     }
 }

@@ -25,7 +25,11 @@
             </tr>
             <tr>
                 <th>User Name</th>
-                <td>{{ $event->eventOwner->username ?? ""}}</td>
+                <td>
+                    <a href="{{ $event->user_id ? route('admin.details.user', $event->user_id) : "#" }}" style="text-decoration: underline; color:black">
+                        {{ $event->eventOwner->username ?? ""}}
+                    </a>
+                </td>
             </tr>
             <tr>
                 <th>Event type </th>
