@@ -1,5 +1,19 @@
 @extends('eventinz_admin.layouts.app')
-
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+<style>
+  #dt-length-0{
+    margin: 5px !important;
+  }
+  .dt-length label{
+    text-transform: uppercase;
+  }
+  .padding{
+    padding: 5px !important;
+    width: 100%;
+  }
+</style>
 @section('content_admin') 
 <div class="card card-primary">
   @if(session('success'))
@@ -23,16 +37,16 @@
       </div>
     </div>
     <!-- /.card-header -->
-    <div class="card">
-      <table class="table">
+    <div class="card padding" id="responsive">
+      <table class="table" id="myTable">
         <thead>
           <tr>
             <th scope="col">#</th>
             <th scope="col">Generic Ids</th>
-            <th scope="col">Event owner</th>
-            <th scope="col">Event type</th>
-            <th scope="col">Vendor type</th>
-            <th scope="col">Approximate budget</th>
+            <th scope="col">Owner</th>
+            <th scope="col">Type</th>
+            <th scope="col">Vendor(s)</th>
+            <th scope="col">Aprx budget</th>
             <th scope="col">Pay Status</th>
             <th scope="col">Public/Private</th>
             <th scope="col">Actions</th>
@@ -45,7 +59,9 @@
           <tr>
             <th scope="row">{{ $count++ }}</th>
             <td>{{ $event->generic_id ?? ""}}</td>
-            <td>{{ $event->eventOwner->username ?? ""}}</td>
+            <td>
+              <a href="{{ $event->user_id ? route('admin.details.user', $event->user_id) : "#" }}" style="text-decoration: underline; color:black;">{{ $event->eventOwner->username ?? ""}}</a>
+            </td>
             <td>{{ $event->eventType->name ?? ""}}</td>
             <td>
                 @if (is_array(json_decode($event->vendor_type_id)))
@@ -80,4 +96,13 @@
       </table>
     </div>
 </div>
+
+<script>
+  let table = new DataTable('#myTable', {
+    columnDefs: [
+      { orderable: false, targets: [7] } // 7 est l'index de la colonne 'Actions', car les index commencent à 0
+    ]
+  }
+  );
+</script>
 @endsection

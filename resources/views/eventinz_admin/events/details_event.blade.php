@@ -215,7 +215,7 @@
             <tr>
                 <th>Travel</th>
                 <td>
-                    <input type="checkbox" name="travel" id="travel" class=" @error('travel') is-invalid @enderror">
+                    <input type="checkbox" value="Yes"  {{ $event->travel == "Yes" ? "checked" : "" }} name="travel" id="travel" class=" @error('travel') is-invalid @enderror">
                     @error('travel') <p> {{ $message }} </p> @enderror
                 </td>
             </tr>

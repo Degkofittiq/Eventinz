@@ -560,6 +560,9 @@ class AdminController extends Controller
 
         
         // dd($dataValidate);
+        if (empty($request->input('travel'))) {
+            $dataValidate['travel'] = 'No';
+        }
     
         $update = $event->update($dataValidate);
     
