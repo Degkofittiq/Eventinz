@@ -88,7 +88,7 @@
                 @endif
             </td>
             <td>
-              @if ($user->last_time_user_online == null || $user->last_time_user_online != "yes")
+              @if ($user->last_time_user_online == null || $user->last_time_user_online == "yes")
                   <span>N/A</span>
               @else
                 {{ \Carbon\Carbon::now()->diffForHumans($user->last_time_user_online) }}ago
