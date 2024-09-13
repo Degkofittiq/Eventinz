@@ -1,5 +1,19 @@
 @extends('eventinz_admin.layouts.app')
-
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+<style>
+  #dt-length-0{
+    margin: 5px !important;
+  }
+  .dt-length label{
+    text-transform: uppercase;
+  }
+  .padding{
+    padding: 5px !important;
+    width: 100%;
+  }
+</style>
 @section('content_admin') 
 <div class="card card-primary">
   @if(session('success'))
@@ -23,8 +37,8 @@
       </div>
     </div>
     <!-- /.card-header -->
-    <div class="card" id="responsive">
-      <table class="table">
+    <div class="card padding" id="responsive">
+      <table class="table" id="myTable">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -60,4 +74,13 @@
       </table>
     </div>
 </div>
+
+<script>
+  let table = new DataTable('#myTable', {
+    columnDefs: [
+      { orderable: false, targets: [7] } // 7 est l'index de la colonne 'Actions', car les index commencent à 0
+    ]
+  }
+  );
+</script>
 @endsection
