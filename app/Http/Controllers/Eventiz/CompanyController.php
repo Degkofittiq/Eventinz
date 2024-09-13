@@ -12,6 +12,7 @@ use App\Rules\SameSizeAs;
 use App\Models\PaymentTaxe;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
+use App\Models\VarriablesLimit;
 use App\Models\VendorCategories;
 use App\Models\VendorServiceType;
 use Illuminate\Support\Facades\DB;
@@ -153,7 +154,7 @@ class CompanyController extends Controller
             if ($taxe) {
                 $subcription['taxe'] = round($subcription['price'] * ($taxe->value / 100), 2);
             }else {
-                $subcription['taxe'] = $subcription['price'] * 1;
+                $subcription['taxe'] = 0;
             }
             return response()->json([
                 'status' => 200,
@@ -213,26 +214,37 @@ class CompanyController extends Controller
             ], 401);  // Unauthorized
         }
     }
-
-    // Store Company Images for the profiles    
+    
     public function storeCompanyImages(Request $request)
     {
         // Récupérer l'utilisateur authentifié
         $user = $request->user();
         $userCompany = Company::where('users_id', $user->id)->first();
-    
+        $validationLimit = VarriablesLimit::where('name', 'images')->first();
+        
         // Vérifier que l'utilisateur est connecté et qu'il n'a pas un rôle administrateur (role_id != 1)
         if ($user && $user->role_id != 1) {
             try {
+                // Limite du nombre d'images, avec une valeur par défaut de 10 si non spécifiée
+                $maxImages = $validationLimit->value ?? 10;
+    
+                // Récupérer les images existantes de l'entreprise (si elles existent)
+                $existingImages = json_decode($userCompany->images, true) ?? [];
+                
+                // Validation pour le nombre total d'images (existantes + nouvelles)
+                if (count($existingImages) + count($request->file('images', [])) > $maxImages) {
+                    return response()->json([
+                        'status' => 400,
+                        'message' => "Vous ne pouvez pas télécharger plus de $maxImages images au total."
+                    ], 400);
+                }
+    
                 // Valider les fichiers d'images
                 $request->validate([
                     'images.*' => 'bail|required|image|mimes:jpeg,png,jpg,gif|max:5120', // Validation pour plusieurs images
                 ]);
     
                 $companyName = preg_replace('/\s+/', '_', $user->name);
-    
-                // Récupérer les images existantes de l'entreprise (si elles existent)
-                $existingImages = json_decode($userCompany->images, true) ?? [];
     
                 // Vérifier la présence d'images
                 if ($request->hasFile('images')) {
@@ -291,18 +303,20 @@ class CompanyController extends Controller
     }
     
     
+    
 
     public function storeCompanyTagline(Request $request){
 
         // Récupérer l'utilisateur authentifié
         $user = $request->user();
         $userCompany = Company::where('users_id',$user->id)->first();
+        $validationLimit = VarriablesLimit::where('name', 'tagline')->first();
 
         if($user && $user->role_id != 1){
             try{
-
+                
                 $taglineValidation = $request->validate([
-                    'tagline' => 'required|string|max:25', // Validation pour Tagline
+                    'tagline' => 'required|string|max:' . ($validationLimit->value ?? '255'), // Validation pour Tagline
                 ]);
                 
 

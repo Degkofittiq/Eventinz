@@ -13,6 +13,7 @@ use App\Rules\SameSizeAs;
 use App\Models\PaymentTaxe;
 use Illuminate\Http\Request;
 use App\Models\Paymenthistory;
+use App\Models\VarriablesLimit;
 use App\Models\ServicesCategory;
 use App\Models\VendorCategories;
 use App\Models\VendorServiceType;
@@ -902,4 +903,30 @@ class AdminController extends Controller
         return redirect()->route('admin.list.paymenttaxe');
     }
 
+    // Data limit management | --
+
+    public function DataLimitList(Request $request){
+
+        $datalimits = VarriablesLimit::all();
+        
+        return view('eventinz_admin.data_limit_management.list', compact('datalimits'));
+    }
+    public function editDataLimitForm(Request $request, $datalimitId){
+
+        $datalimitFound = VarriablesLimit::find($datalimitId);
+
+        return view('eventinz_admin.data_limit_management.edit', compact('datalimitFound'));
+    }
+    public function setDataLimit(Request $request, $datalimitId){
+
+        $datalimitFound = VarriablesLimit::find($datalimitId);
+        
+        if (!$datalimitFound) {
+            return back()->with('error', 'Data limit not found');
+        }
+        
+        $datalimitFound->update($request->all());
+
+        return back()->with('success', 'You\'re been set the limite for');
+    }
 }

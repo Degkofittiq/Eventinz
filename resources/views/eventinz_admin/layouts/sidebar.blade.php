@@ -116,6 +116,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('admin.list.datalimit') }}" class="nav-link {{ request()->url() == route('admin.list.datalimit') ? "active" : "" }}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Data limits
+              </p>
+            </a>
+          </li>
           <li class="nav-item ">
             <a href="#" class="nav-link">
               <i class="nav-icon far fa-plus-square"></i>
