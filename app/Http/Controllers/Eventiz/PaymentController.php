@@ -6,11 +6,13 @@ namespace App\Http\Controllers\Eventiz;
 use Carbon\Carbon;
 use App\Models\CreditPrice;
 use Illuminate\Support\Str;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
-use App\Models\Paymenthistory;
 // use Illuminate\Support\Facades\Auth;
+use App\Models\Paymenthistory;
 use App\Services\PaymentService;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Services\CurrencyConversionService;
 
 class PaymentController extends Controller
@@ -54,7 +56,17 @@ class PaymentController extends Controller
             
                 if ($result) {
                     if ($method === 'mtnmomo') {
+                        if ($request->subscription_id) {
+                            // dd($request->subscription_id);
+                            $subscriptionId = $request->subscription_id;
+                            $subcription = Subscription::where('id',  $subscriptionId)->first();
+                            $user = Auth::user();
+                            $credits = $subcription->credits;
+                            $user->update(['credit' => $user->credit + $credits]);
+                            // dd($subcription->credits);
+                        }
                         // dd($result);
+
                         return response()->json([
                             'status' => 'pending',
                             'message' => 'Payment initiated. Please check your phone to approve the payment.',
