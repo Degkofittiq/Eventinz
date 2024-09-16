@@ -58,7 +58,7 @@
             @forelse ($allReviews as $eachReview)
                 
                 <tr>
-                <th scope="row">{{ $count++ }}</th>
+                <th scope="row">{{ $count++ ?? " "}}</th>
                 
                 <td>
                     <a href="{{ $eachReview->event != null ? route('admin.details.event', $eachReview->event->id) : '#'}}">
@@ -66,10 +66,10 @@
                     </a>
                     {{-- {{ $eachReview->event->generic_id  ?? "" }} --}}
                 </td>
-                <td>{{ $eachReview->user->username }}</td>
-                <td>{{ $eachReview->cibleUser->username }}</td>
-                <td>{{ $eachReview->review_content }}</td>
-                <td>{{ $eachReview->date_review }}</td><td>
+                <td>{{ $eachReview->user->username ?? " " }}</td>
+                <td>{{ $eachReview->cibleUser->username ?? " " }}</td>
+                <td>{{ $eachReview->review_content ?? " " }}</td>
+                <td>{{ $eachReview->date_review ?? " " }}</td><td>
                     <?php
                         for ($i = 1; $i <= 5; $i++) {
                             if ($i <= $eachReview->start_for_cibe) {

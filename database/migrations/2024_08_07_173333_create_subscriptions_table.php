@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->unsignedBigInteger('vendor_service_types_id'); // Single or Multiples 
             $table->decimal('price');
+            $table->integer('credits');
             $table->Integer('duration'); // Preriod in months
             $table->timestamps();
         });

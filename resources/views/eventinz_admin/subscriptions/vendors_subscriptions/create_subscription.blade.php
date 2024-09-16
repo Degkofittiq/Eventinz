@@ -53,6 +53,11 @@
           <input name="duration" type="number" max="12" min="1" id="duration" class="form-control  @error('duration') is-invalid @enderror">
           @error('duration') <p> {{ $message }} </p> @enderror
         </div>
+        <div class="form-group">
+          <label for="credits">credits <span style="color: red"><strong>*</strong></span></label>
+          <input name="credits" type="number" min="1" id="credits" class="form-control  @error('credits') is-invalid @enderror">
+          @error('credits') <p> {{ $message }} </p> @enderror
+        </div>
 
         <!-- Dynamic Features Section -->
         {{-- <div class="form-group">

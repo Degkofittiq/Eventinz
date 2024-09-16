@@ -37,6 +37,7 @@ class SubscriptionPlanController extends Controller
             'price' => 'required|numeric',
             'duration' => 'required|numeric',
             'vendor_service_types_id' => 'required|integer',
+            'credits' => 'required|integer',
         ]);
         
         $subscription = Subscription::create([
@@ -44,7 +45,8 @@ class SubscriptionPlanController extends Controller
             'description' => $subscriptionValidation['description'],
             'price' => $subscriptionValidation['price'],
             'duration' => $subscriptionValidation['duration'],
-           'vendor_service_types_id' => $subscriptionValidation['vendor_service_types_id']
+           'vendor_service_types_id' => $subscriptionValidation['vendor_service_types_id'],
+           'credits' => $subscriptionValidation['credits'],
         ]);
 
         return back()->with('success','The plan has been added');
@@ -56,7 +58,8 @@ class SubscriptionPlanController extends Controller
             'description' => 'required|string|max:255',
             'price' => 'required|numeric',
             'duration' => 'required|numeric',
-            'vendor_service_types_id' => 'required|integer'
+            'vendor_service_types_id' => 'required|integer',
+            'credits' => 'required|integer'
         ]);
         
         $subscriptionFound = Subscription::find($subscriptionId);

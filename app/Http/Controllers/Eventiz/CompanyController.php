@@ -639,12 +639,37 @@ class CompanyController extends Controller
         $user = Auth::user();
         $myTopReview = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')->limit(4)->get();
 
+        // Reviews Users and cibles
+        foreach ($myTopReview as $eachTopReview) {
+            // Accéder au nom d'utilisateur via la relation user
+            $eachTopReview['Author Name'] = $eachTopReview->user->username;
+            $eachTopReview['Cible Name'] = $eachTopReview->cibleUser->username;
+        }  
+        
+        //The method send response without others infomation about the user
+        // $myTopReview = Review::where('review_cible', $user->id)
+        // ->with(['user:id,username', 'cibleUser:id,username']) // Sélectionne uniquement les champs 'id' et 'username'
+        // ->orderBy('start_for_cibe', 'desc')
+        // ->limit(4)
+        // ->get();
+
+        // Reviews Users and cibles
+        // foreach ($myTopReview as $eachTopReview) {
+        //     $eachTopReview['Author Name'] = $eachTopReview->user->username;
+        //     $eachTopReview['Cible Name'] = $eachTopReview->cibleUser->username;
+        //     // Supprimez l'instance complète du User si vous ne la souhaitez pas dans la réponse
+        //     unset($eachTopReview->user);
+        //     unset($eachTopReview->cibleUser);
+        // }      
+
         $reviewStarts = DB::table('reviews')
             ->select('start_for_cibe')
             ->where('review_cible', $user->id)
             ->get();
 
-        $allMyReviews = Review::where('review_cible', $user->id)->get() ;
+        $allMyReviews = Review::where('review_cible', $user->id)->get();
+
+        // All review averages
         $reviewMoyenne = 0;
         if (count($allMyReviews)) {
             $reviewMoyenne = $reviewStarts->sum('start_for_cibe') / count($allMyReviews);
@@ -692,6 +717,43 @@ class CompanyController extends Controller
                'status' => 200,
                'message' => 'My Reviews',
                 'Reviews' => $myReview
+            ]);
+        }else{
+            return response()->json([
+                'status' => 200,
+                'message' => 'My Reviews',
+                 'Reviews' => 'No reviews yet !'
+            ], 200);  // Not Found
+        }
+
+    }
+
+    public function reviewsByStart(){
+        $user = Auth::user();
+
+        $reviewsByStarts =  DB::table('reviews')
+            ->select('start_for_cibe as Starts' , DB::raw('COUNT(start_for_cibe) as Total'))
+            ->where('review_cible', $user->id)
+            ->groupBy('start_for_cibe')
+            ->orderBy('start_for_cibe')
+            ->get();
+            
+            $array = [];
+            // Initialiser toutes les valeurs de 0 à 5 à 0
+            for ($i = 0; $i <= 5; $i++) {
+                $array["Start $i"] = 0;
+            }
+
+        // Parcourir les résultats et assigner les valeurs correspondantes
+        foreach ($reviewsByStarts as $reviewsByStart) {
+            $array["Start {$reviewsByStart->Starts}"] = $reviewsByStart->Total;
+        }
+
+        if(count($reviewsByStarts) > 0){
+            return response()->json([
+               'status' => 200,
+               'message' => 'My Reviews',
+                'Reviews' => $array
             ]);
         }else{
             return response()->json([

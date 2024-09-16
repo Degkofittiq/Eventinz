@@ -93,6 +93,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     Route::get('event/{eventId}', [EventController::class,'showEvent']);
 
     
+    
     // payment
     // MTn Momo And Paypal
     Route::post('/process-money-payment', [PaymentController::class, 'initiatePayment']);
@@ -107,6 +108,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     Route::post('addreview/{eventId}', [EventController::class, 'storeReview']);
     Route::get('/viewmytopreview', [CompanyController::class, 'viewMyTopReviews']);
     Route::get('/viewmyreview', [CompanyController::class, 'viewMyReviews']);
+    Route::get('/reviewsbystart', [CompanyController::class, 'reviewsByStart']);
     // Hide | Show top reviews
     Route::post('/statustopreviews', [CompanyController::class,'updateMyReviewsStatus']);
 

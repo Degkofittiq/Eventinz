@@ -45,6 +45,7 @@
             <th scope="col">Names</th>
             <th scope="col">Vendors Types</th>
             <th scope="col">Prices</th>
+            <th scope="col">Credits</th>
             <th scope="col">Durations</th>
             <th scope="col">Actions</th>
           </tr>
@@ -58,6 +59,7 @@
             <td>{{ $subscriptionPlan->name ?? "" }}</td>
             <td>{{ $subscriptionPlan->vendorType->name ?? "" }}</td>
             <td>{{ $subscriptionPlan->price ?? "" }}</td>
+            <td>{{ $subscriptionPlan->credits ?? "" }}</td>
             <td>{{ ($subscriptionPlan->duration == 3 ||  $subscriptionPlan->duration == 6) ?  $subscriptionPlan->duration . " Months" :  "1 Year" }}</td>
             <td>
               <a href="{{ route('admin.details.subscriptionplan', $subscriptionPlan->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
@@ -78,7 +80,7 @@
 <script>
   let table = new DataTable('#myTable', {
     columnDefs: [
-      { orderable: false, targets: [5] } // 5 est l'index de la colonne 'Actions', car les index commencent à 0
+      { orderable: false, targets: [6] } // 6 est l'index de la colonne 'Actions', car les index commencent à 0
     ]
   }
   );
