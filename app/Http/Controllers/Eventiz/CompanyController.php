@@ -20,10 +20,20 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use App\Services\CurrencyConversionService;
 
 class CompanyController extends Controller
 {
     //
+    private $currencyConversionService;
+    private $currentCurrency = 'USD';
+    private $symbol = '$';
+
+    public function __construct( CurrencyConversionService $currencyConversionService)
+    {
+        $this->currencyConversionService = $currencyConversionService;
+    }
+
 
     public function vendorClasses(){
         $data = [];
@@ -145,14 +155,96 @@ class CompanyController extends Controller
             'Multiple Service' => $multipleServiceSubscriptions
         ]);
     }
+  
+    public function getCurrentCorrency() {
+        $userLocation = Auth::user()->location ?? "United States";
+        $url = 'https://restcountries.com/v3.1/all';
+
+        // Initialiser cURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+
+        // Gestion des erreurs cURL
+        if ($response === false) {
+            die('Erreur cURL : ' . curl_error($ch));
+        }
+
+        curl_close($ch);
+
+        // Décodage du JSON
+        $countries = json_decode($response, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            die('Erreur de décodage JSON : ' . json_last_error_msg());
+        }
+
+        // Vérifier si $countries est un tableau
+        if (!is_array($countries)) {
+            die('Erreur: Les données des pays ne sont pas au format attendu.');
+        }
+
+        // Trier les pays
+        usort($countries, function ($a, $b) {
+            return strcmp($a['name']['common'], $b['name']['common']);
+        });
+
+        // Parcourir les pays
+        foreach ($countries as $country) {
+            $countryName = $country['name']['common'];
+            $currencyCode = isset($country['currencies']) ? array_key_first($country['currencies']) : 'N/A';
+            $currencySymbol = isset($country['currencies'][$currencyCode]['symbol']) ? $country['currencies'][$currencyCode]['symbol'] : 'N/A';
+
+            if (strtolower($countryName) == strtolower($userLocation)) {
+                // Assigner les valeurs aux propriétés
+                $this->currentCurrency = $currencyCode;
+                $this->symbol = $currencySymbol;
+                break;
+            }
+        }
+
+        return [
+            'currency' => $this->currentCurrency,
+            'symbol' => $this->symbol
+        ];
+    }
+
+    // Fonction pour accéder à la devise et au symbole
+    public function testCurrency() {
+
+        // Call the getCurrentCorrency function to get values 
+        $currencyData = $this->getCurrentCorrency();
+
+        // Get currency and Symbol
+        $currentCurrency = $currencyData['currency'];
+        $symbol = $currencyData['symbol'];
+
+        // Use values
+        // return "Devise actuelle : " . $this->currentCurrency . ", Symbole : " . $this->symbol;
+    }
 
     public function subscriptionChoose(Request $request, $subscriptionId){
-        $subcription = Subscription::where('id',  $subscriptionId)->first()->makeHidden(['created_at', 'updated_at']);
-        $taxe = PaymentTaxe::where('id',1)->first();
+        $subcription = Subscription::where('id',  $subscriptionId)->first();
+
         // dd($taxe->value);
         if ($subcription) {
+            
+            $subcription = $subcription->makeHidden(['created_at', 'updated_at']);
+            $taxe = PaymentTaxe::where('id',1)->first();
+
+            // Call the getCurrentCorrency function to get values 
+            $currencyData = $this->getCurrentCorrency();
+    
+            // Get currency and Symbol
+            $currentCurrency = $currencyData['currency'];
+            $symbol = $currencyData['symbol'];
+            $subcription['priceConvert'] = round($this->currencyConversionService->convert($subcription['price'] , 'USD', $this->currentCurrency),2);
+            $subcription['conversionCurrency'] =  $this->currentCurrency;
+
             if ($taxe) {
                 $subcription['taxe'] = round($subcription['price'] * ($taxe->value / 100), 2);
+                $subcription['taxeConvert'] = round($this->currencyConversionService->convert($subcription['taxe'] , 'USD', $this->currentCurrency),2);
             }else {
                 $subcription['taxe'] = 0;
             }
@@ -440,8 +532,9 @@ class CompanyController extends Controller
             $companyUser =  $user;
 
             if ($company->images) {
-                foreach ($companyWithoutUser['images'] as $files) {
-                    $filesPath[] = asset('storage/'. $files['file_path']);
+                // dd(json_decode($companyWithoutUser['images']));
+                foreach (json_decode($companyWithoutUser['images'], true) as $files) {
+                    $filesPath[] = $files['file_path'];
                 }
             }
             

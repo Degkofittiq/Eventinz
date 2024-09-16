@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Eventiz\PaymentController;
 use App\Http\Controllers\Eventiz\Admin\AdminController;
 use App\Http\Controllers\Eventiz\Admin\AdminUsersController;
 use App\Http\Controllers\Eventiz\Admin\SubscriptionPlanController;
@@ -15,6 +16,7 @@ Route::prefix('admin')->group(function() {
     Route::post('/login', [AdminController::class, 'login'])->name('admin.login');
 });
 
+Route::get('/getcurrency', [PaymentController::class, 'testCurrency'])->name('get.current.currency');
 
 Route::prefix('admin')->middleware('auth')->group(function() {
     Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
