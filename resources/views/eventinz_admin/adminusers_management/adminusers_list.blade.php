@@ -62,7 +62,7 @@
             <th scope="col">Usernames</th>
             <th scope="col">Emails</th>
             <th scope="col">Type</th>
-            <th scope="col">Profile Image</th>
+            <th scope="col">Creation date</th>
             <th scope="col">Last time Online</th>
             <th scope="col">Actions</th>
           </tr>
@@ -79,11 +79,12 @@
             <td>{{ $user->email }}</td>
             <td>{{ $user->role->name }}</td>
             <td>
-                @if ($user->profile_image == "")
+              {{ $user->created_at }}
+                {{-- @if ($user->profile_image == "")
                     <img src="{{ asset('AdminTemplate/dist/img/user-avatars-thumbnail_2.png') }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black; min-width:50px;min-height:50px;">
                 @else
                     <img src="{{ $user->profile_image }}" alt="Product 1" class="img-circle img-size-32 mr-2" style="border: 1px solid black; min-width:50px;min-height:50px;">
-                @endif
+                @endif --}}
             </td>
             <td>
               @if ($user->last_time_user_online == null || $user->last_time_user_online == "yes")

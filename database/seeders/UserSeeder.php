@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -26,6 +27,7 @@ class UserSeeder extends Seeder
             'is_otp_valid' => "yes",
             'role_id' => '4',
             'otp' => '100529',
+            'created_at' => Carbon::now(),
         ]);
 
         DB::table('users')->insert([
@@ -37,6 +39,7 @@ class UserSeeder extends Seeder
             'is_otp_valid' => "yes",
             'role_id' => '3',
             'otp' => '879809',
+            'created_at' => Carbon::now(),
         ]);
     }
 }
