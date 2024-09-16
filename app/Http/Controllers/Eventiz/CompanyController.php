@@ -312,6 +312,12 @@ class CompanyController extends Controller
         // Récupérer l'utilisateur authentifié
         $user = $request->user();
         $userCompany = Company::where('users_id', $user->id)->first();
+        if (!$userCompany) {
+            return response()->json([
+                'status' => 400,
+                'message' => "You don't have company yet."
+            ], 400);
+        }
         $validationLimit = VarriablesLimit::where('name', 'images')->first();
         
         // Vérifier que l'utilisateur est connecté et qu'il n'a pas un rôle administrateur (role_id != 1)
