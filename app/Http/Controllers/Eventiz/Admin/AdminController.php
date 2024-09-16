@@ -52,7 +52,7 @@ class AdminController extends Controller
     
         // Tentative de connexion de l'utilisateur
         if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return  back()->with('error', 'You are Unauthorized, check your credentials');
         }
     
         // Trouver l'utilisateur par son email
@@ -60,7 +60,7 @@ class AdminController extends Controller
     
         // Vérifier si l'utilisateur existe et si le mot de passe est correct
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return  back()->with('error', 'You are Unauthorized, check your credentials');
         }
     
         // Mettre à jour le statut de l'utilisateur et connecter l'utilisateur
@@ -80,7 +80,7 @@ class AdminController extends Controller
                 'last_time_user_online' => Carbon::now()
             ]);
             Auth::logout();
-            return redirect()->route('/')->with('error', 'You\'re not authorized');
+            return redirect()->route('/')->with('error', 'You are not authorized');
         }
     }
     
