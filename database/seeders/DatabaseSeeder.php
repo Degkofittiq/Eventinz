@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             contentTextManagementSeeder::class,
-            // contentImagesManagementSeeder::class,
+            contentImagesManagementSeeder::class,
             RightsTableSeeder::class, 
             RightsTypeSeeder::class,
         ]);

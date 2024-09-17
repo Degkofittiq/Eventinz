@@ -604,7 +604,7 @@ class AdminController extends Controller
 
 
     
-    // Content management | addContentTextForm-addContentText-contentTextList-showContentText-updateContentText
+    //  management | addContentTextForm-addContentText-contentTextList-showContentText-updateContentText
 
     public function addContentTextForm(Request $request){
 
@@ -681,11 +681,16 @@ class AdminController extends Controller
     }
 
     public function addContentImage(Request $request){
+
+        $request->merge([
+            'name' => preg_replace('/\s+/', '_', $request->name)
+        ]);
+
         $fieldsValidations = $request->validate([
             'name' =>'required|string|max:255',
             'page' =>'required|string|max:255',
             'type' =>'required|string|max:255',
-            'path' =>'required|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'path' =>'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ]);
         
         if ($request->hasFile('path')) {
