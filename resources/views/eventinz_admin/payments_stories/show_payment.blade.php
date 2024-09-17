@@ -49,9 +49,19 @@
         <td>{{ $paymentFound->currency ?? ""}}</td>
     </tr>
     <tr>
-        <th>Description</th>
+        <th>Description</th> 
         <td>{{ $paymentFound->description ?? ""}}</td>
     </tr>
+    @if ($paymentFound->subscription_id)
+        <tr>
+            <th>Subscription plan</th>
+            <td>
+                <a href="{{ route('admin.details.subscriptionplan', $paymentFound->subscription_id) }}" target="_blank" style="text-decoration: underline;color:black">
+                    {{ $paymentFound->subscriptionPlan->name ?? ""}}
+                </a>
+            </td>
+        </tr>
+    @endif
     <tr>
         <th>Status</th>
         {{--  pending  --}}
