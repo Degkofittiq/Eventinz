@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rights', function (Blueprint $table) {
+        Schema::create('rights_types', function (Blueprint $table) {
             $table->id();
-            $table->string('rights_types_id')->nullable(); // La fonctionalitee qui contient ce droit
-            $table->string('name');
-            $table->string('description')->nullable();
+            $table->text('name');
+            $table->text('description');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rights');
+        Schema::dropIfExists('rights_types');
     }
 };

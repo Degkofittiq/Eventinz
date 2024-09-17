@@ -2,6 +2,17 @@
 @extends('eventinz_admin.layouts.app')
 @section('content_admin') 
 <div class="card card-primary">
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+  
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="card-header">
       <h3 class="card-title">User's  Details</h3>
         <div class="card-tools">
@@ -72,6 +83,14 @@
         <tr>
             <th>Credit</th>
             <td>{{ $userFound->credit }}</td>
+        </tr>
+        <tr>
+            <th>Is OTP completed</th>
+            <td class="{{ strtolower($userFound->is_otp_valid) == "no" ? "text-red" : "text-success"}}">
+                <strong>
+                    {{ ucfirst($userFound->is_otp_valid) }}
+                </strong>
+            </td>
         </tr>
         <tr>
             <th>Last time online</th>
