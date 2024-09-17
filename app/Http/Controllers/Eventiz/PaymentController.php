@@ -37,6 +37,7 @@ class PaymentController extends Controller
             $currency = $request->input('currency', 'XOF'); 
             $payment_type = $request->input('payment_type');
             $payment_date = Carbon::now();
+            $subscription_id = $request->subscription_id;
     
             $payment = Paymenthistory::create([
                 'user_id' => $user->id,
@@ -49,6 +50,7 @@ class PaymentController extends Controller
                 'status' => 'initiated', //
                 'payment_type' => $payment_type, // 
                 'payment_date' => $payment_date, //
+                'subscription_id' => $subscription_id, //
             ]);
 
             try {
@@ -61,8 +63,13 @@ class PaymentController extends Controller
                             $subscriptionId = $request->subscription_id;
                             $subcription = Subscription::where('id',  $subscriptionId)->first();
                             $user = Auth::user();
-                            $credits = $subcription->credits;
-                            $user->update(['credit' => $user->credit + $credits]);
+                            if ($subcription) {
+                                $credits = $subcription->credits;
+                                $payStatus = Paymenthistory::where('payment_id', $payment->payment_id)->first();
+                                if ($payStatus->status == "pending") {
+                                    $user->update(['credit' => $user->credit + $credits]);
+                                }
+                            }
                             // dd($subcription->credits);
                         }
                         // dd($result);
