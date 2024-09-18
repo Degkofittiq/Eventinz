@@ -24,6 +24,7 @@ return new class extends Migration
             $table->String('currency'); // Euro , Dollar, XOF, ... 
             $table->String('description'); 
             $table->integer('subscription_id')->nullable(); 
+            $table->integer('event_id')->nullable(); 
             $table->string('status'); // Success or Faield 
             $table->String('phone_number_or_email'); // it's depend of paypal or momo
             $table->timestamps();

@@ -327,7 +327,10 @@ class CompanyController extends Controller
                 $maxImages = $validationLimit->value ?? 10;
     
                 // Récupérer les images existantes de l'entreprise (si elles existent)
-                $existingImages = json_decode($userCompany->images, true) ?? [];
+                $existingImages = [];
+                if ($userCompany->images) {
+                    $existingImages = json_decode($userCompany->images, true) ?? [];
+                }
                 
                 // Validation pour le nombre total d'images (existantes + nouvelles)
                 if (count($existingImages) + count($request->file('images', [])) > $maxImages) {
@@ -356,13 +359,13 @@ class CompanyController extends Controller
     
                         // Ajouter les données de l'image aux existantes
                         $existingImages[] = [
-                            'file_path' => $fullUrl
+                            'file_path' => json_decode($fullUrl)
                         ];
                     }
     
                     // Mettre à jour le champ `images` de la compagnie avec toutes les images (anciennes + nouvelles) en JSON
                     $userCompany->update([
-                        'images' => json_encode($existingImages) // Encodage en JSON
+                        'images' => $existingImages //  Encodage en JSON
                     ]);
     
                     // Réponse de succès

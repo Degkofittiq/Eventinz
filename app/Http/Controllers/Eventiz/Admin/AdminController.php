@@ -558,7 +558,15 @@ class AdminController extends Controller
                 'cancelstatus' => 'required|string',
                 'status' => 'required|string',
         ]);
+        // json_encode
 
+        $dataValidate['vendor_type_id'] = json_encode($dataValidate['vendor_type_id']);
+        $dataValidate['vendor_type_id'] = str_replace('"', '',$dataValidate['vendor_type_id']);
+
+        if ($request->vendor_poke) {
+            $dataValidate['vendor_poke'] = json_encode($dataValidate['vendor_poke']);
+            $dataValidate['vendor_poke'] = str_replace('"', '',$dataValidate['vendor_poke']);
+        }
         
         // dd($dataValidate);
         if (empty($request->input('travel'))) {

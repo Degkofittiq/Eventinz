@@ -73,21 +73,21 @@ class VendorController extends Controller
         $vendorCategoryIds = json_decode($company->vendor_categories_id, true);
         // Récupération des noms des catégories de vendeur
         $company->vendorCategories = VendorCategories::whereIn('id', $vendorCategoryIds)->get();
-
+        $companyServicesArray = [];
         if ($company->vendorCategories->isNotEmpty()) {
             $companyServicesArray = $company->vendorCategories->pluck('name')->implode(', ');
         }
 
         return response()->json([
-            'company:' => $company->name,
-            'company Tagline:' => $company->tagline,
-            'company Country:' => $company->country,
-            'company State:' => $company->state,
-            'company City:' => $company->city,
-            'company Images:' => $company->images,
-            'company Service Type:' => $company->vendor_service_types_id == 1 ?"Single Service" : "Multiple Services",
-            'company Services List:' => $companyServices,
-            'company Service(s) Categorie:' => $companyServicesArray,
+            'company' => $company->name,
+            'company Tagline' => $company->tagline,
+            'company Country' => $company->country,
+            'company State' => $company->state,
+            'company City' => $company->city,
+            'company Images' => $company->images,
+            'company Service Type' => $company->vendor_service_types_id == 1 ?"Single Service" : "Multiple Services",
+            'company Services List' => $companyServices,
+            'company Service(s) Categorie' => $companyServicesArray,
             'company Reviews' => $companyReviews,
             'company Vendor' => $companyVendor
         ]);

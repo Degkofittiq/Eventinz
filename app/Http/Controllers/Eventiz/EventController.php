@@ -39,14 +39,14 @@ class EventController extends Controller
             return response()->json([
                 'message'=> 'Success',
                 'success'=> 'You\'re able to fill the fields then create your event!'
-            ], 402);
+            ], 200);
 
             // return view('eventiz.event.create');
         }else{
             return response()->json([
                 'message'=> 'Error',
                 'error'=> 'You\'re not authorised to do this action!'
-            ], 402);
+            ], 403);
         }
         
     }
@@ -59,28 +59,29 @@ class EventController extends Controller
         
         if($user && $user->role_id == 1){
             try {
-                $request->validate([
-                    'event_type_id' => 'required|integer',
-                    'vendor_type_id' => [
-                        'required',
-                        'array',
-                        'min:1',
-                    ],
-                    'duration' => 'required|string',
-                    'start_date' => 'required|date_format:d/m/Y',
-                    'aprx_budget' => 'required|numeric|between:0,999999.99',
-                    'guest_number' => 'required|integer',
-                    'travel' => 'required|string|min:2',
-                    'country' => 'required|string',
-                    'state' => 'required|string',
-                    'city' => 'required|string',
-                    'subcategory' => 'nullable|string',
-                    'public_or_private' => 'required|integer',
-                    'description' => 'required|string|max:255',
-                    // 'vendor_poke' => 'nullable|string',
-                    // 'total_amount' => 'required|numeric|between:0,999999.99',
-                    'is_pay_done' => 'nullable|boolean',
-                ]);
+                try { 
+                    $request->validate([
+                        'event_type_id' => 'required|integer',
+                        'vendor_type_id' => [
+                            'required',
+                            'array',
+                            'min:1',
+                        ],
+                        'duration' => 'required|string',
+                        'start_date' => 'required|date_format:d/m/Y',
+                        'aprx_budget' => 'required|numeric|between:0,999999.99',
+                        'guest_number' => 'required|integer',
+                        'travel' => 'required|string|min:2',
+                        'country' => 'required|string',
+                        'state' => 'required|string',
+                        'city' => 'required|string',
+                        'subcategory' => 'nullable|string',
+                        'public_or_private' => 'required|integer',
+                        'description' => 'required|string|max:255',
+                        // 'vendor_poke' => 'nullable|string',
+                        // 'total_amount' => 'required|numeric|between:0,999999.99',
+                        'is_pay_done' => 'nullable|boolean',
+                    ]);
     
                 // Validation conditionnelle basée sur la taille de 'vendor_type_id'
                 if (count($request->input('vendor_type_id')) > 1) {
@@ -100,9 +101,19 @@ class EventController extends Controller
                     //
                 } else {
                     $request->validate([ 
-                        'vendor_poke' => 'required',
+                        'vendor_poke' => [
+                            'required',
+                            'array',
+                            'min:1',
+                        ],
                     ]);
                 }
+            } catch (ValidationException $e) {
+                return response()->json([
+                    'message' => 'Validation Error',
+                    'errors' => $e->errors(),
+                ], 422); // Code 422 pour les erreurs de validation
+            } 
                 
                 $is_pay_done = $request->input('is_pay_done', 0);
                 
@@ -132,7 +143,7 @@ class EventController extends Controller
                     'subcategory' => $request->subcategory,
                     'public_or_private' => $request->public_or_private,
                     'description' => $request->description,
-                    'vendor_poke' => $request->vendor_poke,
+                    'vendor_poke' => json_encode($request->vendor_poke) ?? null,
                     'total_amount' => $request->total_amount,
                     'is_pay_done' => $is_pay_done,
                 ]);

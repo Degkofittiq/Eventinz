@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Eventiz;
 
 // use App\Models\Credit;
 use Carbon\Carbon;
+use App\Models\Event;
 use App\Models\CreditPrice;
 use Illuminate\Support\Str;
 use App\Models\Subscription;
-use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Models\Paymenthistory;
 use App\Services\PaymentService;
 use App\Http\Controllers\Controller;
@@ -37,7 +38,8 @@ class PaymentController extends Controller
             $currency = $request->input('currency', 'XOF'); 
             $payment_type = $request->input('payment_type');
             $payment_date = Carbon::now();
-            $subscription_id = $request->subscription_id;
+            $subscription_id = $request->subscription_id ?? null;
+            $event_id = $request->event_id ?? null;
     
             $payment = Paymenthistory::create([
                 'user_id' => $user->id,
@@ -50,7 +52,8 @@ class PaymentController extends Controller
                 'status' => 'initiated', //
                 'payment_type' => $payment_type, // 
                 'payment_date' => $payment_date, //
-                'subscription_id' => $subscription_id, //
+                'subscription_id' => $subscription_id ?? null, //
+                'event_id' => $event_id ?? null, //
             ]);
 
             try {
@@ -71,6 +74,20 @@ class PaymentController extends Controller
                                 }
                             }
                             // dd($subcription->credits);
+                        }
+
+                        if ($request->event_id) {
+                            // dd($request->event_id);
+                            $eventId = $request->event_id;
+                            $event = Event::where('id',  $eventId)->first();
+                            $user = Auth::user();
+                            if ($event) {
+                                $payStatus = Paymenthistory::where('payment_id', $payment->payment_id)->first();
+                                if ($payStatus->status == "pending") {
+                                    $event->update(['is_pay_done' => 1]);
+                                }
+                            }
+                            // dd($event->credits);
                         }
                         // dd($result);
 

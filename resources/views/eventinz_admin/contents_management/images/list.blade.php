@@ -101,7 +101,7 @@
   let table = new DataTable('#myTable', {
     responsive: true, // Ajoute la réactivité
     columnDefs: [
-      { orderable: false, targets: [6] } // 7 est l'index de la colonne 'Actions', car les index commencent à 0
+      { orderable: false, targets: [5] } // 7 est l'index de la colonne 'Actions', car les index commencent à 0
     ]
   }
   );
