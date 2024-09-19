@@ -31,9 +31,9 @@
                     @else
                         <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</a>
 
-                        @if (Route::has('register'))
+                        {{-- @if (Route::has('register'))
                             <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a>
-                        @endif
+                        @endif --}}
                     @endauth
                 </div>
             @endif
@@ -45,11 +45,11 @@
         @endif
       
             <div class="max-w-6xl mx-auto sm:px-4 lg:px-8">
-                <div class="flex justify-center pt-1 sm:justify-start sm:pt-0">
-                    <img src="{{ asset('eventinz_logo.png') }}" alt="" width="250" height="250">
+                <div class="flex justify-center mx-auto pt-1 sm:justify-start sm:pt-0" style="width: 80%; margin:auto !important;">
+                    <img src="{{ asset('eventinz_logo.png') }}" alt="" style="width: 100%">
                 </div>
 
-                <div class="mt18 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+                {{-- <div class="mt18 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
                     <div class="grid grid-cols-1 md:grid-cols-12">
                         <div class="p-6">
                             <h1>
@@ -59,7 +59,7 @@
                             </h1>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
 

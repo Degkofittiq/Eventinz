@@ -83,6 +83,29 @@ class EventController extends Controller
         ], 200);
     }
 
+    public function categoriesSelectVendors(Request $request){
+        // Récupérer les IDs des vendors à partir de la requête
+        $array = $request->input('vendors_id'); // Utilisation de 'input' pour plus de flexibilité
+    // Vérifie que $array est bien un tableau et qu'il n'est pas vide
+    if (is_array($array) && !empty($array)) {
+        // Convertir les IDs en format JSON pour la requête
+        $vendorChooseId = Company::select('id', 'name','images')
+        // ->where('is_subscribed', 0)
+        ->where(function($query) use ($array) {
+            foreach ($array as $id) {
+                $query->orWhereRaw('JSON_CONTAINS(vendor_categories_id, ?)', [$id]);
+            }
+        })->get();
+    } else {
+        // Si le tableau est vide ou invalide, retourner une réponse appropriée
+        $vendorChooseId = collect(); // Collection vide si pas de IDs
+    }
+    
+        return response()->json([
+            'VendorsChooseList' => $vendorChooseId
+        ], 200);
+    }
+
     public function storeEvent(Request $request){
         // Récupérer l'utilisateur authentifié
         $user = $request->user();

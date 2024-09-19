@@ -110,6 +110,9 @@ class AdminUsersController extends Controller
     public function editAdminUserForm(Request $request, $adminUserId){
 
         $adminUserFound = User::find($adminUserId);
+        if (!$adminUserFound) {
+            return back()->with('error', 'Admin user not found');
+        }
         $roles = Role::where('id',3)->orWhere('id',4)->get();
         // $rights = Right::all();
         $rightTypes = RightsType::with('rights')->get();
@@ -119,6 +122,9 @@ class AdminUsersController extends Controller
 
     public function updateAdminUser(Request $request, $adminUserId){
         $adminUsers = User::find($adminUserId);
+        if (!$adminUsers) {
+            return back()->with('error', 'Admin user not found');
+        }
         try{
             $userValidation = $request->validate([
                 'name' => 'required|string|max:255',
