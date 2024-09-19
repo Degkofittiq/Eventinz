@@ -8,6 +8,7 @@ use App\Models\Review;
 use App\Models\Company;
 use App\Mail\SuccessMail;
 use App\Models\BidQuotes;
+use App\Models\EventType;
 use App\Rules\SameSizeAs;
 use App\Models\EventQuotes;
 use Illuminate\Support\Str;
@@ -51,9 +52,21 @@ class EventController extends Controller
         
     }
 
+    public function eventTypeList(){
+        $eventTypes = EventType::all()->makeHidden(['created_at','updated_at']);
+        
+        if (!$eventTypes) {
+            return response()->json([
+                'error' => 'No event types found yet'
+            ], 404);
+        }
+
+        return response()->json([
+            'eventTypes' => $eventTypes
+        ], 200);
+    }
+
     public function storeEvent(Request $request){
-
-
         // Récupérer l'utilisateur authentifié
         $user = $request->user();
         

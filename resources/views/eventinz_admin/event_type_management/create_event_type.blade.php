@@ -17,22 +17,22 @@
     @endif
 
     <div class="card-header">
-      <h3 class="card-title">Add new Taxe</h3>
+      <h3 class="card-title">Add new Event Type</h3>
     </div>
     <!-- /.card-header -->
     <!-- form start -->
-    <form method="POST" action="{{ route('admin.add.paymenttaxe') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.add.eventtype') }}" enctype="multipart/form-data">
         @csrf
       <div class="card-body">
         <div class="form-group">
           <label for="name">Name <span style="color: red"><strong>*</strong></span></label>
-          <input name="name" id="name" class="form-control  @error('name') is-invalid @enderror">
+          <input name="name" id="name" class="form-control  @error('name') is-invalid @enderror" value="{{ old('name') }}">
           @error('name') <p> {{ $message }} </p> @enderror
         </div>
         <div class="form-group">
-          <label for="value">Value (%)<span style="color: red"><strong>*</strong></span></label>
-          <input name="value" id="value" type="number" step="0.01" class="form-control  @error('value') is-invalid @enderror">
-          @error('value') <p> {{ $message }} </p> @enderror
+          <label for="description">Description<span style="color: red"><strong>*</strong></span></label>
+          <input name="description" id="description" type="text" class="form-control  @error('description') is-invalid @enderror"  value="{{ old('description') }}">
+          @error('description') <p> {{ $message }} </p> @enderror
         </div>
       </div>
       <!-- /.card-body -->

@@ -83,6 +83,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     Route::get('/companyinformation', [CompanyController::class, 'companyInformation']);
     
     // Management a Event
+    Route::get('/eventtpelist', [EventController::class, 'eventTypeList']);
     Route::get('/createeventForm', [EventController::class, 'createEventForm']);
     Route::post('/storeevent', [EventController::class, 'storeEvent']);
 

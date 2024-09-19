@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Eventiz\PaymentController;
 use App\Http\Controllers\Eventiz\Admin\AdminController;
+use App\Http\Controllers\Eventiz\Admin\AdminEventController;
 use App\Http\Controllers\Eventiz\Admin\AdminUsersController;
 use App\Http\Controllers\Eventiz\Admin\SubscriptionPlanController;
 
@@ -76,9 +77,26 @@ Route::prefix('admin')->middleware(['auth'/*,'rights'*/])->group(function() {
 
 
     // Events Management
-    Route::get('/admineventlist', [AdminController::class, 'adminEventList'])->name('admin.list.events');
-    Route::get('/admineventdetail/{eventId}', [AdminController::class, 'adminEventDetails'])->name('admin.details.event');
-    Route::post('/updateevent/{eventId}', [AdminController::class, 'adminEventUpdate'])->name('admin.update.event');
+    Route::get('/admineventlist', [AdminEventController::class, 'adminEventList'])->name('admin.list.events');
+    Route::get('/admineventdetail/{eventId}', [AdminEventController::class, 'adminEventDetails'])->name('admin.details.event');
+    Route::post('/updateevent/{eventId}', [AdminEventController::class, 'adminEventUpdate'])->name('admin.update.event');
+
+    // Events Type Management | eventTypeList-eventTypeDetails-eventTypeAddForm-eventTypeAdd-eventTypeEditForm-eventTypeUpdate-eventTypeDelete
+    Route::get('/eventtypelist', [AdminEventController::class, 'eventTypeList'])->name('admin.list.eventtypes');
+    Route::get('/eventtypeadd', [AdminEventController::class, 'eventTypeAddForm'])->name('admin.add.eventtypeform');
+    Route::post('/eventtypeadd', [AdminEventController::class, 'eventTypeAdd'])->name('admin.add.eventtype');
+    Route::get('/eventtypeedit/{eventTypeId}', [AdminEventController::class, 'eventTypeEditForm'])->name('admin.edit.eventtypeform');
+    Route::post('/eventtypeupdate/{eventTypeId}', [AdminEventController::class, 'eventTypeUpdate'])->name('admin.update.eventtype');
+    Route::get('/eventtypedeleteForm/{eventTypeId}', [AdminEventController::class, 'eventTypeDeleteForm'])->name('admin.deleteform.eventtype');
+    Route::post('/eventtypedelete/{eventTypeId}', [AdminEventController::class, 'eventTypeDelete'])->name('admin.delete.eventtype');
+
+    //Events Subcategory | eventSubcategoryList-eventSubcategoryDetails-eventSubcategoryAddForm-eventSubcategoryAdd-eventSubcategoryEditForm-eventSubcategoryUpdate
+    Route::get('/eventsubcategorylist', [AdminEventController::class, 'eventSubcategoryList'])->name('admin.list.eventsubcategories');
+    Route::get('/eventsubcategoryadd', [AdminEventController::class, 'eventSubcategoryAddForm'])->name('admin.add.eventsubcategoryform');
+    Route::post('/eventsubcategoryadd', [AdminEventController::class, 'eventSubcategoryAdd'])->name('admin.add.eventsubcategory');
+    Route::get('/eventsubcategoryedit/{eventSubcategoryId}', [AdminEventController::class, 'eventSubcategoryEditForm'])->name('admin.edit.eventsubcategoryform');
+    Route::post('/eventsubcategoryupdate/{eventSubcategoryId}', [AdminEventController::class, 'eventSubcategoryUpdate'])->name('admin.update.eventsubcategory');
+
 
     // Reviews 
     Route::get('/adminreviewlist', [AdminController::class, 'adminReviewsList'])->name('admin.list.reviews');
