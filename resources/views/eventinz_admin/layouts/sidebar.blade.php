@@ -94,6 +94,14 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('admin.list.eventsubcategories') }}" class="nav-link {{ request()->url() == route('admin.list.eventsubcategories') ? "active" : "" }}">
+                  <i class="far fa-dot-circle nav-icon"></i>
+                  <p>
+                    Events Subcategories
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('admin.list.reviews') }}" class="nav-link {{ request()->url() == route('admin.list.reviews') ? "active" : "" }}">
                   <i class="far fa-dot-circle nav-icon"></i>
                   <p>

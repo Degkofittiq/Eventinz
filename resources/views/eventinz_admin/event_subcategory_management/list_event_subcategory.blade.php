@@ -13,9 +13,9 @@
       </div>
   @endif
     <div class="card-header">
-      <h3 class="card-title">Event Type List</h3>
+      <h3 class="card-title">Event Subcategorie List</h3>
       <div class="card-tools">
-        <a href="{{ route('admin.add.eventtypeform') }}" class="btn bg-default">
+        <a href="{{ route('admin.add.eventsubcategoryform') }}" class="btn bg-default">
           <i class="fas fa-plus"></i>
           Add New
         </a>
@@ -35,20 +35,20 @@
           </thead>
           <tbody>
             <?php  $count = 1;  ?>
-            @forelse ($eventTypes as $eventType)
+            @forelse ($eventSubcategories as $eventSubcategory)
                 
                 <tr>
                 <th scope="row">{{ $count++ }}</th>
-                <td>{{ $eventType->name  ?? "" }}</td>
-                <td>{{ $eventType->description  ?? "" }}</td>
+                <td>{{ $eventSubcategory->name  ?? "" }}</td>
+                <td>{{ $eventSubcategory->description  ?? "" }}</td>
                 <td>
-                    <a href="{{ route('admin.edit.eventtypeform', $eventType->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
-                    <a href="{{ route('admin.deleteform.eventtype', $eventType->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>
+                    <a href="{{ route('admin.edit.eventsubcategoryform', $eventSubcategory->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
+                    <a href="{{ route('admin.deleteform.eventsubcategory', $eventSubcategory->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>
                 </td>
                 </tr>
             @empty
                 <div class="alert alert-warning">
-                  No Types yet
+                  No Subcategories yet
                 </div>
             @endforelse
           </tbody>

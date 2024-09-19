@@ -90,12 +90,14 @@ Route::prefix('admin')->middleware(['auth'/*,'rights'*/])->group(function() {
     Route::get('/eventtypedeleteForm/{eventTypeId}', [AdminEventController::class, 'eventTypeDeleteForm'])->name('admin.deleteform.eventtype');
     Route::post('/eventtypedelete/{eventTypeId}', [AdminEventController::class, 'eventTypeDelete'])->name('admin.delete.eventtype');
 
-    //Events Subcategory | eventSubcategoryList-eventSubcategoryDetails-eventSubcategoryAddForm-eventSubcategoryAdd-eventSubcategoryEditForm-eventSubcategoryUpdate
+    //Events Subcategory | eventSubcategoryList-eventSubcategoryDetails-eventSubcategoryAddForm-eventSubcategoryAdd-eventSubcategoryEditForm-eventSubcategoryUpdate-eventSubcategoryDeleteForm-eventSubcategoryDelete
     Route::get('/eventsubcategorylist', [AdminEventController::class, 'eventSubcategoryList'])->name('admin.list.eventsubcategories');
     Route::get('/eventsubcategoryadd', [AdminEventController::class, 'eventSubcategoryAddForm'])->name('admin.add.eventsubcategoryform');
     Route::post('/eventsubcategoryadd', [AdminEventController::class, 'eventSubcategoryAdd'])->name('admin.add.eventsubcategory');
     Route::get('/eventsubcategoryedit/{eventSubcategoryId}', [AdminEventController::class, 'eventSubcategoryEditForm'])->name('admin.edit.eventsubcategoryform');
     Route::post('/eventsubcategoryupdate/{eventSubcategoryId}', [AdminEventController::class, 'eventSubcategoryUpdate'])->name('admin.update.eventsubcategory');
+    Route::get('/eventsubcategorydeleteForm/{eventSubcategoryId}', [AdminEventController::class, 'eventSubcategoryDeleteForm'])->name('admin.deleteform.eventsubcategory');
+    Route::post('/eventsubcategorydelete/{eventSubcategoryId}', [AdminEventController::class, 'eventSubcategoryDelete'])->name('admin.delete.eventsubcategory');
 
 
     // Reviews 

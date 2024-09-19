@@ -14,6 +14,7 @@ use App\Models\EventQuotes;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\CanceledEvents;
+use App\Models\EventSubcategory;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -63,6 +64,22 @@ class EventController extends Controller
 
         return response()->json([
             'eventTypes' => $eventTypes
+        ], 200);
+    }
+
+    // eventSubcategoriesList
+    
+    public function eventSubcategoriesList(){
+        $eventSubcategories = EventSubcategory::all()->makeHidden(['created_at','updated_at']);
+        
+        if (!$eventSubcategories) {
+            return response()->json([
+                'error' => 'No event Subcategoies found yet'
+            ], 404);
+        }
+
+        return response()->json([
+            'eventSubcategories' => $eventSubcategories
         ], 200);
     }
 

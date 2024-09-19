@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Eventiz\Admin;
 use App\Models\Event;
 use App\Models\EventType;
 use Illuminate\Http\Request;
+use App\Models\EventSubcategory;
 use App\Models\VendorCategories;
 use App\Http\Controllers\Controller;
 
@@ -172,15 +173,89 @@ class AdminEventController extends Controller
 
     public function eventTypeDelete(Request $request, $eventTypeId){
         $eventTypeFound = EventType::find($eventTypeId);
-        $eventTypeName = $eventTypeFound->name;
 
         if (!$eventTypeFound) {
             return back()->with('error', 'Event Type not found');
         }
 
+        $eventTypeName = $eventTypeFound->name ?? "";
         $delete = $eventTypeFound->delete();
 
         return redirect()->route('admin.list.eventtypes')->with('success', 'Event Type '. $eventTypeName .' has been deleted');
     }
     
+        
+    // Event Subcategory Management 
+    public function eventSubcategoryList(Request $request){
+        $eventSubcategories = EventSubcategory::all();
+
+        return view('eventinz_admin.event_subcategory_management.list_event_subcategory', compact('eventSubcategories'));
+    }
+
+    public function eventSubcategoryEditForm(Request $request, $eventSubcategoryId){
+        $eventSubcategoryFound = EventSubcategory::find($eventSubcategoryId);
+        if (!$eventSubcategoryFound) {
+            return back()->with('error', 'Event Subcategory not found');
+        }
+
+        return view('eventinz_admin.event_subcategory_management.edit_event_subcategory', compact('eventSubcategoryFound'));
+    }
+    
+    public function eventSubcategoryAddForm(Request $request){
+
+        return view('eventinz_admin.event_subcategory_management.create_event_subcategory');
+    }
+    
+    public function eventSubcategoryAdd(Request $request){
+        $dataValidation = $request->validate([
+            'name'  =>  'required|string|max:255',
+            'description'  =>  'required|string|max:255'
+        ]);
+
+        $creation = EventSubcategory::create($dataValidation);
+
+        if (!$creation) {
+            return back()->with('error', 'Failed to create event subcategory');
+        }
+
+        return back()->with('success', 'Event Subcategory created');
+    }
+        
+    public function eventSubcategoryUpdate(Request $request, $eventSubcategoryId){
+        $eventSubcategoryFound = EventSubcategory::find($eventSubcategoryId);
+        if (!$eventSubcategoryFound) {
+            return back()->with('error', 'Event Subcategory not found');
+        }
+        $dataValidation = $request->validate([
+            'name'  =>  'required|string|max:255',
+            'description'  =>  'required|string|max:255'
+        ]);
+        $update = $eventSubcategoryFound->update($dataValidation);
+        if (!$update) {
+            return back()->with('error', 'Failed to update event subcategory');
+        }
+        return back()->with('success', 'Event Subcategory updated');
+    }
+    
+    public function eventSubcategoryDeleteForm(Request $request, $eventSubcategoryId){
+        $eventSubcategoryFound = EventSubcategory::find($eventSubcategoryId);
+        if (!$eventSubcategoryFound) {
+            return back()->with('error', 'Event Subcategory not found');
+        }
+
+        return view('eventinz_admin.event_subcategory_management.delete_event_subcategory', compact('eventSubcategoryFound'));
+    }
+
+    public function eventSubcategoryDelete(Request $request, $eventSubcategoryId){
+        $eventSubcategoryFound = EventSubcategory::find($eventSubcategoryId);
+
+        if (!$eventSubcategoryFound) {
+            return back()->with('error', 'Event Subcategory not found');
+        }
+        $eventSubcategoryName = $eventSubcategoryFound->name ?? "";
+
+        $delete = $eventSubcategoryFound->delete();
+
+        return redirect()->route('admin.list.eventsubcategories')->with('success', 'Event Subcategory '. $eventSubcategoryName .' has been deleted');
+    }
 }
