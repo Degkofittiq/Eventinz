@@ -97,7 +97,8 @@ class EventController extends Controller
             }
         })->get();
         foreach ($vendorChooseId as $company) {
-            $company['user_generic_id'] = $company->user->generic_id;
+            $company['user_generic_id'] = $company->makeHidden(['user'])->user->generic_id;
+            // 
         }
     } else {
         // Si le tableau est vide ou invalide, retourner une réponse appropriée
