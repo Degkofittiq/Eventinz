@@ -152,7 +152,7 @@
                 </td>
             </tr>
             <tr>
-                @if ($event->public_or_private == 1 && $event->vendor_poke)
+                @if ($event->vendor_poke)
                     <tr>
                         <th>Vendor Poke</th>
                         <td>
@@ -160,17 +160,19 @@
                                 @foreach (json_decode($event->vendor_poke) as $vendorPokeId)
                                     @php
                                         // Récupérer le nom du type de fournisseur par son ID
-                                        $vendorPoke = \App\Models\VendorCategories::find($vendorPokeId);
+                                        // $vendorPoke = \App\Models\VendorCategories::find($vendorPokeId);
+                                        $vendorPoke = \App\Models\Company::find($vendorPokeId);
                                     @endphp
                                     
                                     @if ($vendorPoke)
                                         {{ $vendorPoke->name }},
                                     @endif
                                 @endforeach
-
+                                <strong>No vendor poke yet</strong>
                                 <select name="vendor_poke[]" id="vendor_poke[]" class="form-control  @error('vendor_poke') is-invalid @enderror" multiple >
-                                    @foreach ($vendorCategories as $vendorCategorie)
-                                        <option value="{{ $vendorCategorie->id }}" {{ in_array($vendorCategorie->id, json_decode($event->vendor_poke)) ? "selected" : ""}}>{{ $vendorCategorie->name }}</option>
+                                    <option value="">-- No choice --</option>
+                                    @foreach ($companies as $company)
+                                        <option value="{{ $company->id }}" {{ in_array($company->id, json_decode($event->vendor_poke)) ? "selected" : ""}}>{{ $company->user->generic_id }}</option>
                                     @endforeach
                                 </select>
                                 @error('vendor_poke') <p> {{ $message }} </p> @enderror
@@ -179,7 +181,19 @@
                             @endif                         
                         </td>
                     </tr>                
-                @endif 
+                @else
+                
+                <tr>
+                    <th>Vendor Poke</th>
+                    <td>
+                        <select name="vendor_poke[]" id="vendor_poke[]" class="form-control  @error('vendor_poke') is-invalid @enderror" multiple >
+                            @foreach ($companies as $company)
+                                <option value="{{ $company->id }}">{{ $company->user->generic_id }}</option>
+                            @endforeach
+                        </select>                       
+                    </td>
+                </tr>   
+                @endif
             <tr>
                 <th>Status</th>
                 <td>

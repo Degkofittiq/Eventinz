@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Eventiz\Admin;
 
+use App\Models\User;
 use App\Models\Event;
+use App\Models\Company;
 use App\Models\EventType;
 use Illuminate\Http\Request;
 use App\Models\EventSubcategory;
@@ -25,9 +27,10 @@ class AdminEventController extends Controller
 
         $eventTypes = EventType::all();
         $vendorCategories = VendorCategories::all();
+        $companies = Company::all();
         $privateOrPublic = [
             1, //'Private'
-            0, 'Public'
+            0, //'Public'
         ];
         $status = [
             'Yes',
@@ -49,7 +52,7 @@ class AdminEventController extends Controller
         if (!$event) {
             return back()->with('error', 'Event not found');
         }
-        return view('eventinz_admin.events.details_event', compact('event','eventTypes','vendorCategories','privateOrPublic','status','canceledEvents','is_pay_dones'));
+        return view('eventinz_admin.events.details_event', compact('event','eventTypes','vendorCategories','companies','privateOrPublic','status','canceledEvents','is_pay_dones'));
     }
 
     public function adminEventUpdate(Request $request, $eventId){

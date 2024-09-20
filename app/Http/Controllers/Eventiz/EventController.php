@@ -193,7 +193,7 @@ class EventController extends Controller
                     'start_date' => Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d'),
                     'aprx_budget' => $request->aprx_budget,
                     'guest_number' => $request->guest_number,
-                    'travel' => $request->travel,
+                    'travel' => strtolower($request->travel),
                     'country' => $request->country,
                     'state' => $request->state,
                     'city' => $request->city,
@@ -388,7 +388,7 @@ class EventController extends Controller
                                 'duration' => $dataValidate['duration'][$index],
                                 'total' => $dataValidate['total'][$index],
                                 'subdetails' => $dataValidate['subdetails'], // Peut rester en dehors de la boucle s'il est commun
-                                'travel' => $dataValidate['travel'], // Peut rester en dehors de la boucle s'il est commun
+                                'travel' => strtolower($dataValidate['travel']), // Peut rester en dehors de la boucle s'il est commun
                                 'obligatory' => $dataValidate['obligatory'][$index] // obligatory => yes or no_obligatory => no
                             ]);
                         }
