@@ -211,7 +211,8 @@ class EventController extends Controller
                 // Mail::to($user->email)->send(new SuccessMail($successMsg));
                 return response()->json([
                     'message' => 'Success',
-                    'success' => 'Event created successfully!'
+                    'success' => 'Event created successfully!',
+                    'event' => $event
                 ], 200);
 
             } catch (ValidationException $e) {
