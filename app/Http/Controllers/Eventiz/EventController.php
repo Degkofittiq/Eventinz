@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\CanceledEvents;
 use App\Models\EventSubcategory;
+use App\Models\VendorCategories;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -86,24 +87,24 @@ class EventController extends Controller
     public function categoriesSelectVendors(Request $request){
         // Récupérer les IDs des vendors à partir de la requête
         $array = $request->input('vendors_id'); // Utilisation de 'input' pour plus de flexibilité
-    // Vérifie que $array est bien un tableau et qu'il n'est pas vide
-    if (is_array($array) && !empty($array)) {
-        // Convertir les IDs en format JSON pour la requête
-        $vendorChooseId = Company::select('id', 'name','images')
-        // ->where('is_subscribed', 0)
-        ->where(function($query) use ($array) {
-            foreach ($array as $id) {
-                $query->orWhereRaw('JSON_CONTAINS(vendor_categories_id, ?)', [$id]);
+        // Vérifie que $array est bien un tableau et qu'il n'est pas vide
+        if (is_array($array) && !empty($array)) {
+            // Convertir les IDs en format JSON pour la requête
+            $vendorChooseId = Company::select('id', 'name','images')
+            // ->where('is_subscribed', 0)
+            ->where(function($query) use ($array) {
+                foreach ($array as $id) {
+                    $query->orWhereRaw('JSON_CONTAINS(vendor_categories_id, ?)', [$id]);
+                }
+            })->get();
+            foreach ($vendorChooseId as $company) {
+                $company['user_generic_id'] = $company->makeHidden(['user'])->user->generic_id;
+                // 
             }
-        })->get();
-        foreach ($vendorChooseId as $company) {
-            $company['user_generic_id'] = $company->makeHidden(['user'])->user->generic_id;
-            // 
+        } else {
+            // Si le tableau est vide ou invalide, retourner une réponse appropriée
+            $vendorChooseId = collect(); // Collection vide si pas de IDs
         }
-    } else {
-        // Si le tableau est vide ou invalide, retourner une réponse appropriée
-        $vendorChooseId = collect(); // Collection vide si pas de IDs
-    }
     
         return response()->json([
             'VendorsChooseList' => $vendorChooseId
@@ -620,5 +621,28 @@ class EventController extends Controller
             ], 401);
         }    
 
+    }
+
+    public function vendorsChoose(Request $request){
+        
+        // Récupérer les IDs des vendors à partir de la requête
+        $array = $request->input('categories_ids'); // Utilisation de 'input' pour plus de flexibilité
+        // Vérifie que $array est bien un tableau et qu'il n'est pas vide
+        if (is_array($array) && !empty($array)) {
+            // Convertir les IDs en format JSON pour la requête
+            $vendorCategories = VendorCategories::select('id', 'name','category_file','price')
+            ->where(function($query) use ($array) {
+                foreach ($array as $id) {
+                    $query->orWhereRaw('JSON_CONTAINS(id, ?)', [$id]);
+                }
+            })->get();
+        } else {
+            // Si le tableau est vide ou invalide, retourner une réponse appropriée
+            $vendorCategories = collect(); // Collection vide si pas de IDs
+        }
+
+        return response()->json([
+            'categoriesChoose' => $vendorCategories
+        ], 200);
     }
 }
