@@ -96,6 +96,9 @@ class EventController extends Controller
                 $query->orWhereRaw('JSON_CONTAINS(vendor_categories_id, ?)', [$id]);
             }
         })->get();
+        foreach ($vendorChooseId as $company) {
+            $company['user_generic_id'] = $company->user->generic_id;
+        }
     } else {
         // Si le tableau est vide ou invalide, retourner une réponse appropriée
         $vendorChooseId = collect(); // Collection vide si pas de IDs
