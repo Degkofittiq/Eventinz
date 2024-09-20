@@ -25,7 +25,7 @@
         @csrf
       <div class="card-body">
         <div class="form-group">
-          <label for="name">Categorie name <span style="color: red"><strong>*</strong></span></label>
+          <label for="name">Category name <span style="color: red"><strong>*</strong></span></label>
           <input type="text" class="form-control  @error('name') is-invalid @enderror" name="name" id="name" placeholder="Enter category name">
           @error('name') <p> {{ $message }} </p> @enderror
         </div>
@@ -33,6 +33,11 @@
           <label for="description">Description <span style="color: red"><strong>*</strong></label>
         <textarea name="description" id="description" class="form-control  @error('description') is-invalid @enderror" cols="30" rows="10"></textarea>
         @error('description') <p> {{ $message }} </p> @enderror
+        </div>
+        <div class="form-group">
+          <label for="price">Category price <span style="color: red"><strong>*</strong></span></label>
+          <input type="number" step="0.01" class="form-control  @error('price') is-invalid @enderror" name="price" id="price" placeholder="Enter category price">
+          @error('price') <p> {{ $message }} </p> @enderror
         </div>
         <div class="form-group">
           <label for="category_file">Category file</label>

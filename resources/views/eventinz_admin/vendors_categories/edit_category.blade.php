@@ -33,6 +33,11 @@
         @error('description') <p> {{ $message }} </p> @enderror
         </div>
         <div class="form-group">
+          <label for="price">Categorie price <span style="color: red"><strong>*</strong></span></label>
+          <input type="number" step="0.01"  class="form-control  @error('price') is-invalid @enderror" name="price" id="price" placeholder="Enter category price" value="<?= $category->price ?>">
+          @error('price') <p> {{ $message }} </p> @enderror
+        </div>
+        <div class="form-group">
           <label for="category_file">Category file</label>
           @if ($category->category_file)
             <div class="row">

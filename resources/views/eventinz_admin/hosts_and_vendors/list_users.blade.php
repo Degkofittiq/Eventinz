@@ -62,7 +62,7 @@
             <th scope="col">Emails</th>
             {{-- <th scope="col">Credits</th> --}}
             <th scope="col">Type</th>
-            <th scope="col">Created at</th>
+            <th scope="col">Registered at</th>
             <th scope="col">Last time Online</th>
             <th scope="col">Actions</th>
           </tr>

@@ -30,6 +30,7 @@
             <th scope="col">#</th>
             <th scope="col">Categories Names</th>
             <th scope="col">Descriptions</th>
+            <th scope="col">Price</th>
             <th scope="col">Images</th>
             <th scope="col">Actions</th>
           </tr>
@@ -42,6 +43,7 @@
             <th scope="row">{{ $count++ }}</th>
             <td>{{ $category->name }}</td>
             <td>{{ $category->description }}</td>
+            <td>{{ $category->price ?? "Free" }}</td>
             <td>
               {{-- <img src="{{ Storage::disk('s3')->url($category->category_file) }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2"> --}}
               <img src="{{ $category->category_file }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2">

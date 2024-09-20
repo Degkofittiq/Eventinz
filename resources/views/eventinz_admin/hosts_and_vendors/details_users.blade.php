@@ -93,6 +93,10 @@
             </td>
         </tr>
         <tr>
+            <th>Registered at </th>
+            <td>{{ $userFound->created_at }} ({{ str_replace('after', 'Ago',\Carbon\Carbon::now()->diffForHumans($userFound->created_at)) }})</td>
+        </tr>
+        <tr>
             <th>Last time online</th>
             <td>{{ $userFound->last_time_user_online }} ({{ str_replace('after', 'Ago',\Carbon\Carbon::now()->diffForHumans($userFound->last_time_user_online)) }})</td>
         </tr>

@@ -211,6 +211,7 @@ class AdminController extends Controller
             'name' =>'required|string|max:255',
             'description' =>'required|string|max:255',
             'category_file' =>'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'price' =>'nullable|numeric',
         ]);
 
         // dd($categoryValidation);
@@ -233,7 +234,8 @@ class AdminController extends Controller
         $categoryCreation = VendorCategories::create([
             'name' => $categoryValidation['name'],
             'description' => $categoryValidation['description'],
-            'category_file' => $categoryValidation['category_file'] ?? null,  // Ajout de la gestion de l'absence de fichier
+            'category_file' => $categoryValidation['category_file'] ?? null,  // Ajout de la gestion de l'absence de fichier-
+            'price' => $categoryValidation['price'] ?? null,  // price
         ]);
 
         return back()->with('success', 'The new category is been add'.$filePath);
@@ -242,18 +244,25 @@ class AdminController extends Controller
     // Edit Category
     public function editCategory($id){
         $category= VendorCategories::find($id);
+        if (!$category) {
+            return back()->with('error', 'The category not found.');
+        }
         return view('eventinz_admin.vendors_categories.edit_category', compact('category'));
     }
 
     public function updateCategory(Request $request, $id){
         $category= VendorCategories::find($id);
+        if (!$category) {
+            return back()->with('error', 'The category not found.');
+        }
         // dd($request);
         $categoryValidation = $request->validate([
             'name' =>'required|string|max:255',
             'description' =>'required|string|max:255',
             'category_file' =>'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'price' =>'nullable|numeric',
         ]);
-        $filePath = null;
+        $filePath = [];
         
         if ($request->hasFile('category_file')) {
             $categoryName = preg_replace('/\s+/', '_', $request->name);
@@ -270,21 +279,24 @@ class AdminController extends Controller
         }
 
         // Si le chemin est correct, renvoyez-le, sinon une erreur
-        if ($filePath) {
+        if (!$request->file('category_file') && !$filePath) {
 
             $category->update($categoryValidation);
-            return back()->with('success', 'The category is been update'.$filePath);
+            return back()->with('success', 'The category is been update');
 
         } else {
 
             $category->update($categoryValidation);
-            return back()->with('error', 'Failed to upload the file.');
+            return back()->with('error', 'Update without the file. Failed to upload the file.');
         }
     }
 
     // Delete Category form
     public function deleteCategoryForm($id){
         $category = VendorCategories::find($id);
+        if (!$category) {
+            return back()->with('error', 'The category not found.');
+        }
         return view('eventinz_admin.vendors_categories.delete_category', compact('category'));
     }
     
@@ -314,6 +326,9 @@ class AdminController extends Controller
         // 
         $company = Company::find($companyId);
 
+        if (!$company) {
+            return back()->with('error', 'The company not found.');
+        }
 
         // foreach ($companies as $company) {
             // Décodage de la chaîne JSON
@@ -346,7 +361,10 @@ class AdminController extends Controller
         $user = Auth::user();
 
         // Récupération de l'entreprise de l'utilisateur
-        $companyFound = Company::findOrFail($companyId);
+        $companyFound = Company::find($companyId);
+        if (!$companyFound) {
+            return back()->with('error', 'The company not found.');
+        }
 
         try {
             // Validation des données
