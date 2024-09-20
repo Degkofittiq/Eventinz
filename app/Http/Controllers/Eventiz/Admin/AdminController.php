@@ -238,7 +238,7 @@ class AdminController extends Controller
             'price' => $categoryValidation['price'] ?? null,  // price
         ]);
 
-        return back()->with('success', 'The new category is been add'.$filePath);
+        return back()->with('success', 'The new category is been add');
     }
 
     // Edit Category
