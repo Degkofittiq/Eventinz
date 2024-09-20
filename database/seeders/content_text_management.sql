@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `content_text_management`
 --
-DROP TABLE IF EXISTS `content_images_management`;
+DROP TABLE IF EXISTS `content_text_management`;
 
 CREATE TABLE `content_text_management` (
   `id` bigint(20) UNSIGNED NOT NULL,
