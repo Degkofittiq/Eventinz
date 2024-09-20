@@ -215,7 +215,7 @@ class AdminController extends Controller
         ]);
 
         // dd($categoryValidation);
-        
+        $filePath = [];
         if ($request->hasFile('category_file')) {
             // dd(1);
             $categoryName = preg_replace('/\s+/', '_', $request->name);
