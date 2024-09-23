@@ -495,7 +495,7 @@ class EventController extends Controller
             
             return response()->json([
                 'message' => 'Success',
-                'error' => 'Bid accepted!'
+                'Success' => 'Bid accepted!'
             ]);
 
         } else {

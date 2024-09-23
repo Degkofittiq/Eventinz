@@ -8,8 +8,10 @@ use App\Models\Event;
 use App\Models\Review;
 use App\Models\Company;
 use App\Models\Services;
+use App\Models\BidQuotes;
 use App\Models\EventType;
 use App\Rules\SameSizeAs;
+use App\Models\EventQuotes;
 use App\Models\PaymentTaxe;
 use Illuminate\Http\Request;
 use App\Models\Paymenthistory;
@@ -152,34 +154,48 @@ class AdminController extends Controller
              ];
         }
         if($userFound->role_id == 2){
-            $allEvents = Event::where(function($query) use ($userFound) {
-                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($userFound->id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($userFound->id)]);
-            })->get(); // All 
+            $allEvents = $futureEvents = $completedEvents = $canceledEvents = $activeEvents = $eventStatistics = [];
 
-            $futureEvents = Event::whereDate('start_date', '>', now()->format('Y-m-d'))
-            ->where(function($query) use ($userFound) {
-                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($userFound->id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($userFound->id)]);
-            })->get(); // Upcomming
+            $companyAssoc = Company::where('users_id',$userFound->id)->first();
+            if (!$companyAssoc) {
+                // dd('Not company yet');
+            }
 
-            $completedEvents = Event::where('cancelstatus','completed')
-            ->where(function($query) use ($userFound) {
-                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($userFound->id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($userFound->id)]);
-            })->get(); // completed
+            
+            $bidAssocs = BidQuotes::where('status','Accepted')->get();
+            if (!$bidAssocs) {
+                // dd('No Bids yet');
+            }
 
-            $canceledEvents = Event::where('cancelstatus','canceled')
-            ->where(function($query) use ($userFound) {
-                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($userFound->id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($userFound->id)]);
-            })->get(); // Canceled
+            $eventQuoteAssocs = [];
+            foreach ($bidAssocs as $bidAssoc) {
+                $eventQuoteAssocs[] = EventQuotes::where('quote_code', $bidAssoc->quote_code)->first();
+            }
 
-            $activeEvents = Event::where('status', 'Yes')
-            ->where(function($query) use ($userFound) {
-                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($userFound->id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($userFound->id)]);
-            })->get(); // Active
+            if (empty($eventQuoteAssocs)) {
+                // dd('Not Event Quotes accepted yet');
+            }
+
+            if (!empty($eventQuoteAssocs)) {
+                $eventQuoteAssocs = array_unique($eventQuoteAssocs);
+            }
+
+            // Ces requettes de statistique du cote des vendors se base sur les bids accepte pour la selection des companies via la table event quotes
+            foreach ($eventQuoteAssocs as $eventQuoteAssoc) {
+                $allEvents = Event::where('id', $eventQuoteAssoc->event_id)->get(); // All 
+
+                $futureEvents = Event::where('id', $eventQuoteAssoc->event_id)
+                ->whereDate('start_date', '>', now()->format('Y-m-d'))->get(); // Upcomming
+
+                $completedEvents = Event::where('id', $eventQuoteAssoc->event_id)
+                ->where('cancelstatus','completed')->get(); // completed
+
+                $canceledEvents = Event::where('id', $eventQuoteAssoc->event_id)
+                ->where('cancelstatus','canceled')->get(); // Canceled
+
+                $activeEvents = Event::where('id', $eventQuoteAssoc->event_id)
+                ->where('status', 'Yes')->get(); // Active
+            }
 
             $eventStatistics = [
                 'message'=> 'Success',
