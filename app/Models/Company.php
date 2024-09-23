@@ -18,9 +18,9 @@ class Company extends Model
         'images' => 'array', // Cast la colonne images comme tableau
     ];
     
-    public function user(): HasOne
+    public function user()
     {
-        return $this->hasOne(User::class, 'id');
+        return $this->belongsTo(User::class, 'users_id');
     }
 
     public function serviceType(): HasOne

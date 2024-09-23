@@ -106,7 +106,7 @@
             <!-- Dynamic Features Section -->
             <div class="form-group">
                 @if (!empty($company->images))
-                    @foreach (json_decode($company->images, true) as $item)
+                    @foreach ($company->images as $item)
                         {{-- <img src="{{ Storage::disk('s3')->url($item['file_path']) }}" alt="" width="100px" height="100px" class="shadow mx-2 my-2" style=""> --}}
                         <img src="{{ $item['file_path'] }}" alt="" width="100px" height="100px" class="shadow mx-2 my-2" style="">
                     @endforeach

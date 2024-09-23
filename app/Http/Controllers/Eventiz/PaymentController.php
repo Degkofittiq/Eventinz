@@ -5,15 +5,18 @@ namespace App\Http\Controllers\Eventiz;
 // use App\Models\Credit;
 use Carbon\Carbon;
 use App\Models\Event;
+use App\Models\Company;
 use App\Models\CreditPrice;
 use Illuminate\Support\Str;
-use App\Models\Subscription;
 // use Illuminate\Support\Facades\Auth;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
 use App\Models\Paymenthistory;
 use App\Services\PaymentService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewEventNotificationMail;
 use App\Services\CurrencyConversionService;
 
 class PaymentController extends Controller
@@ -77,7 +80,6 @@ class PaymentController extends Controller
                         }
 
                         if ($request->event_id) {
-                            // dd($request->event_id);
                             $eventId = $request->event_id;
                             $event = Event::where('id',  $eventId)->first();
                             $user = Auth::user();
@@ -86,15 +88,52 @@ class PaymentController extends Controller
                                 if ($payStatus->status == "pending") {
                                     $event->update(['is_pay_done' => 1]);
                                 }
+
+                                $vendorsChoose = [];
+                                if ($event) {
+                                    $vendorIds = $event->vendor_type_id ?? []; // Vendor Category Id
+                                    $pokeVendorIds = $event->vendor_poke ?? []; // Vendor Company Id
+                                    $companyvendorEmails = [];
+
+                                    $eventMessage = 'There is a new event in your vendor category on our plateform, check your account in EvenTinz apk to Bid !';
+                                    if (!empty($vendorIds) && is_array(json_decode($vendorIds, true))) {
+                                        foreach (json_decode($vendorIds, true) as $vendorId) {
+                                            $companyVendor = Company::whereRaw('JSON_CONTAINS(vendor_categories_id, ?)', [$vendorId])->first();
+
+                                            if ($companyVendor) {
+                                                $companyvendorEmails[] = $companyVendor->user->email;
+                                            }
+                                        }
+                                    }
+
+                                    if (!empty($pokeVendorIds) && is_array(json_decode($pokeVendorIds))) {
+                                        foreach (json_decode($pokeVendorIds) as $pokeVendorId) {
+                                            $companyVendor = Company::where('id',$pokeVendorId)->first();
+                                            
+                                            if ($companyVendor) {
+                                                $companyvendorEmails[] = $companyVendor->user->email;
+                                            }
+                                        }
+                                    }
+                                    $companyvendorEmails = array_unique($companyvendorEmails);
+                                    $count = 0;
+                                    if ($companyvendorEmails) {
+                                        // Send Mails
+                                        foreach ($companyvendorEmails as $address) {
+                                            Mail::to($address)->send(new NewEventNotificationMail($eventMessage));
+                                            $count = $count + 1;
+                                        }
+                                    }
+                                }
                             }
-                            // dd($event->credits);
                         }
-                        // dd($result);
 
                         return response()->json([
                             'status' => 'pending',
                             'message' => 'Payment initiated. Please check your phone to approve the payment.',
-                            'PaymentDetails' => $payment
+                            'PaymentDetails' => $payment,
+                            'emails' => $companyvendorEmails,
+                            'count' => $count
                         ]);
                     } else {
                         return response()->json($result);

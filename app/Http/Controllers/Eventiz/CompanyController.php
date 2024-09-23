@@ -822,27 +822,28 @@ class CompanyController extends Controller
     public function myEventStatistics(){
         // Récupérer l'utilisateur authentifié
         $user = auth()->user();
+        $companyAssoc = Company::where('users_id',$user->id)->get();
 
         if($user){
             $pastEvents = Event::whereDate('start_date', '<', now()->format('Y-m-d'))
             ->where(function($query) use ($user) {
                 $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($user->id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($user->id)]);
+                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
             })->get();
             $futureEvents = Event::whereDate('start_date', '>', now()->format('Y-m-d'))
             ->where(function($query) use ($user) {
                 $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($user->id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($user->id)]);
+                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
             })->get();
             $currentEvents = Event::whereDate('start_date', '=', now()->format('Y-m-d'))
             ->where(function($query) use ($user) {
                 $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($user->id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($user->id)]);
+                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
             })->get();
             $activeEvents = Event::where('status', 'Yes')
             ->where(function($query) use ($user) {
                 $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($user->id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($user->id)]);
+                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
             })->get();
 
             return response()->json([
