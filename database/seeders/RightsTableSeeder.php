@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class RightsTableSeeder extends Seeder
@@ -16,12 +17,15 @@ class RightsTableSeeder extends Seeder
     public function run()
     {
         //
-        DB::table('rights')->insert([
-            [
-                'rights_types_id' => '1',
-                'name' => 'print_list',
-                'description' => 'print any list'
-            ],
-        ]);
+        // Path to the SQL file
+        $path = database_path('seeders/rights_types.sql');
+
+        // Read the contents of the SQL file
+        $sql = File::get($path);
+
+        // Execute the SQL commands
+        DB::unprepared($sql);
+
+        $this->command->info('Database seeded with rights_types.sql');
     }
 }
