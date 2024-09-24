@@ -53,7 +53,8 @@ INSERT INTO `rights_types` (`id`, `name`, `description`, `created_at`, `updated_
 (10, 'Site Content Text Management', 'Right for content Text Management', NULL, NULL),
 (11, 'Site Content Images Management', 'Right for content Images Management', NULL, NULL),
 (12, 'Data limits', 'Data limits', NULL, NULL),
-(13, 'Support and Help', 'Spport and Help', NULL, NULL);
+(13, 'Support and Help', 'Support and Help', NULL, NULL),
+(14, 'View service list', 'View service list', NULL, NULL);
 
 --
 -- Indexes for dumped tables

@@ -32,34 +32,37 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('admin.userslist.index') }}" class="nav-link  {{ request()->url() == route('admin.userslist.index') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>
-                    Hosts & Vendors List
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.list.adminusers') }}" class="nav-link {{ request()->url() == route('admin.list.adminusers') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>Amin Users List</p>
-                </a>
-              </li>
-              {{-- <li class="nav-item">
-                <a href="{{ route('admin.list.rights') }}" class="nav-link {{ request()->url() == route('admin.list.rights') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>Rights Management</p>
-                </a>
-              </li> --}}
-              <li class="nav-item">
-                <a href="{{ route('admin.resendform.otp') }}" class="nav-link {{ request()->url() == route('admin.resendform.otp') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>
-                    Resend OTP
-                  </p>
-                </a>
-              </li>
+              @if(in_array('view_users_hosts_and_vendors_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.userslist.index') }}" class="nav-link  {{ request()->url() == route('admin.userslist.index') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Hosts & Vendors List
+                    </p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_list_of_staff_members', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.adminusers') }}" class="nav-link {{ request()->url() == route('admin.list.adminusers') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>Amin Users List</p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('resend_otp', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.resendform.otp') }}" class="nav-link {{ request()->url() == route('admin.resendform.otp') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Resend OTP
+                    </p>
+                  </a>
+                </li>
+              @endif
+
             </ul>
           </li>
           <li class="nav-item menu">
@@ -71,38 +74,50 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('admin.list.events') }}" class="nav-link  {{ request()->url() == route('admin.list.events') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>
-                    Events List
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.list.eventtypes') }}" class="nav-link {{ request()->url() == route('admin.list.eventtypes') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>
-                    Events Type
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.list.eventsubcategories') }}" class="nav-link {{ request()->url() == route('admin.list.eventsubcategories') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>
-                    Events Subcategories
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.list.reviews') }}" class="nav-link {{ request()->url() == route('admin.list.reviews') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>
-                    Reviews
-                  </p>
-                </a>
-              </li>
+              @if(in_array('view_events_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.events') }}" class="nav-link  {{ request()->url() == route('admin.list.events') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Events List
+                    </p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_event_type_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.eventtypes') }}" class="nav-link {{ request()->url() == route('admin.list.eventtypes') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Events Type
+                    </p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_event_subcategories_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.eventsubcategories') }}" class="nav-link {{ request()->url() == route('admin.list.eventsubcategories') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Events Subcategories
+                    </p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_reviews_list	', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.reviews') }}" class="nav-link {{ request()->url() == route('admin.list.reviews') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Reviews
+                    </p>
+                  </a>
+                </li>
+              @endif
+
             </ul>
           </li>
           <li class="nav-item ">
@@ -114,40 +129,55 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('admin.list.subscriptionplans') }}" class="nav-link {{ request()->url() == route('admin.list.subscriptionplans') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>
-                    Subscriptions
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.list.category') }}" class="nav-link {{ request()->url() == route('admin.list.category') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>Categories Management</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.list.companies') }}" class="nav-link {{ request()->url() == route('admin.list.companies') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>Companies List</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.list.servicescategories') }}" class="nav-link {{ request()->url() == route('admin.list.servicescategories') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>Services Categories List</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.list.vendorclass') }}" class="nav-link {{ request()->url() == route('admin.list.vendorclass') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>
-                    Vendors Classes
-                  </p>
-                </a>
-              </li>
+              @if(in_array('view_subscription_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.subscriptionplans') }}" class="nav-link {{ request()->url() == route('admin.list.subscriptionplans') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Subscriptions
+                    </p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_categories_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.category') }}" class="nav-link {{ request()->url() == route('admin.list.category') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>Categories Management</p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_companies_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.companies') }}" class="nav-link {{ request()->url() == route('admin.list.companies') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>Companies List</p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_service_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.servicescategories') }}" class="nav-link {{ request()->url() == route('admin.list.servicescategories') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>Services Categories List</p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_vendors_classes_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.vendorclass') }}" class="nav-link {{ request()->url() == route('admin.list.vendorclass') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Vendors Classes
+                    </p>
+                  </a>
+                </li>
+              @endif
+
             </ul>
           </li>
           <li class="nav-item ">
@@ -159,22 +189,28 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('admin.list.payments') }}" class="nav-link {{ request()->url() == route('admin.list.payments') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>
-                    Payments Stories
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.list.paymenttaxe') }}" class="nav-link {{ request()->url() == route('admin.list.paymenttaxe') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>
-                    Taxes management
-                  </p>
-                </a>
-              </li>
+              @if(in_array('view_payments_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.payments') }}" class="nav-link {{ request()->url() == route('admin.list.payments') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Payments Stories
+                    </p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_taxes_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.paymenttaxe') }}" class="nav-link {{ request()->url() == route('admin.list.paymenttaxe') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Taxes management
+                    </p>
+                  </a>
+                </li>
+              @endif
+
             </ul>
           </li>
           <li class="nav-item ">
@@ -186,26 +222,35 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('admin.list.contenttext') }}" class="nav-link {{ request()->url() == route('admin.list.contenttext') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>Content Text</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.list.contentimage') }}" class="nav-link {{ request()->url() == route('admin.list.contentimage') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>Content Images / Icons</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.list.datalimit') }}" class="nav-link {{ request()->url() == route('admin.list.datalimit') ? "active" : "" }}">
-                  <i class="far fa-dot-circle nav-icon"></i>
-                  <p>
-                    Data limits
-                  </p>
-                </a>
-              </li>
+              @if(in_array('view_contents_texts_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.contenttext') }}" class="nav-link {{ request()->url() == route('admin.list.contenttext') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>Content Text</p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_contents_images_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.contentimage') }}" class="nav-link {{ request()->url() == route('admin.list.contentimage') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>Content Images / Icons</p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_limits_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.datalimit') }}" class="nav-link {{ request()->url() == route('admin.list.datalimit') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Data limits
+                    </p>
+                  </a>
+                </li>
+              @endif
+
             </ul>
           </li>
         </ul>
