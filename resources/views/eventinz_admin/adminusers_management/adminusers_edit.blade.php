@@ -119,21 +119,46 @@
                         <p class="text-danger">{{ $message }}</p>
                     @enderror  
                     <p type="button" class="btn btn-info" id="toggleButton" onclick="toggleCheckboxes()">Select All</p> <br>
-
-                    @foreach($rightTypes as $rightType)
-                        <strond>{{ $rightType->name }}</strond> <!-- Nom du type de droit -->
-                        <ul>
-                            @foreach($rightType->rights as $right)
-                                @if (!empty($adminUserFound->rights))
-                                    <input {{ in_array($right->name,json_decode($adminUserFound->rights)) ? "checked" : "" }} type="checkbox" name="rights[]" id="rights[]" value="{{ $right->name }}" class=" @error('rights') is-invallid @enderror" placeholder="Put the new Admin/Master Rights">
-                                @else
-                                    <input type="checkbox" name="rights[]" id="rights[]" value="{{ $right->name }}" class=" @error('rights') is-invallid @enderror" placeholder="Put the new Admin/Master Rights">
-                                @endif
-                            <!-- Right Name -->
-                                <label for="rights_{{ $right->name }}"> {{ "  " . $right->name . "  " }} </label>
+                    <div class="row">
+                        @foreach($rightTypes as $rightType)
+                            <div class="col-md-12">
+                                <strong>{{ $rightType->name }}</strong> <!-- Nom du type de droit -->
+                            </div>
+                            
+                            @php
+                                $rightsChunks = $rightType->rights->chunk(2); // Divise les droits en groupes de 3 pour les colonnes
+                            @endphp
+                    
+                            @foreach($rightsChunks as $chunk)
+                                <div class="col-md-4">
+                                    <ul>
+                                        @foreach($chunk as $right)
+                                            @if (!empty($adminUserFound->rights))
+                                                <input {{ in_array($right->name, json_decode($adminUserFound->rights)) ? "checked" : "" }} 
+                                                    type="checkbox" 
+                                                    name="rights[]"
+                                                    id="rights_{{ $right->name }}"
+                                                    value="{{ $right->name }}" 
+                                                    class=" @error('rights') is-invalid @enderror" 
+                                                    placeholder="Put the new Admin/Master Rights">
+                                            @else
+                                                <input 
+                                                    type="checkbox" 
+                                                    name="rights[]" 
+                                                    id="rights_{{ $right->name }}" 
+                                                    value="{{ $right->name }}" 
+                                                    class=" @error('rights') is-invalid @enderror" 
+                                                    placeholder="Put the new Admin/Master Rights">
+                                            @endif
+                                            <!-- Right Name -->
+                                            <label for="rights_{{ $right->name }}"> {{ "  " . $right->description . "  " }} </label><br>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             @endforeach
-                        </ul>
-                    @endforeach             
+                        @endforeach
+                    </div>
+                               
                 </td>        
             </tr>
             <tr>
