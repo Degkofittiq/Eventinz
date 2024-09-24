@@ -18,7 +18,7 @@ class RightsTypeSeeder extends Seeder
     {
         //
         // Path to the SQL file
-        $path = database_path('seeders/rights.sql');
+        $path = database_path('seeders/rights_types.sql'); 
 
         // Read the contents of the SQL file
         $sql = File::get($path);
@@ -26,6 +26,6 @@ class RightsTypeSeeder extends Seeder
         // Execute the SQL commands
         DB::unprepared($sql);
 
-        $this->command->info('Database seeded with rights.sql');
+        $this->command->info('Database seeded with rights_types.sql');
     }
 }

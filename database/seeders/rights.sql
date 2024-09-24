@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 24, 2024 at 01:41 PM
+-- Generation Time: Sep 24, 2024 at 03:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,7 +67,7 @@ INSERT INTO `rights` (`id`, `rights_types_id`, `name`, `description`, `created_a
 (23, '3', 'review_edit', 'review edit', '2024-09-24 10:33:26', '2024-09-24 10:33:26'),
 (24, '4', 'view_categories_list', 'view categories list', '2024-09-24 10:33:45', '2024-09-24 10:33:45'),
 (25, '4', 'edit_category', 'edit category', '2024-09-24 10:34:04', '2024-09-24 10:34:04'),
-(26, '4', 'delete_category_add_new_category', 'delete category add new category', '2024-09-24 10:34:20', '2024-09-24 10:34:20'),
+(26, '4', 'delete_category', 'delete category', '2024-09-24 10:34:20', '2024-09-24 10:34:20'),
 (27, '9', 'view_subscription_list', 'view subscription list', '2024-09-24 10:34:38', '2024-09-24 10:34:38'),
 (28, '9', 'view_subscription_details', 'view subscription details', '2024-09-24 10:34:51', '2024-09-24 10:34:51'),
 (29, '9', 'add_new_subscription', 'add new subscription', '2024-09-24 10:35:10', '2024-09-24 10:35:10'),
@@ -91,7 +91,9 @@ INSERT INTO `rights` (`id`, `rights_types_id`, `name`, `description`, `created_a
 (47, '11', 'view_content_image', 'view content image', '2024-09-24 10:40:05', '2024-09-24 10:40:05'),
 (48, '11', 'edit_content_image', 'edit content image', '2024-09-24 10:40:16', '2024-09-24 10:40:16'),
 (49, '12', 'view_limits_list', 'view limits list', '2024-09-24 10:40:31', '2024-09-24 10:40:31'),
-(50, '12', 'edit_limit', 'edit limit', '2024-09-24 10:40:48', '2024-09-24 10:40:48');
+(50, '12', 'edit_limit', 'edit limit', '2024-09-24 10:40:48', '2024-09-24 10:40:48'),
+(51, '4', 'add_new_category', 'add new category', '2024-09-24 13:49:32', '2024-09-24 13:49:32'),
+(52, '3', 'add_new_event_subcategory', 'add new event subcategory', '2024-09-24 13:49:32', '2024-09-24 13:49:32');
 
 --
 -- Indexes for dumped tables
@@ -111,7 +113,7 @@ ALTER TABLE `rights`
 -- AUTO_INCREMENT for table `rights`
 --
 ALTER TABLE `rights`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -70,6 +70,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
     <!-- /.content-header -->
 
+    @if (request()->url() == route('admin.dashboard') )
+      @if(session('success'))
+          <div class="alert alert-success">
+              {{ session('success') }}
+          </div>
+      @endif
+    
+      @if(session('error'))
+          <div class="alert alert-danger">
+              {{ session('error') }}
+          </div>
+      @endif      
+    @endif
+
     <!-- Main content -->
       {{-- <div class="content">
         <div class="container-fluid">
