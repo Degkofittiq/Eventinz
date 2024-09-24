@@ -17,16 +17,19 @@ class RightsTypeSeeder extends Seeder
     {
         //
         DB::table('rights_types')->insert([
-            ['name' => 'Listing','description' => 'All listing right'],
-            ['name' => 'User Management','description' => 'Magement of users functionalities right'],
-            ['name' => 'Staff Management','description' => 'Management of Staff member right'],
-            ['name' => 'Event Management','description' => 'Magement of events right'],
-            ['name' => 'Taxe Management','description' => 'Management of taxes right'],
-            ['name' => 'Vendors Categories Management','description' => 'Management of category right'],
-            ['name' => 'Payments Management','description' => 'Management of payments right'],
-            ['name' => 'Subrcriptions plan Management','description' => 'Magement of subscriptions right'],
+            ['name' => 'Users Management','description' => 'Magement of users functionalities'],
+            ['name' => 'Staff Management','description' => 'Management of Staff member'],
+            ['name' => 'Events Management','description' => 'Magement of events'],
+            ['name' => 'Vendors Categories Management','description' => 'Magement of Vendors Categories'],
+            ['name' => 'Companies Management','description' => 'Management of Companies'],
+            ['name' => 'Taxe Management','description' => 'Management of taxes'],
+            ['name' => 'Vendors Classes Management','description' => 'Management of vendors Classes'],
+            ['name' => 'Payments Management','description' => 'Management of payments'],
+            ['name' => 'Subrcriptions plan Management','description' => 'Magement of subscriptions'],
             ['name' => 'Site Content Text Management','description' => 'Right for content Text Management'],
-            ['name' => 'Spport and Help','description' => 'Spport and Help'],
+            ['name' => 'Site Content Images Management','description' => 'Right for content Images Management'],
+            ['name' => 'Data limits','description' => 'Data limits'],
+            ['name' => 'Support and Help','description' => 'Spport and Help'],
             // ...
 
         ]);

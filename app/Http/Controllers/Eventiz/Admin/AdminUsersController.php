@@ -197,4 +197,45 @@ class AdminUsersController extends Controller
 
         return view('eventinz_admin.adminusers_management.adminusers_list', compact('adminUsers'));
     }
+
+    // rights CRUD, just temporaly
+    public function rightsList(){
+
+        $rights = Right::all();
+
+        return view('eventinz_admin.rights_management.rights_list', compact('rights'));
+    }
+    
+    public function addRightForm(){
+        $rightsTypes = RightsType::all();
+
+        return view('eventinz_admin.rights_management.rights_create', compact('rightsTypes'));
+    }
+    
+    public function addRight(Request $request){
+        $rightValidation = $request->validate([
+            'name' =>'required|string|max:255',
+            'description' =>'required|string|max:255',
+            'rights_types_id' =>'required|integer',
+        ]);
+
+        try{
+            $rightCreate = Right::create([
+                'name' => preg_replace('/\s+/', '_', $rightValidation['name']),
+                'description' => $rightValidation['description'],
+                'rights_types_id' => $rightValidation['rights_types_id'],
+            ]);
+
+            if (!$rightCreate) {
+                return back()->with('error', 'New right creation cannot be completed. Please try again!');
+            }
+
+            return back()->with('success', 'New right created successfully.');
+        }catch (Exception $e) {
+            return back()->with('error', 'New right creation cannot be completed, '. $e->getMessage() );
+        }
+
+    }
+    // rightsList-addRightForm-addRight-
+
 }

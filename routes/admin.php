@@ -154,4 +154,11 @@ Route::prefix('admin')->middleware(['auth'/*,'rights'*/])->group(function() {
     Route::get('/datalimitlist', [AdminController::class,'DataLimitList'])->name('admin.list.datalimit');
     Route::get('/editdatalimit/{datalimitId}', [AdminController::class,'editDataLimitForm'])->name('admin.edit.datalimit');
     Route::post('/setdatalimit/{datalimitId}', [AdminController::class,'setDataLimit'])->name('admin.set.datalimit');
+
+    
+    // rightsList-addRightForm-addRight
+    Route::get('/rightslist', [AdminUsersController::class,'rightsList'])->name('admin.list.rights');
+    Route::get('/addrightform', [AdminUsersController::class,'addRightForm'])->name('admin.addform.right');
+    Route::post('/addright', [AdminUsersController::class,'addRight'])->name('admin.add.right');
+
 });

@@ -46,6 +46,12 @@
                   <p>Amin Users List</p>
                 </a>
               </li>
+              {{-- <li class="nav-item">
+                <a href="{{ route('admin.list.rights') }}" class="nav-link {{ request()->url() == route('admin.list.rights') ? "active" : "" }}">
+                  <i class="far fa-dot-circle nav-icon"></i>
+                  <p>Rights Management</p>
+                </a>
+              </li> --}}
               <li class="nav-item">
                 <a href="{{ route('admin.resendform.otp') }}" class="nav-link {{ request()->url() == route('admin.resendform.otp') ? "active" : "" }}">
                   <i class="far fa-dot-circle nav-icon"></i>

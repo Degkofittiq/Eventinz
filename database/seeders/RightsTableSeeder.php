@@ -22,21 +22,6 @@ class RightsTableSeeder extends Seeder
                 'name' => 'print_list',
                 'description' => 'print any list'
             ],
-            [
-                'rights_types_id' => '1',
-                'name' => 'view',
-                'description' => 'view any list'
-            ],
-            [
-                'rights_types_id' => '1',
-                'name' => 'edit',
-                'description' => 'edit user profiles'
-            ],
-            [
-                'rights_types_id' => '1',
-                'name' => 'delete',
-                'description' => 'delete user'
-            ]
         ]);
     }
 }
