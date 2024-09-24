@@ -7,6 +7,7 @@ use Database\Seeders\RoleSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\RightsTypeSeeder;
 use Database\Seeders\RightsTableSeeder;
+use Database\Seeders\VarriablesLimitTableSeeder;
 use Database\Seeders\contentTextManagementSeeder;
 use Database\Seeders\contentImagesManagementSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             contentImagesManagementSeeder::class,
             RightsTableSeeder::class, 
             RightsTypeSeeder::class,
+            VarriablesLimitTableSeeder::class,
         ]);
     }
 }

@@ -31,7 +31,7 @@
         </div>
         <div class="form-group">
           <label for="value">Value <span style="color: red"><strong>*</strong></span></label>
-          <input value="{{ $datalimitFound->value ?? " " }}" name="value" id="value" class="form-control  @error('value') is-invalid @enderror">
+          <input value="{{ $datalimitFound->value ?? " " }}" type="number" name="value" id="value" class="form-control  @error('value') is-invalid @enderror">
           @error('value') <p> {{ $message }} </p> @enderror
         </div>
       </div>

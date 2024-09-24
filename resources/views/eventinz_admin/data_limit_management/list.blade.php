@@ -14,7 +14,7 @@
       </div>
   @endif
     <div class="card-header">
-      <h3 class="card-title">Vendor class List</h3>
+      <h3 class="card-title">Datas limit List</h3>
       <div class="card-tools">
         <a href="{{ route('admin.add.vendorclassform') }}" class="btn bg-default">
           <i class="fas fa-plus"></i>
@@ -40,7 +40,7 @@
           <tr>
             <th scope="row">{{ $count++ }}</th>
             <td>{{ $datalimit->name ?? "" }}</td>
-            <td>{{ $datalimit->value ?? "" }}</td>
+            <td>{{ $datalimit->value ?? "Not set Yet" }}</td>
             <td>
               <a href="{{ route('admin.edit.datalimit', $datalimit->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
             </td>
