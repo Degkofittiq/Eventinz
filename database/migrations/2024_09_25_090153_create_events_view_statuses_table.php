@@ -12,11 +12,12 @@ return new class extends Migration
      * @return void
      */
     public function up()
-    { // Birthday - Mariage - Party -   
-        Schema::create('event_types', function (Blueprint $table) {
+    {
+        Schema::create('events_view_statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description');
+            $table->string('name'); // private - public
+            $table->string('description'); // if public (this status allow notification to all vendors in the categories that you choosed ) 
+            $table->decimal('price')->nullable(); // if the event is on private, the system should be send back a price
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('event_types');
+        Schema::dropIfExists('events_view_statuses');
     }
 };

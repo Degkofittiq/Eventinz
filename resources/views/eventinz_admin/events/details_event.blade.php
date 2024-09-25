@@ -138,7 +138,7 @@
                 <td>
                     <select class="form-control  @error('public_or_private') is-invalid @enderror" name="public_or_private" id="public_or_private">
                         @foreach ($privateOrPublic as $item)
-                            <option value="{{ $item }}" {{ $event->public_or_private == $item ? "selected" : ""}}>{{ $item  == 0 ? "Public" : "Private"}}</option>
+                            <option value="{{ $item->id }}" {{ $event->public_or_private == $item->id ? "selected" : ""}}>{{ $item->name}}</option>
                         @endforeach
                     </select>
                     @error('public_or_private') <p> {{ $message }} </p> @enderror                    

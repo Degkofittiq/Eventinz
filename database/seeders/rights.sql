@@ -94,7 +94,9 @@ INSERT INTO `rights` (`id`, `rights_types_id`, `name`, `description`, `created_a
 (50, '12', 'edit_limit', 'edit limit', '2024-09-24 10:40:48', '2024-09-24 10:40:48'),
 (51, '4', 'add_new_category', 'add new category', '2024-09-24 13:49:32', '2024-09-24 13:49:32'),
 (52, '3', 'add_new_event_subcategory', 'add new event subcategory', '2024-09-24 13:49:32', '2024-09-24 13:49:32'),
-(53, '14', 'view_service_list', 'view service list', '2024-09-24 13:49:32', '2024-09-24 13:49:32');
+(53, '14', 'view_service_list', 'view service list', '2024-09-24 13:49:32', '2024-09-24 13:49:32'),
+(54, '13', 'view_support_help', 'Support and help', '2024-09-24 13:49:32', '2024-09-24 13:49:32'),
+(55, '8', 'view_eventviewstatus_list', 'Event View Status List', '2024-09-24 13:49:32', '2024-09-24 13:49:32');
 
 --
 -- Indexes for dumped tables

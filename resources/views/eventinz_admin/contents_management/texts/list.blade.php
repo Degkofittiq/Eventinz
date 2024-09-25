@@ -75,7 +75,7 @@
             @forelse ($textContents as $textContent)
                 
                 <tr>
-                    <th scope="row">{{ $count++ }}</th>
+                    <th scope="row">{{ $count++ }}</th> 
                     <td>{{ $textContent->name  ?? "" }}</td>
                     <td>{{ $textContent->page }}</td>
                     <td>
@@ -106,7 +106,6 @@
     columnDefs: [
       { orderable: false, targets: [5] } // 7 est l'index de la colonne 'Actions', car les index commencent à 0
     ]
-  }
-  );
+  });
 </script>
 @endsection

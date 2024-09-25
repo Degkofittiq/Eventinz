@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\EventType;
 use Illuminate\Http\Request;
 use App\Models\EventSubcategory;
+use App\Models\EventsViewStatus;
 use App\Models\VendorCategories;
 use App\Http\Controllers\Controller;
 
@@ -28,10 +29,7 @@ class AdminEventController extends Controller
         $eventTypes = EventType::all();
         $vendorCategories = VendorCategories::all();
         $companies = Company::all();
-        $privateOrPublic = [
-            1, //'Private'
-            0, //'Public'
-        ];
+        $privateOrPublic = EventsViewStatus::all();
         $status = [
             'Yes',
             'No'
@@ -260,5 +258,83 @@ class AdminEventController extends Controller
         $delete = $eventSubcategoryFound->delete();
 
         return redirect()->route('admin.list.eventsubcategories')->with('success', 'Event Subcategory '. $eventSubcategoryName .' has been deleted');
+    }
+
+    // Events View Status Management | eventViewStatusList-eventViewStatusAddForm-eventViewStatusAdd-eventViewStatusEditForm-eventViewStatusUpdate-eventViewStatusDelete-eventViewStatusDeleteForm
+    public function eventViewStatusList(Request $request){
+        $eventViewStatuses = EventsViewStatus::all();
+
+        return view('eventinz_admin.events_view_status_management.list_event_view_status', compact('eventViewStatuses'));
+    }
+
+    public function eventViewStatusEditForm(Request $request, $eventViewStatusId){
+        $eventViewStatusFound = EventsViewStatus::find($eventViewStatusId); // EventsViewStatus
+        if (!$eventViewStatusFound) {
+            return back()->with('error', 'Event View Status not found');
+        }
+
+        return view('eventinz_admin.events_view_status_management.edit_event_view_status', compact('eventViewStatusFound'));
+    }
+    
+    public function eventViewStatusAddForm(Request $request){
+
+        return view('eventinz_admin.events_view_status_management.create_event_view_status');
+    }
+    
+    public function eventViewStatusAdd(Request $request){
+        $dataValidation = $request->validate([
+            'name'  =>  'required|string|max:255',
+            'description'  =>  'required|string|max:255',
+            'price'  =>  'nullable|numeric'
+        ]);
+
+        $creation = EventsViewStatus::create($dataValidation);
+
+        if (!$creation) {
+            return back()->with('error', 'Failed to create event event view status');
+        }
+
+        return back()->with('success', 'Event ViewStatus created');
+    }
+        
+    public function eventViewStatusUpdate(Request $request, $eventViewStatusId){
+        $eventViewStatusFound = EventsViewStatus::find($eventViewStatusId);
+        if (!$eventViewStatusFound) {
+            return back()->with('error', 'Event View Status not found');
+        }
+        $dataValidation = $request->validate([
+            'name'  =>  'required|string|max:255',
+            'description'  =>  'required|string|max:255',
+            'price'  =>  'nullable|numeric'
+        ]);
+
+        $update = $eventViewStatusFound->update($dataValidation);
+
+        if (!$update) {
+            return back()->with('error', 'Failed to update event View Status');
+        }
+        return back()->with('success', 'Event View Status updated');
+    }
+    
+    public function eventViewStatusDeleteForm(Request $request, $eventViewStatusId){
+        $eventViewStatusFound = EventsViewStatus::find($eventViewStatusId);
+        if (!$eventViewStatusFound) {
+            return back()->with('error', 'Event View Status not found');
+        }
+
+        return view('eventinz_admin.events_view_status_management.delete_event_view_status', compact('eventViewStatusFound'));
+    }
+
+    public function eventViewStatusDelete(Request $request, $eventViewStatusId){
+        $eventViewStatusFound = EventsViewStatus::find($eventViewStatusId);
+
+        if (!$eventViewStatusFound) {
+            return back()->with('error', 'Event ViewStatus not found');
+        }
+
+        $eventViewStatusName = $eventViewStatusFound->name ?? "";
+        $delete = $eventViewStatusFound->delete();
+
+        return redirect()->route('admin.list.eventviewstatus')->with('success', 'Event ViewStatus '. $eventViewStatusName .' has been deleted');
     }
 }

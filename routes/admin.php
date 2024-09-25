@@ -156,6 +156,16 @@ Route::prefix('admin')->middleware(['auth','rights'])->group(function() {
     Route::post('/setdatalimit/{datalimitId}', [AdminController::class,'setDataLimit'])->name('admin.set.datalimit')->middleware('rights:edit_limit');
 
     
+    // Events View Status Management | eventViewStatusList-eventViewStatusAddForm-eventViewStatusAdd-eventViewStatusEditForm-eventViewStatusUpdate-eventViewStatusDelete-eventViewStatusDeleteForm
+    Route::get('/eventviewstatuslist', [AdminEventController::class, 'eventViewStatusList'])->name('admin.list.eventviewstatus')/*->middleware('rights:view_event_viewstatus_list')*/;
+    Route::get('/eventviewstatusadd', [AdminEventController::class, 'eventViewStatusAddForm'])->name('admin.add.eventviewstatusform')/*->middleware('rights:add_new_event_viewstatus')*/;
+    Route::post('/eventviewstatusadd', [AdminEventController::class, 'eventViewStatusAdd'])->name('admin.add.eventviewstatus')/*->middleware('rights:add_new_event_viewstatus')*/;
+    Route::get('/eventviewstatusedit/{eventViewStatusId}', [AdminEventController::class, 'eventViewStatusEditForm'])->name('admin.edit.eventviewstatusform')/*->middleware('rights:edit_event_viewstatus')*/;
+    Route::post('/eventviewstatusupdate/{eventViewStatusId}', [AdminEventController::class, 'eventViewStatusUpdate'])->name('admin.update.eventviewstatus')/*->middleware('rights:edit_event_viewstatus')*/;
+    Route::get('/eventviewstatusdeleteForm/{eventViewStatusId}', [AdminEventController::class, 'eventViewStatusDeleteForm'])->name('admin.deleteform.eventviewstatus')/*->middleware('rights:delete_event_viewstatus')*/;
+    Route::post('/eventviewstatusdelete/{eventViewStatusId}', [AdminEventController::class, 'eventViewStatusDelete'])->name('admin.delete.eventviewstatus')/*->middleware('rights:delete_event_viewstatus')*/;
+
+    
     // rightsList-addRightForm-addRight
     Route::get('/rightslist', [AdminUsersController::class,'rightsList'])->name('admin.list.rights')/*->middleware('rights:xxxxxxxxxxxxx')*/;
     Route::get('/addrightform', [AdminUsersController::class,'addRightForm'])->name('admin.addform.right')/*->middleware('rights:xxxxxxxxxxxxx')*/;

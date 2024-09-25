@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\User;
 use App\Models\EventType;
+use App\Models\EventsViewStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -28,4 +29,9 @@ class Event extends Model
         return $this->belongsToMany(VendorType::class, 'vendor_type_event', 'event_id', 'vendor_type_id');
     }
 
+    
+    public function eventsViewStatus()
+    {
+        return $this->belongsTo(EventsViewStatus::class,'public_or_private');
+    }
 }

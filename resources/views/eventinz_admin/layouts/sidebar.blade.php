@@ -62,6 +62,18 @@
                   </a>
                 </li>
               @endif
+              
+              @if(in_array('view_support_help', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  {{-- <a href="{{ route('admin.resendform.otp') }}" class="nav-link {{ request()->url() == route('admin.resendform.otp') ? "active" : "" }}"> --}}
+                  <a href="#" class="nav-link ">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Support & Help
+                    </p>
+                  </a>
+                </li>
+              @endif
 
             </ul>
           </li>
@@ -206,6 +218,17 @@
                     <i class="far fa-dot-circle nav-icon"></i>
                     <p>
                       Taxes management
+                    </p>
+                  </a>
+                </li>
+              @endif
+
+              @if(in_array('view_eventviewstatus_list', json_decode(Auth::user()->rights)))
+                <li class="nav-item">
+                  <a href="{{ route('admin.list.eventviewstatus') }}" class="nav-link {{ request()->url() == route('admin.list.eventviewstatus') ? "active" : "" }}">
+                    <i class="far fa-dot-circle nav-icon"></i>
+                    <p>
+                      Event View Status
                     </p>
                   </a>
                 </li>

@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\CanceledEvents;
 use App\Models\EventSubcategory;
+use App\Models\EventsViewStatus;
 use App\Models\VendorCategories;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -109,6 +110,21 @@ class EventController extends Controller
         return response()->json([
             'VendorsChooseList' => $vendorChooseId
         ], 200);
+    }
+
+    public function eventVieswStatusesList(){
+        $eventViewStatuses =  EventsViewStatus::all()->makeHidden(['created_at','updated_at']);
+        
+        if (!$eventViewStatuses) {
+            return response()->json([
+                'error' => 'No Event view statuses found yet'
+            ], 404);
+        }
+        
+        return response()->json([
+            'Event View Statuses' => $eventViewStatuses
+        ], 200);
+
     }
 
     public function storeEvent(Request $request){
