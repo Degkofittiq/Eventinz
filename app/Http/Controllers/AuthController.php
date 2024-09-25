@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Mail\OTPMail;
 use App\Models\Event;
 use App\Models\Company;
+use App\Models\BidQuotes;
+use App\Models\EventQuotes;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\ForgotPasswordMail;
@@ -344,21 +346,110 @@ class AuthController extends Controller
     public function viewProfile(Request $request){
         $userFound = Auth::user();
 
-        $activeEvents = Event::where('user_id', $userFound->id)->where('status', 'Yes')->get();
-        $pastEvents = Event::where('user_id', $userFound->id)->whereDate('start_date', '<', now()->format('Y-m-d'))->get();
-        $futureEvents = Event::where('user_id', $userFound->id)->whereDate('start_date', '>', now()->format('Y-m-d'))->get();
-        $canceledEvents = Event::where('user_id', $userFound->id)->where('cancelstatus', 'Canceled')->get();
+        if ($userFound->role_id == 1) {
+            $activeEvents = Event::where('user_id', $userFound->id)->where('status', 'Yes')->get();
+            $pastEvents = Event::where('user_id', $userFound->id)->whereDate('start_date', '<', now()->format('Y-m-d'))->get();
+            $futureEvents = Event::where('user_id', $userFound->id)->whereDate('start_date', '>', now()->format('Y-m-d'))->get();
+            $canceledEvents = Event::where('user_id', $userFound->id)->where('cancelstatus', 'Canceled')->get();
+    
+            $userFound['registered_at'] = $userFound['created_at']; 
+            $userFound['user_genders_id'] = json_decode($userFound['user_genders_id'], true); 
+            $userFound['age'] = json_decode($userFound['age'], true); 
+             
+            return response()->json([
+                'user found' => $userFound->makeHidden(['rights','updated_at','created_at']),
+                'Active Events ('. count($activeEvents) .')'=> count($activeEvents) > 0 ? $activeEvents : 0,
+                'Past Events ('. count($pastEvents) .')'=> count($pastEvents) > 0 ? $pastEvents : 0,
+                'Upcomming Events ('. count($futureEvents) .')'=> count($futureEvents) > 0 ? $futureEvents : 0,
+                'Canceled Events ('. count($canceledEvents) .')'=> count($canceledEvents) > 0 ? $canceledEvents : 0,
+            ]);
+        } else {
+            /*
+                $companyAssoc = Company::where('users_id',$userFound->id)->first();
+                $pastEvents = Event::whereDate('start_date', '<', now()->format('Y-m-d'))
+                ->where(function($query) use ($userFound,$companyAssoc) {
+                    $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
+                        ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
+                })->get();
+                $futureEvents = Event::whereDate('start_date', '>', now()->format('Y-m-d'))
+                ->where(function($query) use ($userFound,$companyAssoc) {
+                    $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
+                        ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
+                })->get();
+                $currentEvents = Event::whereDate('start_date', '=', now()->format('Y-m-d'))
+                ->where(function($query) use ($userFound,$companyAssoc) {
+                    $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
+                        ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
+                })->get();
+                $activeEvents = Event::where('status', 'Yes')
+                ->where(function($query) use ($userFound,$companyAssoc) {
+                    $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
+                        ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
+                })->get();
+            */ 
 
-         $userFound['user_genders_id'] = json_decode($userFound['user_genders_id'], true); 
-         $userFound['age'] = json_decode($userFound['age'], true); 
-         
-        return response()->json([
-            'user found' => $userFound,
-            'Active Events ('. count($activeEvents) .')'=> count($activeEvents) > 0 ? $activeEvents : 0,
-            'Past Events ('. count($pastEvents) .')'=> count($pastEvents) > 0 ? $pastEvents : 0,
-            'Upcomming Events ('. count($futureEvents) .')'=> count($futureEvents) > 0 ? $futureEvents : 0,
-            'Canceled Events ('. count($canceledEvents) .')'=> count($canceledEvents) > 0 ? $canceledEvents : 0,
-        ]);
+            $allEvents = $futureEvents = $completedEvents = $canceledEvents = $activeEvents = $eventStatistics = [];
+
+            $companyAssoc = Company::where('users_id',$userFound->id)->first();
+            if (!$companyAssoc) {
+                return response()->json([
+                    'message'=> 'error',
+                    'error'=> 'Not company yet'
+                ], 404);
+            }
+
+            $bidAssocs = BidQuotes::where('status','Accepted')->get();
+            if (!$bidAssocs) {
+                // dd('No Bids yet');
+            }
+
+            $eventQuoteAssocs = [];
+            foreach ($bidAssocs as $bidAssoc) {
+                $eventQuoteAssocs[] = EventQuotes::where('quote_code', $bidAssoc->quote_code)->first();
+            }
+
+            if (!empty($eventQuoteAssocs)) {
+                $eventQuoteAssocs = array_unique($eventQuoteAssocs);
+            }
+
+            // Ces requettes de statistique du cote des vendors se base sur les bids accepte pour la selection des companies via la table event quotes
+            foreach ($eventQuoteAssocs as $eventQuoteAssoc) {
+                $activeEvents = Event::where('id', $eventQuoteAssoc->event_id)
+                ->orWhere('user_id', $userFound->id)->where('status', 'Yes')->get();
+
+                $pastEvents = $currentEvents = [];
+
+                $allEvents = Event::where('id', $eventQuoteAssoc->event_id)->get(); // All 
+
+                $futureEvents = Event::where('id', $eventQuoteAssoc->event_id)
+                ->whereDate('start_date', '>', now()->format('Y-m-d'))->get(); // Upcomming
+
+                $completedEvents = Event::where('id', $eventQuoteAssoc->event_id)
+                ->where('cancelstatus','completed')->get(); // completed
+
+                $canceledEvents = Event::where('id', $eventQuoteAssoc->event_id)
+                ->where('cancelstatus','canceled')->get(); // Canceled
+
+                $activeEvents = Event::where('id', $eventQuoteAssoc->event_id)
+                ->where('status', 'Yes')->get(); // Active
+
+                $activeEvents = Event::where('id', $eventQuoteAssoc->event_id)->where('status', 'Yes')->get();
+                $pastEvents = Event::where('id', $eventQuoteAssoc->event_id)->whereDate('start_date', '<', now()->format('Y-m-d'))->get();
+            }
+
+            $userFound['registered_at'] = $userFound['created_at']; 
+            $userFound['user_genders_id'] = json_decode($userFound['user_genders_id'], true); 
+            $userFound['age'] = json_decode($userFound['age'], true); 
+            return response()->json([
+                'message'=> 'Success',
+                'user found' => $userFound->makeHidden(['rights','updated_at','created_at']),
+                 'Past Events ('. count($pastEvents) .')'=> count($pastEvents) > 0 ? $pastEvents : 0,
+                 'Future Events ('. count($futureEvents) .')'=> count($futureEvents) > 0 ? $futureEvents : 0,
+                 'Current Events ('. count($currentEvents) .')'=> count($currentEvents) > 0 ? $currentEvents : 0,
+                 'Active Events ('. count($activeEvents) .')'=> count($activeEvents) > 0 ? $activeEvents : 0
+            ], 200);
+        }
+        
     }
 
  

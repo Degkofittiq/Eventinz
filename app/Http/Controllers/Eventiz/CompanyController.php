@@ -824,7 +824,7 @@ class CompanyController extends Controller
         $user = auth()->user();
         $companyAssoc = Company::where('users_id',$user->id)->first();
         if (!$companyAssoc) {
-            dd('Not company yet');
+            // dd('Not company yet');
         }
 
         // dd($companyAssoc->vendor_categories_id);
