@@ -10,6 +10,7 @@ use App\Mail\SuccessMail;
 use App\Models\BidQuotes;
 use App\Models\EventType;
 use App\Rules\SameSizeAs;
+use App\Mail\BidStatusMail;
 use App\Models\EventQuotes;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -385,7 +386,7 @@ class EventController extends Controller
                         ], 422); // Code 422 pour les erreurs de validation
                     }
                 
-                    $quoteCode = Str::random(4) . "-". $eventId . "-" . $userCompany->id;
+                    $quoteCode = strtoupper(Str::random(4)) . "-". $eventId . "-" . $userCompany->id;
                     BidQuotes::create([
                         'quote_code' => $quoteCode,
                         'event_id' => $eventId,
@@ -395,7 +396,7 @@ class EventController extends Controller
                     // Boucle sur les services pour créer les devis si 'servicename' est un tableau
                     if (isset($dataValidate['servicename']) && is_array($dataValidate['servicename'])) {
                         foreach ($dataValidate['servicename'] as $index => $service) {
-                            EventQuotes::create([
+                            $quoteCreated = EventQuotes::create([
                                 'quote_code' => $quoteCode,
                                 'event_id' => $eventId,
                                 'company_id' => $userCompany->id, // Utilisation de l'entreprise de l'utilisateur
@@ -404,24 +405,38 @@ class EventController extends Controller
                                 'rate' => $dataValidate['rate'][$index],
                                 'duration' => $dataValidate['duration'][$index],
                                 'total' => $dataValidate['total'][$index],
-                                'subdetails' => $dataValidate['subdetails'], // Peut rester en dehors de la boucle s'il est commun
-                                'travel' => strtolower($dataValidate['travel']), // Peut rester en dehors de la boucle s'il est commun
+                                'subdetails' => $dataValidate['subdetails'], // en dehors de la boucle il est commun
+                                'travel' => strtolower($dataValidate['travel']), // en dehors de la boucle il est commun
                                 'obligatory' => $dataValidate['obligatory'][$index] // obligatory => yes or no_obligatory => no
                             ]);
                         }
+                        
+                        if ($quoteCreated) {
+                            $restCredit = $user->credit - 1;
+                        
+                            // Mise à jour du crédit de l'utilisateur authentifié
+                            $user->update([
+                                'credit' => $restCredit
+                            ]);
+                        
+                            return response()->json([
+                                'message' => 'success',
+                                'success' => 'Quote have been created!',
+                                'Your Quote dedatils' => $quoteCreated->makeHidden(['updated_at','created_at']) 
+                            ], 200);
+                        } else {
+                            return response()->json([
+                                'message' => 'error',
+                                'error' => 'Something\'s wrong!'
+                            ]);
+                        }
+                        
                     }
-                
-                    $restCredit = $user->credit - 1;
-                
-                    // Mise à jour du crédit de l'utilisateur authentifié
-                    $user->update([
-                        'credit' => $restCredit
-                    ]);
-                
+                } else {
                     return response()->json([
-                        'message' => 'Success',
-                        'error' => 'Quote have been created!'
-                    ], 200);
+                        'message' => 'Unauthorized',
+                        'error' => 'You need to register your company first!'
+                    ], 403);
                 }
 
             } else {
@@ -442,10 +457,16 @@ class EventController extends Controller
     public function showBids($eventId){
         // Bids
         $bids = BidQuotes::where('event_id', $eventId)->get();
+        if (!$bids) {
+            return response()->json([
+                'message' => 'Error',
+                'error' => 'No bids found for this event!'
+            ], 404);
+        }
 
         return response()->json([
             'message' => 'Success',
-            'bids' => $bids
+            'bids' => $bids->makeHidden(['updated_at','created_at']) 
         ]);
     }
 
@@ -497,7 +518,6 @@ class EventController extends Controller
         $user = Auth::user();
         $foundBid = BidQuotes::where('quote_code',$quoteCode)->first();
         $foundBidEvent = Event::where('id',$foundBid->event_id)->first();
-
         // dd($foundBid);
 
         if ($foundBid) {
@@ -505,9 +525,25 @@ class EventController extends Controller
                 'status' => 'Accepted'
             ]);
             
-            $foundBid->update([
+            $foundBidEvent->update([
                 'status' => 'Yes' // Yes => Active or No => Inactive
             ]);
+
+            $bidFoundQuotes = EventQuotes::where('quote_code',$quoteCode)->get();
+            
+            foreach ($bidFoundQuotes as $bidFoundQuote) {
+                $bidFoundQuote->update([
+                'status' => 'accepted' // Yes => Active or No => Inactive
+            ]);
+            }
+
+            $foundBidCompany = $bidFoundQuotes->first()->company_id;
+            $foundBidVendorEmail = Company::where('id', $foundBidCompany)->first()->user->email;
+
+            $bidValidationMessage = "Your Bid on << $foundBidEvent->generic_id >> Event has been approved.";
+
+            // Envoyer un email à l'utilisateur et à l'entreprise pour leur confirmation
+            Mail::to($foundBidVendorEmail)->send(new BidStatusMail($bidValidationMessage));
             
             return response()->json([
                 'message' => 'Success',
@@ -529,6 +565,7 @@ class EventController extends Controller
         // Récupérer l'utilisateur authentifié
         $user = Auth::user();
         $foundBid = BidQuotes::where('quote_code',$quoteCode)->first();
+        $foundBidEvent = Event::where('id',$foundBid->event_id)->first();
 
         // dd($foundBid);
 
@@ -536,6 +573,19 @@ class EventController extends Controller
             $foundBid->update([
                 'status' => 'Rejected'
             ]);
+
+            $foundBidQuote = EventQuotes::where('quote_code', $quoteCode)->first()->company_id;
+
+            if ($foundBidQuote) {
+                $foundBidVendorEmail = Company::where('id', $foundBidQuote)->first()->user->email;
+            }
+
+            if ($foundBidVendorEmail) {
+                $bidValidationMessage = "Your Bid on << $foundBidEvent->generic_id >> Event has disapproved by the Host.";
+    
+                // Envoyer un email à l'utilisateur et à l'entreprise pour leur confirmation
+                Mail::to($foundBidVendorEmail)->send(new BidStatusMail($bidValidationMessage));
+            }
 
             return response()->json([
                 'message' => 'Success',
