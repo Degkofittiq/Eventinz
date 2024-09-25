@@ -55,6 +55,7 @@ class AuthController extends Controller
                                 'regex:/[@$!%*?&]/', // Doit contenir au moins un caractère spécial
                             ],
                 'role_id' => 'required|integer',
+                'phone' => 'nullable|integer',
                 // 'vendor_service_types_id' => 'required_if:role_id,2|integer',
                 // 'vendor_categories_id' => 'required_if:role_id,2|integer',
             ]);
@@ -81,6 +82,7 @@ class AuthController extends Controller
                 'email' => $userValidation['email'],
                 'password' => Hash::make($userValidation['password']),
                 'role_id' => $userValidation['role_id'],
+                'phone' => $userValidation['phone'] ?? null,
                 'otp' => $otp
             ]);
             return response()->json(['message' => 'OTP sent successfully. Please verify the OTP.', 'otp' => $otp, 'users' => $userValidation]);
@@ -374,7 +376,8 @@ class AuthController extends Controller
                 'age' => 'nullable|array',  // Valide un tableau
                 'age.age' => 'nullable|integer|min:0',  // Valide la clé 'age'
                 'age.status' => 'nullable|string|in:show,hide', // Valide la clé 'status' avec des valeurs spécifiques            
-                'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120'
+                'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+                'phone' => 'nullable|integer',
             ]);
 
             // Trouve l'utilisateur par id
@@ -412,6 +415,9 @@ class AuthController extends Controller
             }
             if (!empty($request->age)) {
                 $data['age'] = json_encode($userValidation['age']);
+            }
+            if (!empty($request->phone)) {
+                $data['phone'] = json_encode($userValidation['phone']);
             }
             
             // Mettre à jour les informations de l'utilisateur
@@ -576,6 +582,5 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
-
 
 }

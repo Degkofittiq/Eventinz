@@ -45,6 +45,10 @@
             <td>{{ $userFound->email }}</td>
         </tr>
         <tr>
+            <th>Phone</th>
+            <td>{{ $userFound->phone ?? "Not set yet"}}</td>
+        </tr>
+        <tr>
             <th>Gender</th>
             <td>
                 @if ($userFound->user_genders_id)
