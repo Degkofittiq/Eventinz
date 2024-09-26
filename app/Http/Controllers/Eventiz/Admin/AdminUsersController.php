@@ -9,7 +9,9 @@ use App\Models\User;
 use App\Models\Right;
 use App\Models\RightsType;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminUsersController extends Controller
@@ -128,15 +130,15 @@ class AdminUsersController extends Controller
         try{
             $userValidation = $request->validate([
                 'name' => 'required|string|max:255',
-                'username' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255',
+                'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($adminUsers->id)], // règle unique si modifié
+                'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($adminUsers->id)], // règle unique si modifié
                 'role_id' => 'required|integer',
                 'rights' => 'required|array',
                 'rights.*' => 'string',
             ]);
 
             if ($request->password != "") {
-                $userValidation['password'] = $request->validate([
+                $newPasswordValidation = $request->validate([
                     'password' => ['required',
                                     'string',
                                     'min:8', // La longueur minimale du mot de passe
@@ -147,18 +149,10 @@ class AdminUsersController extends Controller
                                     'regex:/[@$!%*?&]/', // Doit contenir au moins un caractère spécial
                                 ]
                 ]);
+
+                $userValidation['password'] = $newPasswordValidation['password'];
             }
 
-            if ($request->email != $adminUsers->email) {
-                $userValidation['email'] = $request->validate([
-                    'email' => 'required|string|email|max:255|unique:users'
-                ]);
-            }
-            if ($request->username != $adminUsers->username) {
-                $userValidation['username'] = $request->validate([
-                    'username' => 'required|string|max:255|unique:users'
-                ]);
-            }
         }catch (ValidationException $e) {
             return back()->with('error', 'New admin update cannot be completed, ' . $e->getMessage() );
         }
@@ -167,6 +161,7 @@ class AdminUsersController extends Controller
             return back()->with('error', 'New admin update cannot be completed');            
         }
 
+        // dd($userValidation);
         $adminUsers->update([
             'name' => $userValidation['name'],
             'username' => $userValidation['username'],
@@ -181,6 +176,10 @@ class AdminUsersController extends Controller
                 'password' => Hash::make($userValidation['password']),
             ]);
         }
+        
+        // Supprimer tous les jetons de connexion de l'utilisateur
+        $adminUsers->tokens()->delete(); // Cela déconnectera cet utilisateur
+
         return back()->with('success', 'New admin update successfull !');      
     }
 
