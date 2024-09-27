@@ -62,7 +62,7 @@
             <th scope="col">Emails</th>
             <th scope="col">Type</th>
             <th scope="col">Creation date</th>
-            <th scope="col">Last time</th>
+            <th scope="col">Account Status</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -85,11 +85,17 @@
                 @endif --}}
             </td>
             <td>
-              @if ($user->last_time_user_online == null || $user->last_time_user_online == "yes")
-                  <span>N/A</span>
-              @else
-                {{ \Carbon\Carbon::now()->diffForHumans($user->last_time_user_online) }}ago
-              @endif
+                <form action="{{ route('user.updateAccountStatus', $user->id) }}" method="POST" id="account-status-form">
+                    @csrf
+                    {{-- @method('PUT') <!-- Assuming you're using a PUT method for update --> --}}
+                    <select name="account_status" id="account_status" class="form-control @error('account_status') is-invalid @enderror" onchange="document.getElementById('account-status-form').submit();">
+                        <?php $account_statuses = [["name" => "Activate"],["name"=> "Desactivate"]]; ?>
+                        @foreach ($account_statuses as $account_status)
+                            <option value="{{ $account_status['name'] }}" {{ $user->account_status == $account_status['name'] ? 'selected' : '' }}>{{ $account_status['name'] }}</option>
+                        @endforeach
+                    </select>
+                    <p class="text-red">@error('account_status') {{ $message }} @enderror</p>
+                </form>
             </td>
             <td>
               <a href="{{ route('admin.edit.adminuserform',$user->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i>View</a>

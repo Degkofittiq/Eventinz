@@ -148,7 +148,7 @@ Route::prefix('admin')->middleware(['auth','rights'])->group(function() {
     Route::post('/updateadminUser/{adminUserId}', [AdminUsersController::class, 'updateAdminUser'])->name('admin.update.adminuser')->middleware('rights:edit_staff_members'); // Edit POST action
     Route::get('/deleteadminuserform/{adminUserId}', [AdminUsersController::class, 'deleteAdminUserForm'])->name('admin.deleteform.adminuser')->middleware('rights:edit_staff_members');
     Route::get('/deleteadminuser/{adminUserId}', [AdminUsersController::class, 'deleteAdminUser'])->name('admin.delete.adminuser')/*->middleware('rights:xxxxxxxxxxxxx')*/;
-
+    Route::post('/updateaccountstatus/{userId}', [AdminController::class, 'updateAccountStatus'])->name('user.updateAccountStatus')/*->middleware('rights:xxxxxxxxxxxxx')*/;
 
     // Set data limit
     Route::get('/datalimitlist', [AdminController::class,'DataLimitList'])->name('admin.list.datalimit')->middleware('rights:view_limits_list');

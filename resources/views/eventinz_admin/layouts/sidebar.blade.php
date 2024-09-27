@@ -119,7 +119,7 @@
                 </li>
               @endif
 
-              @if(in_array('view_reviews_list	', json_decode(Auth::user()->rights)))
+              @if(in_array('view_reviews_list', json_decode(Auth::user()->rights)))
                 <li class="nav-item">
                   <a href="{{ route('admin.list.reviews') }}" class="nav-link {{ request()->url() == route('admin.list.reviews') ? "active" : "" }}">
                     <i class="far fa-dot-circle nav-icon"></i>

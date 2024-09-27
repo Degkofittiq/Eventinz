@@ -129,6 +129,21 @@ class AdminController extends Controller
         return view('eventinz_admin.hosts_and_vendors.list_users', compact('users'));
     }
 
+    public function updateAccountStatus(Request $request, $userId){
+        $userFound = User::find($userId);
+        if (!$userFound) {
+            return back()->with('error', 'User not found.');            
+        }
+
+        if ($request->account_status == 'Activate' || $request->account_status == 'Desactivate') {
+            $userFound->update(['account_status' =>  $request->account_status]);
+            return back()->with('success', 'User status updated to '. $request->account_status);
+        } else {
+            return back()->with('error', 'Invalid status.');
+        }
+
+    }
+
     public function userDetails(Request $request, $userId){
         $userFound = User::find($userId);
          

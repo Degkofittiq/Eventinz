@@ -27,6 +27,7 @@ return new class extends Migration
             $table->unsignedBigInteger('facebook_id')->nullable();
             $table->unsignedBigInteger('google_id')->nullable();
             $table->string('password'); //
+            $table->string('account_status')->default('Active');
             $table->unsignedBigInteger('role_id');
             $table->text('rights')->nullable();
             $table->timestamp('email_verified_at')->nullable();
