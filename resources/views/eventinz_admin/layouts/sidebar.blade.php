@@ -47,7 +47,7 @@
                 <li class="nav-item">
                   <a href="{{ route('admin.list.adminusers') }}" class="nav-link {{ request()->url() == route('admin.list.adminusers') ? "active" : "" }}">
                     <i class="far fa-dot-circle nav-icon"></i>
-                    <p>Amin Users List</p>
+                    <p>Admin Users List</p>
                   </a>
                 </li>
               @endif

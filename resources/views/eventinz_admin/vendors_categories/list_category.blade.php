@@ -1,5 +1,40 @@
 @extends('eventinz_admin.layouts.app')
-
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+<style>
+  
+  #dt-length-0{
+    margin: 5px !important;
+  }
+  .dt-length label{
+    text-transform: uppercase;
+  }
+  #padding{
+    padding: 5px !important;
+    width: 100%;
+  }
+    #responsive {
+      max-width: 100%;
+      overflow-x: auto; /* Permet le défilement horizontal */
+      -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur mobile */
+    }
+  @media (max-width: 768px) {
+    #responsive {
+      max-width: 100%;
+      overflow-x: auto; /* Permet le défilement horizontal */
+      -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur mobile */
+    }
+    #responsive .dt-layout-row{
+      width: 100% !important;
+    }
+    
+    table {
+      width: 100%; /* S'assure que le tableau occupe tout l'espace disponible */
+      table-layout: auto; /* Ajuste automatiquement la largeur des colonnes */
+    }
+  }
+</style>
 @section('content_admin') 
 <div class="card card-primary">
   @if(session('success'))
@@ -24,7 +59,7 @@
     </div>
     <!-- /.card-header -->
     <div class="card"  id="responsive">
-      <table class="table">
+      <table class="table" id="myTable">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -46,7 +81,7 @@
             <td>{{ $category->price ?? "Free" }}</td>
             <td>
               {{-- <img src="{{ Storage::disk('s3')->url($category->category_file) }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2"> --}}
-              @if (str_contains("://", $category->category_file))
+              @if ($category->category_file)
                 <img src="{{ $category->category_file }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2">
               @else
                 <img src="https://s3-alpha-sig.figma.com/img/bb05/5e25/ab3f70a77d9f42e72dc88584b1f9f868?Expires=1728259200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=MUl1HkcYg51eBkujNzXp6lw80xuZFzMgrLkmQvc875EadHJq88HeTk0kgF5RhfIAyf07TdMPpGFwo5Y12aeOg69yLAQs5W8B6YUQMfGiWMm2jBLFDyhyLxiKGOW8ALFneU5lDEpPuH76es~rQCM3JH6dFuSTNsrQc3MqXkVjlu22QPnAsb-VD-BNmNqMPy10LmM7K5YogC-3OOb3ZBGl1TBb~p1z~vhl7Ii4f6xhoKI9SlQzfP2Ge03rzaZ7SLnlqy4kx7W8cknLLZVFfsIrMcRlpqh2rFmUKgIyGrl8kb3u3YjddWgAZ2-TtGfpjv3C8Wl5418rszXg~F4zVa34-g__" alt="" height="100px" width="100px" class="shadow mx-2 my-2">
@@ -66,4 +101,14 @@
       </table>
     </div>
 </div>
+
+
+<script>
+  let table = new DataTable('#myTable', {
+    responsive: true, // Ajoute la réactivité
+    columnDefs: [
+      { orderable: false, targets: [5] } // 7 est l'index de la colonne 'Actions', car les index commencent à 0
+    ]
+  });
+</script>
 @endsection
