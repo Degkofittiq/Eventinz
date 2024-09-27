@@ -28,8 +28,10 @@
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col"  style="width: 40%">Name</th>
-              <th scope="col"  style="width: 30%">Description</th>
+              <th scope="col">Name</th>
+              <th scope="col" >Description</th>
+              <th scope="col" >Event Types</th>
+              <th scope="col" >Created By</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -41,6 +43,8 @@
                 <th scope="row">{{ $count++ }}</th>
                 <td>{{ $eventSubcategory->name  ?? "" }}</td>
                 <td>{{ $eventSubcategory->description  ?? "" }}</td>
+                <td>{{ $eventSubcategory->eventType->name  ?? "" }}</td>
+                <td>{{ $eventSubcategory->created_by  ?? "" }}</td>
                 <td>
                     <a href="{{ route('admin.edit.eventsubcategoryform', $eventSubcategory->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
                     <a href="{{ route('admin.deleteform.eventsubcategory', $eventSubcategory->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->Integer('vendor_categories_id');
             $table->string('name');
             $table->string('description');
+            $table->string('created_by');
             $table->timestamps();
         });
     }

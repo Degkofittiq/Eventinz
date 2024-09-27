@@ -30,7 +30,7 @@
             <th scope="col">#</th>
             <th scope="col">Categories Names</th>
             <th scope="col">Descriptions</th>
-            <th scope="col">Price</th>
+            <th scope="col">Vendor Plus Price</th>
             <th scope="col">Images</th>
             <th scope="col">Actions</th>
           </tr>

@@ -35,7 +35,7 @@
         @error('description') <p> {{ $message }} </p> @enderror
         </div>
         <div class="form-group">
-          <label for="price">Category price <span style="color: red"><strong>*</strong></span></label>
+          <label for="price">Vendor Plus Price <span style="color: red"><strong>*</strong></span></label>
           <input type="number" step="0.01" class="form-control  @error('price') is-invalid @enderror" name="price" id="price" placeholder="Enter category price">
           @error('price') <p> {{ $message }} </p> @enderror
         </div>

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name'); // private - public
             $table->string('description'); // if public (this status allow notification to all vendors in the categories that you choosed ) 
-            $table->decimal('price')->nullable(); // if the event is on private, the system should be send back a price
+            $table->decimal('price')->default(0.00); // if the event is on private, the system should be send back a price
             $table->timestamps();
         });
     }

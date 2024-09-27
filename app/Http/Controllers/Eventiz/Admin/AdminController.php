@@ -380,7 +380,7 @@ class AdminController extends Controller
             "Branding",
             "Graphic Design",
             "Logo Design",
-        ];   
+        ];    
         // dd(count($companyServices));
         return view('eventinz_admin.vendors_companies.edit_vendors_companies', compact('company','companyServices', "servicenames"));
     }
@@ -467,7 +467,8 @@ class AdminController extends Controller
         $dataStoring = ServicesCategory::create([
             'name' => $dataValidate['name'],
             'description' => $dataValidate['description'],
-        'vendor_categories_id' => $dataValidate['vendor_categories_id']
+            'vendor_categories_id' => $dataValidate['vendor_categories_id'],
+            'created_by' => Auth::user()->name
         ]);
 
         if ($dataStoring) {
@@ -504,7 +505,8 @@ class AdminController extends Controller
                 $VendorCategories->update([
                     'name' => $dataValidate['name'],
                     'description' => $dataValidate['description'],
-                    'vendor_categories_id' => $dataValidate['vendor_categories_id']
+                    'vendor_categories_id' => $dataValidate['vendor_categories_id'],
+                    'created_by' => Auth::user()->name
                 ]);
                 return redirect()->route('admin.list.servicescategories')->with('success', 'The service category is been updated!');
             } catch (\Throwable $th) {

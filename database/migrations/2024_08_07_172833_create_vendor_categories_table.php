@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->text('category_file')->nullable();
-            $table->decimal('price')->nullable();
+            $table->decimal('price')->nullable(); // If Vendor Plus Price
             $table->timestamps();
         });
     }

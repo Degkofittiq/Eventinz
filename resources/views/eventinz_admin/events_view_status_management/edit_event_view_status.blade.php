@@ -21,7 +21,7 @@
     </div>
     <!-- /.card-header -->
     <!-- form start -->
-    <form method="POST" action="{{ route('admin.update.eventtype',$eventViewStatusFound->id) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.update.eventviewstatus',$eventViewStatusFound->id) }}" enctype="multipart/form-data">
         @csrf
       <div class="card-body">
         <div class="form-group">
@@ -37,7 +37,7 @@
         <div class="form-group">
           <label for="price">Price ($)<span style="color: red"><strong>*</strong></span></label>
           <input name="price" id="price" type="number" step="0.01" class="form-control  @error('price') is-invalid @enderror"  value="{{ old('price') ?? $eventViewStatusFound->price }}">
-          @error('price') <p> {{ $message }} </p> @enderror
+          @error('price') <p> {{ $message }}  Note: If Public just put 0</p> @enderror
         </div>
       </div>
       <!-- /.card-body -->

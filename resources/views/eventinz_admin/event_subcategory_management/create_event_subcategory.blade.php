@@ -25,6 +25,15 @@
         @csrf
       <div class="card-body">
         <div class="form-group">
+          <label for="event_types_id">Event Type<span style="color: red"><strong>*</strong></span></label>
+          <select name="event_types_id" id="event_types_id" type="number" class="form-control  @error('event_types_id') is-invalid @enderror">  
+            @foreach ($eventTypes as $eventType)
+              <option value="{{ $eventType->id }}">{{ $eventType->name }}</option>
+            @endforeach
+          </select>
+          @error('event_types_id') <p> {{ $message }} </p> @enderror
+        </div>
+        <div class="form-group">
           <label for="name">Name <span style="color: red"><strong>*</strong></span></label>
           <input name="name" id="name" class="form-control  @error('name') is-invalid @enderror" value="{{ old('name') }}">
           @error('name') <p> {{ $message }} </p> @enderror

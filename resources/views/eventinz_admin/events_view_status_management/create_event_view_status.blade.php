@@ -36,8 +36,8 @@
         </div>
         <div class="form-group">
           <label for="price">Price ($)<span style="color: red"><strong>*</strong></span></label>
-          <input name="price" id="price" type="number" step="0.01" class="form-control  @error('price') is-invalid @enderror"  value="{{ old('price') }}">
-          @error('price') <p> {{ $message }} </p> @enderror
+          <input name="price" id="price" type="number" step="0.01" class="form-control  @error('price') is-invalid @enderror"  value="{{ old('price') ?? 0 }}">
+          @error('price') <p> {{ $message }} Note: If Public just put 0</p> @enderror
         </div>
       </div>
       <!-- /.card-body -->

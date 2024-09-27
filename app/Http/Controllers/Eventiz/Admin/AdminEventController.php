@@ -11,6 +11,7 @@ use App\Models\EventSubcategory;
 use App\Models\EventsViewStatus;
 use App\Models\VendorCategories;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class AdminEventController extends Controller
 {
@@ -195,24 +196,29 @@ class AdminEventController extends Controller
 
     public function eventSubcategoryEditForm(Request $request, $eventSubcategoryId){
         $eventSubcategoryFound = EventSubcategory::find($eventSubcategoryId);
+        $eventTypes = EventType::all();
         if (!$eventSubcategoryFound) {
             return back()->with('error', 'Event Subcategory not found');
         }
 
-        return view('eventinz_admin.event_subcategory_management.edit_event_subcategory', compact('eventSubcategoryFound'));
+        return view('eventinz_admin.event_subcategory_management.edit_event_subcategory', compact('eventSubcategoryFound','eventTypes'));
     }
     
     public function eventSubcategoryAddForm(Request $request){
+        $eventTypes = EventType::all();
 
-        return view('eventinz_admin.event_subcategory_management.create_event_subcategory');
+        return view('eventinz_admin.event_subcategory_management.create_event_subcategory', compact('eventTypes'));
     }
     
     public function eventSubcategoryAdd(Request $request){
         $dataValidation = $request->validate([
             'name'  =>  'required|string|max:255',
-            'description'  =>  'required|string|max:255'
+            'description'  =>  'required|string|max:255',
+            'event_types_id'  =>  'required|integer'
         ]);
 
+        $dataValidation['created_by'] = Auth::user()->name;
+        
         $creation = EventSubcategory::create($dataValidation);
 
         if (!$creation) {
@@ -229,8 +235,11 @@ class AdminEventController extends Controller
         }
         $dataValidation = $request->validate([
             'name'  =>  'required|string|max:255',
-            'description'  =>  'required|string|max:255'
+            'description'  =>  'required|string|max:255',
+            'event_types_id'  =>  'required|integer'
         ]);
+        $dataValidation['created_by'] = Auth::user()->name;
+
         $update = $eventSubcategoryFound->update($dataValidation);
         if (!$update) {
             return back()->with('error', 'Failed to update event subcategory');
@@ -285,8 +294,10 @@ class AdminEventController extends Controller
         $dataValidation = $request->validate([
             'name'  =>  'required|string|max:255',
             'description'  =>  'required|string|max:255',
-            'price'  =>  'nullable|numeric'
+            'price'  =>  'required|numeric|min:0'
         ]);
+        // $dataValidation['created_by'] = Auth::user()->name;
+        $dataValidation['price'] ?? 0;
 
         $creation = EventsViewStatus::create($dataValidation);
 
@@ -305,8 +316,10 @@ class AdminEventController extends Controller
         $dataValidation = $request->validate([
             'name'  =>  'required|string|max:255',
             'description'  =>  'required|string|max:255',
-            'price'  =>  'nullable|numeric'
+            'price'  =>  'required|numeric|min:0'
         ]);
+        // $dataValidation['created_by'] = Auth::user()->name;
+        $dataValidation['price'] ?? 0;
 
         $update = $eventViewStatusFound->update($dataValidation);
 
