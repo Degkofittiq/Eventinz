@@ -1,6 +1,17 @@
 @extends('eventinz_admin.layouts.app')
 
 @section('content_admin')
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
     
 <div class="row mb-2">
     <div class="col-sm-6">

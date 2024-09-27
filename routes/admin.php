@@ -13,13 +13,13 @@ use App\Http\Controllers\Eventiz\Admin\SubscriptionPlanController;
 
 Route::prefix('admin')->group(function() {
     // Route pour le tableau de bord admin
-    Route::get('/adminlogin', [AdminController::class, 'loginForm'])->name('login');
+    Route::get('/adminbackoffice', [AdminController::class, 'loginForm'])->name('login');
     Route::post('/login', [AdminController::class, 'login'])->name('admin.login');
 });
 
 // Route::get('/getcurrency', [PaymentController::class, 'testCurrency'])->name('get.current.currency'); 
 
-Route::prefix('admin')->middleware(['auth','rights'])->group(function() {
+Route::prefix('admin')->middleware(['auth','rights','checkAccountStatus'])->group(function() {
     Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
     // Route pour le tableau de bord admin
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');

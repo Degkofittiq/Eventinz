@@ -188,10 +188,7 @@ class AuthController extends Controller
             // Trouver l'utilisateur par son email
             $user = User::where('email', $request->email)->first();
         }catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => $e->errors(),
-            ], 422);
+            return back()->with('error', 'The given data was invalid.');
         }
 
         if ($user) {

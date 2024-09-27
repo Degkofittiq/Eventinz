@@ -29,6 +29,17 @@
 </head>
 <body>
     <div class="login-container">
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+    
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <h2 class="text-center">Eventinz Admin Login</h2>
         <form action="{{ route('admin.login') }}" method="POST" enctype="multipart/form-data">
             @csrf
