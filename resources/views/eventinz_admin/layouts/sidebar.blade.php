@@ -14,7 +14,7 @@
         <span style="position: absolute; bottom: 1px; right: 1px; background-color: #00ff00; color: white; border: none; border-radius: 50%; padding: 5px; cursor: pointer;"></span>
       </div>
       <div class="info">
-        <a href="{{ route('admin.dashboard') }}" class="d-block">@UserAdmin</a>
+        <a href="{{ route('admin.dashboard') }}" class="d-block">{{ Auth::user()->username }}</a>
       </div>
     </div>
 
