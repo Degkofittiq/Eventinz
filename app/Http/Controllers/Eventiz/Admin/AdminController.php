@@ -130,12 +130,14 @@ class AdminController extends Controller
     }
 
     public function updateAccountStatus(Request $request, $userId){
-        $userFound = User::find($userId);
+        $userFound = User::where('id',$userId)->first();
+        // dd($userFound);
         if (!$userFound) {
             return back()->with('error', 'User not found.');            
         }
+        // dd($request->account_status);
 
-        if ($request->account_status == 'Activate' || $request->account_status == 'Desactivate') {
+        if ($request->account_status === 'Activate' || $request->account_status === 'Desactivate') {
             $userFound->update(['account_status' =>  $request->account_status]);
             return back()->with('success', 'User status updated to '. $request->account_status);
         } else {

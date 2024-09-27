@@ -85,10 +85,10 @@
                 @endif --}}
             </td>
             <td>
-                <form action="{{ route('user.updateAccountStatus', $user->id) }}" method="POST" id="account-status-form">
+                <form action="{{ route('user.updateAccountStatus', $user->id) }}" method="POST" id="account-status-form{{ $user->id }}">
                     @csrf
                     {{-- @method('PUT') <!-- Assuming you're using a PUT method for update --> --}}
-                    <select name="account_status" id="account_status" class="form-control @error('account_status') is-invalid @enderror" onchange="document.getElementById('account-status-form').submit();">
+                    <select name="account_status" id="account_status" class="form-control @error('account_status') is-invalid @enderror" onchange="document.getElementById('account-status-form{{ $user->id }}').submit();">
                         <?php $account_statuses = [["name" => "Activate"],["name"=> "Desactivate"]]; ?>
                         @foreach ($account_statuses as $account_status)
                             <option value="{{ $account_status['name'] }}" {{ $user->account_status == $account_status['name'] ? 'selected' : '' }}>{{ $account_status['name'] }}</option>
