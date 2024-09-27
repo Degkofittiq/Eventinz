@@ -170,7 +170,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 {{-- {{ asset('AdminTemplate/xxxxxxxxxxxxx') }} --}}
 <!-- jQuery -->
-<script src="{{ asset('AdminTemplate/plugins/jquery/jquery.min.js') }}"></script>
+@if (request()->url() != route('admin.resendform.otp') )
+  <script src="{{ asset('AdminTemplate/plugins/jquery/jquery.min.js') }}"></script>    
+@endif
 <!-- Bootstrap 4 -->
 <script src="{{ asset('AdminTemplate/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE App -->
