@@ -46,7 +46,11 @@
             <td>{{ $category->price ?? "Free" }}</td>
             <td>
               {{-- <img src="{{ Storage::disk('s3')->url($category->category_file) }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2"> --}}
-              <img src="{{ $category->category_file }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2">
+              @if (str_contains("://", $category->category_file))
+                <img src="{{ $category->category_file }}" alt="" height="100px" width="100px" class="shadow mx-2 my-2">
+              @else
+                <img src="https://s3-alpha-sig.figma.com/img/bb05/5e25/ab3f70a77d9f42e72dc88584b1f9f868?Expires=1728259200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=MUl1HkcYg51eBkujNzXp6lw80xuZFzMgrLkmQvc875EadHJq88HeTk0kgF5RhfIAyf07TdMPpGFwo5Y12aeOg69yLAQs5W8B6YUQMfGiWMm2jBLFDyhyLxiKGOW8ALFneU5lDEpPuH76es~rQCM3JH6dFuSTNsrQc3MqXkVjlu22QPnAsb-VD-BNmNqMPy10LmM7K5YogC-3OOb3ZBGl1TBb~p1z~vhl7Ii4f6xhoKI9SlQzfP2Ge03rzaZ7SLnlqy4kx7W8cknLLZVFfsIrMcRlpqh2rFmUKgIyGrl8kb3u3YjddWgAZ2-TtGfpjv3C8Wl5418rszXg~F4zVa34-g__" alt="" height="100px" width="100px" class="shadow mx-2 my-2">
+              @endif
             </td>
             <td>
               <a href="{{ route('admin.edit.category', $category->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-pen"></i> Edit</a>

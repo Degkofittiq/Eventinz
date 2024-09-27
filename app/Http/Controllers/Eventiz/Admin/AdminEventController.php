@@ -62,6 +62,17 @@ class AdminEventController extends Controller
             return back()->with('error', 'Event not found');
         }
     
+        $eventViewStatuses = EventsViewStatus::all();
+        $publicId = null;
+        foreach ($eventViewStatuses as $eventViewStatus) {
+            if (strtolower($eventViewStatus->name) == strtolower("public")) {
+                $publicId = $eventViewStatus->id;
+                // dd($publicId);
+            }
+        }
+
+        // try {
+            
         $dataValidate =  $request->validate([
             'event_type_id' => 'required|integer',
             'vendor_type_id' => [
@@ -86,12 +97,19 @@ class AdminEventController extends Controller
             'total_amount' => count($request->input('vendor_type_id')) > 1 
                 ? 'required|numeric|regex:/^\d+(\.\d{1,2})?$/' 
                 : 'nullable',
-            'vendor_poke' => $request->input('public_or_private') == 0 
+            'vendor_poke' => $request->input('public_or_private') == $publicId
                 ? 'nullable' 
                 : 'required',
                 'cancelstatus' => 'required|string',
                 'status' => 'required|string',
         ]);
+        // } catch (\Throwable $th) {
+        //     if ($request->input('public_or_private') != $publicId) {
+        //         return back()->with('error', 'Validation Error, you want to make the event view status to Public, so '.$th->getMessage());
+        //     }
+
+        //     return back()->with('error', $th->getMessage());
+        // }
         // json_encode
 
         $dataValidate['vendor_type_id'] = json_encode($dataValidate['vendor_type_id']);

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Event;
 use App\Models\Subscription;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,5 +30,10 @@ class Paymenthistory extends Model
     public function subscriptionPlan()
     {
         return $this->belongsTo(Subscription::class, 'subscription_id');
+    }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'event_id');
     }
 }

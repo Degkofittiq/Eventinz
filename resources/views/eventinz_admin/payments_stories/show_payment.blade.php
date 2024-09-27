@@ -62,6 +62,16 @@
             </td>
         </tr>
     @endif
+    @if ($paymentFound->event_id)
+        <tr>
+            <th>Event</th>
+            <td>
+                <a href="{{ route('admin.details.event', $paymentFound->event_id) }}" target="_blank" style="text-decoration: underline;color:black">
+                    {{ $paymentFound->event->generic_id ?? ""}}
+                </a>
+            </td>
+        </tr>
+    @endif
     <tr>
         <th>Status</th>
         {{--  pending  --}}

@@ -175,7 +175,7 @@
                                         <option value="{{ $company->id }}" {{ in_array($company->id, json_decode($event->vendor_poke)) ? "selected" : ""}}>{{ $company->user->generic_id }}</option>
                                     @endforeach
                                 </select>
-                                @error('vendor_poke') <p> {{ $message }} </p> @enderror
+                                @error('vendor_poke') <p> {{ $message }} , If the event Private, You must poke Vendor</p> @enderror
                             @else
                                 No Vendor Found
                             @endif                         
@@ -197,9 +197,12 @@
             <tr>
                 <th>Status</th>
                 <td>
+                    <strong>
+                        {{  $event->status == "Yes" ? "Active" : "Not Active yet"}} <br>
+                    </strong>
                     <select name="status" id="status" class="form-control  @error('status') is-invalid @enderror">
                         @foreach ($status as $item)
-                            <option value="{{  $item }}" {{ $event->status == "Yes" ? "Active" : "Not Active yet"}}>{{  $item == "Yes" ? "Active" : "Not Active yet"}}</option>
+                            <option value="{{ $item }}" {{ $event->status == $item ? "selected" : ""}}>{{  $item == "Yes" ? "Active" : "Not Active yet"}}</option>
                         @endforeach
                     </select>
                     @error('status') <p> {{ $message }} </p> @enderror
