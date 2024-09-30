@@ -49,7 +49,7 @@
                         <strong>Current choice: </strong>
                             @foreach (json_decode($event->vendor_type_id) as $vendorTypeId)
                                 @php
-                                    // Récupérer le nom du type de fournisseur par son ID
+                                    // Récupérer le nom du type de fournisseur par son ID de category
                                     $vendorType = \App\Models\VendorCategories::find($vendorTypeId);
                                 @endphp
                                 
