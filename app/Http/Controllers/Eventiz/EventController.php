@@ -268,9 +268,9 @@ class EventController extends Controller
                 $event['daysLeft'] = str_replace('after', 'Ago',\Carbon\Carbon::now()->diffForHumans($event->start_date)) ;
                 $event['postedOn'] = $event->created_at ;
                 if ($event->vendor_type_id) {    
-                    $event['vendor_type_id'] = json_decode($event->vendor_type_id) ;
+                    $event->vendor_type_id = json_decode($event->vendor_type_id) ;
 
-                    foreach ($event['vendor_type_id'] as $categoryId) {
+                    foreach ($event->vendor_type_id as $categoryId) {
                         if ($categoryId != null && VendorCategories::find($categoryId)) {
                             $vendorCategoriesArray[] = VendorCategories::find($categoryId)->name ;
                         }else {
@@ -280,7 +280,7 @@ class EventController extends Controller
     
                     $event['catlist'] = $vendorCategoriesArray;
                 }
-                if ($event->vendor_poke) {
+                if ($event->vendor_poke && is_array($event->vendor_poke)) {
                     $event['vendor_poke'] = json_decode($event->vendor_poke) ;
 
                     foreach ($event['vendor_poke']  as $vendorPokeId) {
@@ -316,6 +316,223 @@ class EventController extends Controller
                     }
                 }
             }
+
+            foreach ($pastEvents as $event) {
+                $event = $event->makeHidden(['created_at','updated_at']);
+                $event['daysLeft'] = str_replace('after', 'Ago',\Carbon\Carbon::now()->diffForHumans($event->start_date)) ;
+                $event['postedOn'] = $event->created_at ;
+                if ($event->vendor_type_id) {    
+                    $event->vendor_type_id = json_decode($event->vendor_type_id) ;
+
+                    foreach ($event->vendor_type_id as $categoryId) {
+                        if ($categoryId != null && VendorCategories::find($categoryId)) {
+                            $vendorCategoriesArray[] = VendorCategories::find($categoryId)->name ;
+                        }else {
+                            $vendorCategoriesArray[] = "Not found yet";
+                        }
+                    }
+    
+                    $event['catlist'] = $vendorCategoriesArray;
+                }
+                if ($event->vendor_poke && is_array($event->vendor_poke)) {
+                    $event['vendor_poke'] = json_decode($event->vendor_poke) ;
+
+                    foreach ($event['vendor_poke']  as $vendorPokeId) {
+                        if ($vendorPokeId != null && Company::find($vendorPokeId)) {
+                            $vendorPokesArray[] = Company::find($vendorPokeId)->name ;
+                        }else {
+                            $vendorPokesArray[] = "Not found yet";
+                        }
+                    }
+    
+                    $event['vendorPokes'] = $vendorPokesArray;
+                }
+                
+
+                $event['bids'] = BidQuotes::where('event_id',$event->id)->get()->makeHidden(['created_at','updated_at']);
+                if ($event['bids']) {
+                    $event['bidsNumber'] = count($event['bids']);
+                    foreach ($event['bids'] as $bid) {
+                        $quoteQuery = EventQuotes::where('quote_code',$bid->quote_code);
+    
+                        if ($quoteQuery) {
+                            if ($quoteQuery->first()) {                        
+                                $bid['QotesDetails'] = $quoteQuery->get();
+                                if ($quoteQuery->first()->company) {
+                                    $company = $quoteQuery->first()->company->makeHidden(['created_at','updated_at']);
+                                    $bid['VendorCompany'] = $quoteQuery->first()->company->makeHidden(['created_at','updated_at']);
+                                    $bid['VendorName'] = $quoteQuery->first()->company->user->name;
+                                }
+                            }
+                        }else{
+    
+                        }
+                    }
+                }
+            }
+
+            foreach ($futureEvents as $event) {
+                $event = $event->makeHidden(['created_at','updated_at']);
+                $event['daysLeft'] = str_replace('after', 'Ago',\Carbon\Carbon::now()->diffForHumans($event->start_date)) ;
+                $event['postedOn'] = $event->created_at ;
+                if ($event->vendor_type_id) {    
+                    $event->vendor_type_id = json_decode($event->vendor_type_id) ;
+
+                    foreach ($event->vendor_type_id as $categoryId) {
+                        if ($categoryId != null && VendorCategories::find($categoryId)) {
+                            $vendorCategoriesArray[] = VendorCategories::find($categoryId)->name ;
+                        }else {
+                            $vendorCategoriesArray[] = "Not found yet";
+                        }
+                    }
+    
+                    $event['catlist'] = $vendorCategoriesArray;
+                }
+                if ($event->vendor_poke && is_array($event->vendor_poke)) {
+                    $event['vendor_poke'] = json_decode($event->vendor_poke) ;
+
+                    foreach ($event['vendor_poke']  as $vendorPokeId) {
+                        if ($vendorPokeId != null && Company::find($vendorPokeId)) {
+                            $vendorPokesArray[] = Company::find($vendorPokeId)->name ;
+                        }else {
+                            $vendorPokesArray[] = "Not found yet";
+                        }
+                    }
+    
+                    $event['vendorPokes'] = $vendorPokesArray;
+                }
+                
+
+                $event['bids'] = BidQuotes::where('event_id',$event->id)->get()->makeHidden(['created_at','updated_at']);
+                if ($event['bids']) {
+                    $event['bidsNumber'] = count($event['bids']);
+                    foreach ($event['bids'] as $bid) {
+                        $quoteQuery = EventQuotes::where('quote_code',$bid->quote_code);
+    
+                        if ($quoteQuery) {
+                            if ($quoteQuery->first()) {                        
+                                $bid['QotesDetails'] = $quoteQuery->get();
+                                if ($quoteQuery->first()->company) {
+                                    $company = $quoteQuery->first()->company->makeHidden(['created_at','updated_at']);
+                                    $bid['VendorCompany'] = $quoteQuery->first()->company->makeHidden(['created_at','updated_at']);
+                                    $bid['VendorName'] = $quoteQuery->first()->company->user->name;
+                                }
+                            }
+                        }else{
+    
+                        }
+                    }
+                }
+            }
+
+            foreach ($currentEvents as $event) {
+                $event = $event->makeHidden(['created_at','updated_at']);
+                $event['daysLeft'] = str_replace('after', 'Ago',\Carbon\Carbon::now()->diffForHumans($event->start_date)) ;
+                $event['postedOn'] = $event->created_at ;
+                if ($event->vendor_type_id) {    
+                    $event->vendor_type_id = json_decode($event->vendor_type_id) ;
+
+                    foreach ($event->vendor_type_id as $categoryId) {
+                        if ($categoryId != null && VendorCategories::find($categoryId)) {
+                            $vendorCategoriesArray[] = VendorCategories::find($categoryId)->name ;
+                        }else {
+                            $vendorCategoriesArray[] = "Not found yet";
+                        }
+                    }
+    
+                    $event['catlist'] = $vendorCategoriesArray;
+                }
+                if ($event->vendor_poke && is_array($event->vendor_poke)) {
+                    $event['vendor_poke'] = json_decode($event->vendor_poke) ;
+
+                    foreach ($event['vendor_poke']  as $vendorPokeId) {
+                        if ($vendorPokeId != null && Company::find($vendorPokeId)) {
+                            $vendorPokesArray[] = Company::find($vendorPokeId)->name ;
+                        }else {
+                            $vendorPokesArray[] = "Not found yet";
+                        }
+                    }
+    
+                    $event['vendorPokes'] = $vendorPokesArray;
+                }
+                
+
+                $event['bids'] = BidQuotes::where('event_id',$event->id)->get()->makeHidden(['created_at','updated_at']);
+                if ($event['bids']) {
+                    $event['bidsNumber'] = count($event['bids']);
+                    foreach ($event['bids'] as $bid) {
+                        $quoteQuery = EventQuotes::where('quote_code',$bid->quote_code);
+    
+                        if ($quoteQuery) {
+                            if ($quoteQuery->first()) {                        
+                                $bid['QotesDetails'] = $quoteQuery->get();
+                                if ($quoteQuery->first()->company) {
+                                    $company = $quoteQuery->first()->company->makeHidden(['created_at','updated_at']);
+                                    $bid['VendorCompany'] = $quoteQuery->first()->company->makeHidden(['created_at','updated_at']);
+                                    $bid['VendorName'] = $quoteQuery->first()->company->user->name;
+                                }
+                            }
+                        }else{
+    
+                        }
+                    }
+                }
+            }
+            
+            foreach ($activeEvents as $event) {
+                $event = $event->makeHidden(['created_at','updated_at']);
+                $event['daysLeft'] = str_replace('after', 'Ago',\Carbon\Carbon::now()->diffForHumans($event->start_date)) ;
+                $event['postedOn'] = $event->created_at ;
+                if ($event->vendor_type_id) {    
+                    $event->vendor_type_id = json_decode($event->vendor_type_id) ;
+
+                    foreach ($event->vendor_type_id as $categoryId) {
+                        if ($categoryId != null && VendorCategories::find($categoryId)) {
+                            $vendorCategoriesArray[] = VendorCategories::find($categoryId)->name ;
+                        }else {
+                            $vendorCategoriesArray[] = "Not found yet";
+                        }
+                    }
+    
+                    $event['catlist'] = $vendorCategoriesArray;
+                }
+                if ($event->vendor_poke && is_array($event->vendor_poke)) {
+                    $event['vendor_poke'] = json_decode($event->vendor_poke) ;
+
+                    foreach ($event['vendor_poke']  as $vendorPokeId) {
+                        if ($vendorPokeId != null && Company::find($vendorPokeId)) {
+                            $vendorPokesArray[] = Company::find($vendorPokeId)->name ;
+                        }else {
+                            $vendorPokesArray[] = "Not found yet";
+                        }
+                    }
+    
+                    $event['vendorPokes'] = $vendorPokesArray;
+                }
+                
+
+                $event['bids'] = BidQuotes::where('event_id',$event->id)->get()->makeHidden(['created_at','updated_at']);
+                if ($event['bids']) {
+                    $event['bidsNumber'] = count($event['bids']);
+                    foreach ($event['bids'] as $bid) {
+                        $quoteQuery = EventQuotes::where('quote_code',$bid->quote_code);
+    
+                        if ($quoteQuery) {
+                            if ($quoteQuery->first()) {                        
+                                $bid['QotesDetails'] = $quoteQuery->get();
+                                if ($quoteQuery->first()->company) {
+                                    $company = $quoteQuery->first()->company->makeHidden(['created_at','updated_at']);
+                                    $bid['VendorCompany'] = $quoteQuery->first()->company->makeHidden(['created_at','updated_at']);
+                                    $bid['VendorName'] = $quoteQuery->first()->company->user->name;
+                                }
+                            }
+                        }else{
+    
+                        }
+                    }
+                }
+            }
+
 
             return response()->json([
                 'message'=> 'Success',
