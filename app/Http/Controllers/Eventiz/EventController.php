@@ -271,7 +271,7 @@ class EventController extends Controller
                     $event['vendor_type_id'] = json_decode($event->vendor_type_id) ;
 
                     foreach ($event['vendor_type_id'] as $categoryId) {
-                        if (VendorCategories::find($categoryId)) {
+                        if ($categoryId != null && VendorCategories::find($categoryId)) {
                             $vendorCategoriesArray[] = VendorCategories::find($categoryId)->name ;
                         }else {
                             $vendorCategoriesArray[] = "Not found yet";
@@ -284,7 +284,7 @@ class EventController extends Controller
                     $event['vendor_poke'] = json_decode($event->vendor_poke) ;
 
                     foreach ($event['vendor_poke']  as $vendorPokeId) {
-                        if (Company::find($vendorPokeId)) {
+                        if ($vendorPokeId != null && Company::find($vendorPokeId)) {
                             $vendorPokesArray[] = Company::find($vendorPokeId)->name ;
                         }else {
                             $vendorPokesArray[] = "Not found yet";

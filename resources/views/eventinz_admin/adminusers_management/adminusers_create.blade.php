@@ -126,14 +126,14 @@
                         @endphp
                         @foreach($rightTypes as $rightType)
                             <div class="col-md-12">
-                                <div class="card collapsed-card" data-card-widget="collapse" style="border-top: 3px solid rgb({{ rand(0,255) }},{{ rand(0,255) }},{{ rand(0,255) }})">
-                                    <div class="card-header">
+                                <div class="card collapsed-card" style="border-top: 3px solid rgb({{ rand(0,255) }},{{ rand(0,255) }},{{ rand(0,255) }})">
+                                    <div class="card-header" data-card-widget="collapse">
                                         <h3 class="card-title">
                                             <strong>{{ $rightType->name }}</strong> <!-- Nom du type de droit -->
                                         </h3>
                             
                                         <div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                                            <button type="button" class="btn btn-tool" ><i class="fas fa-plus"></i>
                                             </button>
                                         </div>
                                         <!-- /.card-tools -->
