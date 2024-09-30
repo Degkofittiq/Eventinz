@@ -120,42 +120,67 @@
                     @enderror  
                     <p type="button" class="btn btn-info" id="toggleButton" onclick="toggleCheckboxes()">Select All</p> <br>
                     <div class="row">
+                        @php
+                            //  id="toggleButton" onclick="toggleCheckboxes()"
+                            $id = 1;
+                        @endphp
                         @foreach($rightTypes as $rightType)
-                            <div class="col-md-12">
-                                <strong>{{ $rightType->name }}</strong> <!-- Nom du type de droit -->
-                            </div>
-                            
-                            @php
-                                $rightsChunks = $rightType->rights->chunk(2); // Divise les droits en groupes de 3 pour les colonnes
-                            @endphp
-                    
-                            @foreach($rightsChunks as $chunk)
-                                <div class="col-md-4">
-                                    <ul>
-                                        @foreach($chunk as $right)
-                                            @if (!empty($adminUserFound->rights))
-                                                <input {{ in_array($right->name, json_decode($adminUserFound->rights)) ? "checked" : "" }} 
-                                                    type="checkbox" 
-                                                    name="rights[]"
-                                                    id="rights_{{ $right->name }}"
-                                                    value="{{ $right->name }}" 
-                                                    class=" @error('rights') is-invalid @enderror" 
-                                                    placeholder="Put the new Admin/Master Rights">
-                                            @else
-                                                <input 
-                                                    type="checkbox" 
-                                                    name="rights[]" 
-                                                    id="rights_{{ $right->name }}" 
-                                                    value="{{ $right->name }}" 
-                                                    class=" @error('rights') is-invalid @enderror" 
-                                                    placeholder="Put the new Admin/Master Rights">
-                                            @endif
-                                            <!-- Right Name -->
-                                            <label for="rights_{{ $right->name }}"> {{ "  " . $right->description . "  " }} </label><br>
-                                        @endforeach
-                                    </ul>
+                        <div class="col-md-12">
+                            <div class="card" style="border-top: 3px solid rgb({{ rand(0,255) }},{{ rand(0,255) }},{{ rand(0,255) }})">
+                                <div class="card-header" data-card-widget="collapse" >
+                                    <h3 class="card-title">
+                                        <strong>{{ $rightType->name }}</strong> <!-- Nom du type de droit -->
+                                    </h3>
+                        
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <!-- /.card-tools -->
                                 </div>
-                            @endforeach
+                                    
+                                @php
+                                    $rightsChunks = $rightType->rights->chunk(1); // Divise les droits en groupes de 3 pour les colonnes
+                                @endphp
+                        
+                                <div class="card-body after-display-block">
+                                    <div class="row">
+                                        <span style="border: 1px solid" class="btn btn-sm checkAllButton {{ 'class_'.$id++ }}" data-type-id="{{ $rightType->id }}" id="checkAllButton" onclick="checkAllboxes({{ $rightType->id }})">Check all</span>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        @foreach($rightsChunks as $chunk)
+                                            <div class="col-md-4">
+                                                @foreach($chunk as $right)
+                                                    @if (!empty($adminUserFound->rights))
+                                                        <input {{ in_array($right->name, json_decode($adminUserFound->rights)) ? "checked" : "" }} 
+                                                            type="checkbox" 
+                                                            name="rights[]" 
+                                                            id="rights_{{ $right->name }}" 
+                                                            value="{{ $right->name }}" 
+                                                            class="right-checkbox type-{{ $rightType->id }} @error('rights') is-invalid @enderror" 
+                                                            placeholder="Put the new Admin/Master Rights">
+                                                    @else
+                                                        <input 
+                                                            type="checkbox" 
+                                                            name="rights[]" 
+                                                            id="rights_{{ $right->name }}" 
+                                                            value="{{ $right->name }}" 
+                                                            class="right-checkbox type-{{ $rightType->id }} @error('rights') is-invalid @enderror" 
+                                                            placeholder="Put the new Admin/Master Rights">
+                                                    @endif
+                                                    <!-- Right Name -->
+                                                    <label for="rights_{{ $right->name }}"> {{ "  " . $right->description . "  " }} </label><br>
+                                                @endforeach
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                    <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col -->   
                         @endforeach
                     </div>
                                
@@ -207,6 +232,7 @@
         }
     }
 </script>
+
 <script>
 
     function toggleCheckboxes() {
@@ -234,6 +260,26 @@
     }
 
     document.getElementById('role_id').addEventListener('change', handleRoleChange);
+</script>
+
+<script>
+    function checkAllboxes(id) {
+        const checkboxes = document.querySelectorAll(`.right-checkbox.type-${id}`); // Sélectionne toutes les cases à cocher ayant une classe spécifique
+        const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked); // Vérifie si toutes les cases sont cochées
+    
+        // Inverse l'état de sélection des cases à cocher
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = !allChecked;
+        });
+    
+        // Met à jour le texte du bouton en fonction de l'état des cases
+        const button = document.querySelector(`.btn[data-type-id='${id}']`);
+        button.textContent = allChecked ? 'Check all' : 'Uncheck all';
+    }
+    
+    // Appel direct de la fonction pour le type de droit approprié
+    checkAllboxes({{ $rightType->id }});
+
 </script>
 </div>
 
