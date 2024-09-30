@@ -1,6 +1,11 @@
 @extends('eventinz_admin.layouts.app')
 @section('content_admin') 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2.select2-container.select2-container--default{
+        height: 40px !important;
+    }
+</style>
 <div class="card card-primary">
     @if(session('success'))
         <div class="alert alert-success">
@@ -58,4 +63,10 @@
     $('#emailselect').select2();
     });
 </script>
+<script>
+    $(document).ready(function(){
+        $('span.select2-selection.select2-selection--single').css('height', '35px');
+    });
+</script>
+
 @endsection
