@@ -745,7 +745,8 @@ class CompanyController extends Controller
 
     public function reviewsByStart(){
         $user = Auth::user();
-
+        $reviewsArray = [];
+        $array = [];
         $reviewsByStarts =  DB::table('reviews')
             ->select('start_for_cibe as Starts' , DB::raw('COUNT(start_for_cibe) as Total'))
             ->where('review_cible', $user->id)
@@ -763,7 +764,9 @@ class CompanyController extends Controller
         foreach ($reviewsByStarts as $reviewsByStart) {
             for ($i = 0; $i <= 5; $i++) {
                 // $array["Start $i"] = 0;
-                $array["Star $i"] = [
+                $reviewsArray[] = Review::where('review_cible', $user->id)->where('start_for_cibe', $i)->get()->makeHidden(['created_at','updated_at']);
+                $array[] = [
+                    'Star' =>  $i,
                     'Total' =>  count(Review::where('review_cible', $user->id)->where('start_for_cibe', $i)->get()->makeHidden(['created_at','updated_at'])),
                     'Reviews' => Review::where('review_cible', $user->id)->where('start_for_cibe', $i)->get()->makeHidden(['created_at','updated_at'])
                 ];
