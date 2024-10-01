@@ -96,13 +96,18 @@ class PaymentController extends Controller
                                     $vendorIds = $event->vendor_type_id ?? []; // Vendor Category Id
                                     $pokeVendorIds = $event->vendor_poke ?? []; // Vendor Company Id
 
-                                    $eventMessage = 'There is a new event in your vendor category on our plateform, check your account in EvenTinz apk to Bid !';
+                                    $eventMessage = 'There is a new event "' . $event->generic_id .'" in your vendor category on our plateform, check your account in EvenTinz apk to Bid !';
                                     if (!empty($vendorIds) && is_array(json_decode($vendorIds, true))) {
                                         foreach (json_decode($vendorIds, true) as $vendorId) {
-                                            $companyVendor = Company::whereRaw('JSON_CONTAINS(vendor_categories_id, ?)', [$vendorId])->first();
+                                            $companyVendor = Company::whereRaw('JSON_CONTAINS(vendor_categories_id, ?)', [$vendorId])->get();
 
                                             if ($companyVendor) {
-                                                $companyvendorEmails[] = $companyVendor->user->email;
+                                                // dd($companyVendor);
+                                                foreach ($companyVendor as $compVend) {
+                                                    if ($compVend->user) {
+                                                        $companyvendorEmails[] = $compVend->user->email;
+                                                    }
+                                                }
                                             }
                                         }
                                     }

@@ -28,6 +28,10 @@ Route::prefix('admin')->middleware(['auth','rights','checkAccountStatus'])->grou
     Route::get('/userslist', [AdminController::class, 'usersList'])->name('admin.userslist.index')->middleware('rights:view_users_hosts_and_vendors_list');
     Route::get('/userdetails/{userId}', [AdminController::class, 'userDetails'])->name('admin.details.user')->middleware('rights:view_details_about_hosts_and_vendors');
 
+    // user Support & Help Form
+    Route::get('/supporthelpform/{userId}', [AdminController::class, 'userSupportHelpForm'])->name('admin.addlogform.supporthelp')/*->middleware('rights:resend_otp')*/; //send the new otp
+    Route::post('/supporthelp/{userId}', [AdminController::class, 'userSupportHelp'])->name('admin.addlog.supporthelp')/*->middleware('rights:resend_otp')*/; //send the new otp
+
     // Categories Management
     Route::get('/addcategory', [AdminController::class, 'addCategory'])->name('admin.add.category')->middleware('rights:add_new_category');
     Route::get('/listcategory', [AdminController::class, 'listCategory'])->name('admin.list.category')->middleware('rights:view_categories_list');

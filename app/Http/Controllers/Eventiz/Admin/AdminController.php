@@ -19,6 +19,7 @@ use App\Models\VarriablesLimit;
 use App\Models\ServicesCategory;
 use App\Models\VendorCategories;
 use App\Models\VendorServiceType;
+use App\Models\userSupportsAndHelp;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -227,6 +228,39 @@ class AdminController extends Controller
 
         return view('eventinz_admin.hosts_and_vendors.details_users', compact('userFound','eventStatistics'));
     }
+
+    public function userSupportHelpForm(Request $request, $userId){
+
+        $userFound = User::find($userId);
+        if (!$userFound) {
+            return back()->with('error', 'User not found.');            
+        }
+        
+        return view('eventinz_admin.hosts_and_vendors.supportdetails_users', compact('userFound'));
+    }
+
+    public function userSupportHelp(Request $request, $userId){
+
+        $userFound = User::find($userId);
+        if (!$userFound) {
+            return back()->with('error', 'User not found.');            
+        }
+
+        $dataValidation = $request->validate([
+            'support_description' =>'required|string|max:255',
+        ]);
+        
+        $supportHelpForm = userSupportsAndHelp::create([
+            'admin_id' => Auth::user()->id,
+            'users_id' => $userId,
+            'support_description' => $request->support_description,
+        ]);
+        
+        if ($supportHelpForm) {
+            return back()->with('success', 'Support help has successfully registered.');
+        }
+    }
+
     // Add Category
     public function addCategory(){
         $categories= VendorCategories::all();

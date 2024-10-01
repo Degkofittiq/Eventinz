@@ -58,7 +58,7 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Generic</th>
-            <th scope="col">Usernames</th>
+            {{-- <th scope="col">Usernames</th> --}}
             <th scope="col">Emails</th>
             {{-- <th scope="col">Credits</th> --}}
             <th scope="col">Type</th>
@@ -75,7 +75,7 @@
             <th scope="row">{{ $count++ }}</th>
             <td>{{ $user->generic_id }}</td>
             {{-- <td>{{ $user->name }}</td> --}}
-            <td>{{ $user->username }}</td>
+            {{-- <td>{{ $user->username }}</td> --}}
             <td>{{ $user->email }}</td>
             {{-- <td>{{ $user->credit }}</td> --}}
             <td>{{ $user->role->name ?? "" }}</td>
@@ -102,6 +102,7 @@
               </td>
             <td>
               <a href="{{ route('admin.details.user',$user->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
+              <a href="{{ route('admin.addlogform.supporthelp',$user->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Support</a>
               {{-- <a href="{{ route('admin.deleteform.user', $user->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a> --}}
             </td>
           </tr>
@@ -120,7 +121,7 @@
   let table = new DataTable('#myTable', {
     responsive: true, // Ajoute la réactivité
     columnDefs: [
-      { orderable: false, targets: [7] } // 7 est l'index de la colonne 'Actions', car les index commencent à 0
+      { orderable: false, targets: [6] } // 7 est l'index de la colonne 'Actions', car les index commencent à 0
     ]
   }
   );

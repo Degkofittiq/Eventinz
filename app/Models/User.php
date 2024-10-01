@@ -79,4 +79,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Subscription::class, 'id');
     }
+
+    // userSupportsAndHelp
+    public function userSupportsAndHelp()
+    {
+        return $this->hasMany(userSupportsAndHelp::class);
+    }
 }
