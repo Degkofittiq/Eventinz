@@ -73,7 +73,7 @@ class EventController extends Controller
     // eventSubcategoriesList
     
     public function eventSubcategoriesList(){
-        $eventSubcategories = EventSubcategory::all()->makeHidden(['created_at','updated_at']);
+        $eventSubcategories = EventSubcategory::all()->makeHidden(['created_at','updated_at','created_by','event_types_id']);
         
         if (!$eventSubcategories) {
             return response()->json([
@@ -85,6 +85,21 @@ class EventController extends Controller
             'eventSubcategories' => $eventSubcategories
         ], 200);
     }
+
+    public function eventTypeSubcategoriesList(Request $request, $eventTypeId){
+        $eventSubcategories = EventSubcategory::where('event_types_id',$eventTypeId)->get()->makeHidden(['created_at','updated_at','created_by','event_types_id']);
+        
+        if (!$eventSubcategories) {
+            return response()->json([
+                'error' => 'No event Subcategoies found yet'
+            ], 404);
+        }
+
+        return response()->json([
+            'eventSubcategories' => $eventSubcategories
+        ], 200);
+    }
+    
 
     public function categoriesSelectVendors(Request $request){
         // Récupérer les IDs des vendors à partir de la requête

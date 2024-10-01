@@ -87,6 +87,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     Route::get('/eventviewstatuseslist', [EventController::class, 'eventVieswStatusesList']);
     Route::post('/vendorschoose', [EventController::class, 'vendorsChoose']);
     Route::get('/eventsubcategorieslist', [EventController::class, 'eventSubcategoriesList']);
+    Route::get('/eventsubcategorieslist/{eventTypeId}', [EventController::class, 'eventTypeSubcategoriesList']);
     Route::post('/categoriesselectvendorslist', [EventController::class, 'categoriesSelectVendors']);
     Route::get('/createeventForm', [EventController::class, 'createEventForm']);
     Route::post('/storeevent', [EventController::class, 'storeEvent']);
