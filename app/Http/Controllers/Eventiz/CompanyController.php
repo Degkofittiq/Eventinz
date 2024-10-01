@@ -540,7 +540,13 @@ class CompanyController extends Controller
             $companyWithoutUser = $company->makeHidden(['user']);
             $companyUser =  $user;
 
-            if ($company->images) {
+            if ($company->images && is_array($company->images)) {
+                // dd(json_decode($companyWithoutUser['images']));
+                foreach ($company->images as $files) {
+                    $filesPath[] = $files['file_path'];
+                }
+            }
+            if ($company->images && !is_array($company->images)) {
                 // dd(json_decode($companyWithoutUser['images']));
                 foreach (json_decode($companyWithoutUser['images'], true) as $files) {
                     $filesPath[] = $files['file_path'];
