@@ -43,7 +43,7 @@ class CompanyController extends Controller
             $vendorClassData['features'] = json_decode($vendorClass->features); // Décoder les 'features'
             $data[] = $vendorClassData;
         }
-        return response()->json($data);
+        return response()->json(["classe" => $data]);
     }
 
     public function vendorClass(Request $request, $vendorClassId){
