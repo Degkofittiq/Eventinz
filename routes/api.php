@@ -115,6 +115,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     Route::get('/viewmytopreview', [CompanyController::class, 'viewMyTopReviews']);
     Route::get('/viewmyreview', [CompanyController::class, 'viewMyReviews']);
     Route::get('/reviewsbystart', [CompanyController::class, 'reviewsByStart']);
+    Route::get('/reviewsbystartwithcontent', [CompanyController::class, 'reviewsByStartWithContent']);
     // Hide | Show top reviews
     Route::post('/statustopreviews', [CompanyController::class,'updateMyReviewsStatus']);
 

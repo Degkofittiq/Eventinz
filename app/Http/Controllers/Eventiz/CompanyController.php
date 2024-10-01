@@ -755,13 +755,63 @@ class CompanyController extends Controller
             
             $array = [];
             // Initialiser toutes les valeurs de 0 à 5 à 0
-            for ($i = 0; $i <= 5; $i++) {
-                $array["Start $i"] = 0;
-            }
+            // for ($i = 0; $i <= 5; $i++) {
+            //     $array["Start $i"] = 0;
+            // }
 
         // Parcourir les résultats et assigner les valeurs correspondantes
         foreach ($reviewsByStarts as $reviewsByStart) {
-            $array["Start {$reviewsByStart->Starts}"] = $reviewsByStart->Total;
+            for ($i = 0; $i <= 5; $i++) {
+                // $array["Start $i"] = 0;
+                $array["Star $i"] = [
+                    'Total' =>  count(Review::where('review_cible', $user->id)->where('start_for_cibe', $i)->get()->makeHidden(['created_at','updated_at'])),
+                    'Reviews' => Review::where('review_cible', $user->id)->where('start_for_cibe', $i)->get()->makeHidden(['created_at','updated_at'])
+                ];
+            }
+        }
+
+        if(count($reviewsByStarts) > 0){
+            return response()->json([
+               'status' => 200,
+               'message' => 'My Reviews',
+                'Reviews' => $array
+            ]);
+        }else{
+            return response()->json([
+                'status' => 200,
+                'message' => 'My Reviews',
+                 'Reviews' => 'No reviews yet !'
+            ], 200);  // Not Found
+        }
+    }
+
+    // reviewsByStartWithContent
+/*
+    public function reviewsByStartWithContent(){
+        $user = Auth::user();
+
+        $reviewsByStarts =  DB::table('reviews')
+            ->select('start_for_cibe as Starts' , DB::raw('COUNT(start_for_cibe) as Total'))
+            ->where('review_cible', $user->id)
+            ->groupBy('start_for_cibe')
+            ->orderBy('start_for_cibe')
+            ->get();
+            
+            $array = [];
+            // Initialiser toutes les valeurs de 0 à 5 à 0
+            // for ($i = 0; $i <= 5; $i++) {
+            //     $array["Start $i"] = 0;
+            // }
+
+        // Parcourir les résultats et assigner les valeurs correspondantes
+        foreach ($reviewsByStarts as $reviewsByStart) {
+            for ($i = 0; $i <= 5; $i++) {
+                // $array["Start $i"] = 0;
+                $array["Star $i"] = [
+                    'Total' =>  count(Review::where('review_cible', $user->id)->where('start_for_cibe', $i)->get()->makeHidden(['created_at','updated_at'])),
+                    'Reviews' => Review::where('review_cible', $user->id)->where('start_for_cibe', $i)->get()->makeHidden(['created_at','updated_at'])
+                ];
+            }
         }
 
         if(count($reviewsByStarts) > 0){
@@ -779,7 +829,7 @@ class CompanyController extends Controller
         }
 
     }
-
+*/
     public function updateMyReviewsStatus(Request $request){
         $user = Auth::user();
         $myReviews = Review::where('review_cible', $user->id)->orderBy('start_for_cibe', 'desc')->limit(4)->get();
