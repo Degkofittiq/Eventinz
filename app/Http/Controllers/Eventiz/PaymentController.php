@@ -43,6 +43,8 @@ class PaymentController extends Controller
             $payment_date = Carbon::now();
             $subscription_id = $request->subscription_id ?? null;
             $event_id = $request->event_id ?? null;
+            $companyvendorEmails = [];
+            $count = 0;
     
             $payment = Paymenthistory::create([
                 'user_id' => $user->id,
@@ -93,7 +95,6 @@ class PaymentController extends Controller
                                 if ($event) {
                                     $vendorIds = $event->vendor_type_id ?? []; // Vendor Category Id
                                     $pokeVendorIds = $event->vendor_poke ?? []; // Vendor Company Id
-                                    $companyvendorEmails = [];
 
                                     $eventMessage = 'There is a new event in your vendor category on our plateform, check your account in EvenTinz apk to Bid !';
                                     if (!empty($vendorIds) && is_array(json_decode($vendorIds, true))) {
@@ -116,7 +117,6 @@ class PaymentController extends Controller
                                         }
                                     }
                                     $companyvendorEmails = array_unique($companyvendorEmails);
-                                    $count = 0;
                                     if ($companyvendorEmails) {
                                         // Send Mails
                                         foreach ($companyvendorEmails as $address) {
