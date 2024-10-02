@@ -107,6 +107,14 @@ class CompanyController extends Controller
                     'subscriptions_id' => 'required|integer', // Subscription plan
                 ]);
 
+                
+                $array = [];
+                foreach ($request->vendor_categories_id as $value) {
+                    $array[] = intval($value);
+                }
+
+                $request->vendor_categories_id = $array;
+                
                 $company = Company::create([
                     'users_id' => $user->id,
                     'name' => $request->name, 
