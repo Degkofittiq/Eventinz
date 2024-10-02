@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Eventiz;
 
 use Exception;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Event;
 use App\Models\Review;
 use App\Models\Company;
 use App\Models\Services;
 use App\Mail\SuccessMail;
+use App\Models\BidQuotes;
 use App\Rules\SameSizeAs;
+use App\Models\EventQuotes;
 use App\Models\PaymentTaxe;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
@@ -760,15 +764,24 @@ class CompanyController extends Controller
             //     $array["Start $i"] = 0;
             // }
 
-        // Parcourir les résultats et assigner les valeurs correspondantes
+        // Parcourir les résultats et assigner les valeurs correspondantes 
         foreach ($reviewsByStarts as $reviewsByStart) {
             for ($i = 0; $i <= 5; $i++) {
                 // $array["Start $i"] = 0;
-                $reviewsArray[] = Review::where('review_cible', $user->id)->where('start_for_cibe', $i)->get()->makeHidden(['created_at','updated_at']);
+                
+                $reviewsArray = Review::where('review_cible', $user->id)
+                ->where('start_for_cibe', $i)
+                ->get();
+                            
+                foreach ($reviewsArray as $review) {
+                    // Ajoute l'objet User correspondant au champ 'user_id' dans la clé 'User'
+                    $review->setAttribute('User', User::select('generic_id','name','username','profile_image')->where('id', $review->user_id)->get());
+                }
+
                 $array[] = [
                     'Star' =>  $i,
                     'Total' =>  count(Review::where('review_cible', $user->id)->where('start_for_cibe', $i)->get()->makeHidden(['created_at','updated_at'])),
-                    'Reviews' => Review::where('review_cible', $user->id)->where('start_for_cibe', $i)->get()->makeHidden(['created_at','updated_at'])
+                    'Reviews' => $reviewsArray
                 ];
             }
         }
@@ -878,27 +891,90 @@ class CompanyController extends Controller
 
     }
     
+    
+    function processEvents($events) {
+        foreach ($events as $event) {
+            $vendorPokesArray = $vendorCategoriesArray = $event['catlist'] = null;
+            $event = $event->makeHidden(['created_at', 'updated_at']);
+            $event['daysLeft'] = str_replace('after', 'Ago', Carbon::now()->diffForHumans($event->start_date));
+            $event['postedOn'] = $event->created_at;
+    
+            // Process vendor_type_id
+            if ($event->vendor_type_id) {
+                $event->vendor_type_id = json_decode($event->vendor_type_id);
+    
+                foreach ($event->vendor_type_id as $categoryId) {
+                    if ($categoryId != null && VendorCategories::find($categoryId)) {
+                        $vendorCategoriesArray[] = VendorCategories::find($categoryId)->name;
+                    } else {
+                        $vendorCategoriesArray[] = "Not found yet";
+                    }
+                }
+                $event['catlist'] = $vendorCategoriesArray;
+            }
+    
+            // Process vendor_poke
+            if ($event->vendor_poke) {
+                $event->vendor_poke = json_decode($event->vendor_poke);
+            }
+    
+            if ($event->vendor_poke && is_array($event->vendor_poke)) {
+                foreach ($event['vendor_poke'] as $vendorPokeId) {
+                    if ($vendorPokeId != null && Company::find($vendorPokeId)) {
+                        $vendorPokesArray[] = Company::find($vendorPokeId)->name;
+                    } else {
+                        $vendorPokesArray[] = "Not found yet";
+                    }
+                }
+                $event['vendorPokes'] = $vendorPokesArray;
+            }
+    
+            // Process bids
+            $event['bids'] = BidQuotes::where('event_id', $event->id)->get()->makeHidden(['created_at', 'updated_at']);
+            if ($event['bids']) {
+                $event['bidsNumber'] = count($event['bids']);
+                foreach ($event['bids'] as $bid) {
+                    $quoteQuery = EventQuotes::where('quote_code', $bid->quote_code);
+    
+                    if ($quoteQuery && $quoteQuery->first()) {
+                        $bid['QotesDetails'] = $quoteQuery->get();
+                        if ($quoteQuery->first()->company) {
+                            $company = $quoteQuery->first()->company->makeHidden(['created_at', 'updated_at']);
+                            $bid['VendorCompany'] = $company;
+                            $bid['VendorName'] = $company->user->name;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public function myEventStatistics(){
         // Récupérer l'utilisateur authentifié
         $user = auth()->user();
         $companyAssoc = Company::where('users_id',$user->id)->first();
         if (!$companyAssoc) {
-            // dd('Not company yet');
+            return response()->json([
+                'message'=> 'Success',
+                'Success'=> 'You don\'t have a company yet'
+             ], 200);
         }
 
         // dd($companyAssoc->vendor_categories_id);
-        if($user){
-            $pastEvents = Event::whereDate('start_date', '<', now()->format('Y-m-d'))
+        if($user ){ 
+            $uncompletedEvents = Event::whereDate('start_date', '<', now()->format('Y-m-d'))
+            ->where(function($query) use ($user,$companyAssoc) {
+                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
+                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
+            })
+            ->orWhere('cancelstatus','Canceled')
+            ->get();
+            $upcommingEvents = Event::whereDate('start_date', '>', now()->format('Y-m-d'))
             ->where(function($query) use ($user,$companyAssoc) {
                 $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
                       ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
             })->get();
-            $futureEvents = Event::whereDate('start_date', '>', now()->format('Y-m-d'))
-            ->where(function($query) use ($user,$companyAssoc) {
-                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
-            })->get();
-            $currentEvents = Event::whereDate('start_date', '=', now()->format('Y-m-d'))
+            $completedEvents = Event::where('cancelstatus','Completed')
             ->where(function($query) use ($user,$companyAssoc) {
                 $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
                       ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
@@ -908,13 +984,20 @@ class CompanyController extends Controller
                 $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
                       ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
             })->get();
+           
+            // processEvents($uncompletedEvents);
 
+            //  Canceled-Completed
+            $this->processEvents($uncompletedEvents);
+            $this->processEvents($upcommingEvents);
+            $this->processEvents($completedEvents);
+            $this->processEvents($activeEvents);
             return response()->json([
                 'message'=> 'Success',
-                 'Past Events ('. count($pastEvents) .')'=> count($pastEvents) > 0 ? $pastEvents : 0,
-                 'Future Events ('. count($futureEvents) .')'=> count($futureEvents) > 0 ? $futureEvents : 0,
-                 'Current Events ('. count($currentEvents) .')'=> count($currentEvents) > 0 ? $currentEvents : 0,
-                 'Active Events ('. count($activeEvents) .')'=> count($activeEvents) > 0 ? $activeEvents : 0
+                 'Uncompleted Event'=> count($uncompletedEvents) > 0 ? ['Total' => count($uncompletedEvents) ,'Events' => $uncompletedEvents] : 0,
+                 'Upcomming Event'=> count($upcommingEvents) > 0 ? ['Total' => count($uncompletedEvents) ,'Events' => $upcommingEvents] : 0,
+                 'Current Event'=> count($completedEvents) > 0 ? ['Total' => count($uncompletedEvents) ,'Events' => $completedEvents] : 0,
+                 'Active Event'=> count($activeEvents) > 0 ? ['Total' => count($uncompletedEvents) ,'Events' => $activeEvents] : 0
              ], 200);
         }else{
             return response()->json([
@@ -922,6 +1005,5 @@ class CompanyController extends Controller
                 'error'=> 'You\'re not authorised to do this action!'
             ], 401);
         }
-    }
-    
+    }    
 }

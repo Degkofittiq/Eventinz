@@ -93,7 +93,7 @@ Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     Route::post('/storeevent', [EventController::class, 'storeEvent']);
 
     Route::get('/myevents', [EventController::class, 'myEvent']); 
-    Route::get('/myeventstatistics', [CompanyController::class, 'myEventStatistics']);
+    Route::get('/myeventstatistics', [CompanyController::class, 'myEventStatistics']); //For vendors
 
     // show Event
     Route::get('event/{eventId}', [EventController::class,'showEvent']);

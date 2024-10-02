@@ -114,9 +114,18 @@ class EventController extends Controller
                     $query->orWhereRaw('JSON_CONTAINS(vendor_categories_id, ?)', [$id]);
                 }
             })->get();
-            foreach ($vendorChooseId as $company) {
-                $company['user_generic_id'] = $company->makeHidden(['user'])->user->generic_id;
-                // 
+            
+            if ($vendorChooseId) {
+                foreach ($vendorChooseId as $company) {
+                    // dd($company->user);
+                    if ($company->user) {
+                        $company['user_generic_id'] = $company->makeHidden(['user'])->user->generic_id;
+                    }else {
+                        // user
+                        $company['user'] = 'Not User link to this company';
+                    }
+                    // 
+                }
             }
         } else {
             // Si le tableau est vide ou invalide, retourner une réponse appropriée
@@ -825,10 +834,14 @@ class EventController extends Controller
                 $foundQuoteItem->update([
                     'status' => "removed"
                 ]);
+                return response()->json([
+                    'message' => 'Error',
+                    'error' => 'You\'re been remove this quote item!'
+                ], 200);
             }else {
                 return response()->json([
                     'message' => 'Error',
-                    'error' => 'You can\'t remove thiis quote item!'
+                    'error' => 'You can\'t remove this quote item!'
                 ], 403);
             }
         } else {
