@@ -107,7 +107,7 @@ class EventController extends Controller
         // Vérifie que $array est bien un tableau et qu'il n'est pas vide
         if (is_array($array) && !empty($array)) {
             // Convertir les IDs en format JSON pour la requête
-            $vendorChooseId = Company::select('id', 'name','images')
+            $vendorChooseId = Company::select('id', 'name','images','users_id')
             // ->where('is_subscribed', 0)
             ->where(function($query) use ($array) {
                 foreach ($array as $id) {
