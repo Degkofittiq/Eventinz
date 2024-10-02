@@ -226,6 +226,27 @@ class EventController extends Controller
                 // Créer un évènement avec les données fournies par l'utilisateur
                 // $date = Carbon::createFromFormat('d/m/Y', $dateString);
 
+                // vendor_type_id
+                if ($request->vendor_type_id) {
+                    $arrayvendor_type_id = [];
+                    foreach ($request->vendor_type_id as $value) {
+                        $arrayvendor_type_id[] = intval($value);
+                    }
+    
+                    $request->vendor_type_id = $arrayvendor_type_id;
+                }
+
+                if ($request->vendor_poke) {
+                    // vendor_poke
+                    $arrayvendor_poke = [];
+                    foreach ($request->vendor_poke as $value) {
+                        $arrayvendor_poke[] = intval($value);
+                    }
+    
+                    $request->vendor_poke = $arrayvendor_poke;
+                }
+
+
                 $event = Event::create([                    
                     'generic_id' =>  $this->generateUniqueEventID(),
                     'user_id' => $user->id,
