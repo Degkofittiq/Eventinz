@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('admin_action_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->string('path');
-            $table->string('method');
+            $table->string('action')->nullable();
+            $table->string('path')->nullable();
+            $table->string('method')->nullable();
             $table->json('input')->nullable();
             $table->timestamps();
         });
