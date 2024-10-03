@@ -87,6 +87,8 @@ Route::prefix('admin')->middleware(['auth','rights','checkAccountStatus'])->grou
     Route::get('/admineventdetail/{eventId}', [AdminEventController::class, 'adminEventDetails'])->name('admin.details.event')->middleware('rights:view_event_details');
     Route::post('/updateevent/{eventId}', [AdminEventController::class, 'adminEventUpdate'])->name('admin.update.event')->middleware('rights:edit_event_details');
 
+    Route::get('/admineventbidsdetails/{QuoteCode}', [AdminEventController::class, 'adminEventBidsDetails'])->name('admin.bidsdetails.event')->middleware('rights:view_event_details');
+
     // Events Type Management | eventTypeList-eventTypeDetails-eventTypeAddForm-eventTypeAdd-eventTypeEditForm-eventTypeUpdate-eventTypeDelete
     Route::get('/eventtypelist', [AdminEventController::class, 'eventTypeList'])->name('admin.list.eventtypes')->middleware('rights:view_event_type_list');
     Route::get('/eventtypeadd', [AdminEventController::class, 'eventTypeAddForm'])->name('admin.add.eventtypeform')->middleware('rights:add_new_event_type');

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Eventiz\Admin;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Company;
+use App\Models\BidQuotes;
 use App\Models\EventType;
+use App\Models\EventQuotes;
 use Illuminate\Http\Request;
 use App\Models\EventSubcategory;
 use App\Models\EventsViewStatus;
@@ -44,14 +46,14 @@ class AdminEventController extends Controller
             1 // 'Yes'  // paid
         ];
 
-        // dd(json_decode($event->vendor_type_id));
+        $eventBids = BidQuotes::where('event_id', $event->id)->get();
+        $eventQuotes = EventQuotes::where('event_id', $event->id)->get() ;
+
         if (!$event) {
             return back()->with('error', 'Event not found');
         }
-        if (!$event) {
-            return back()->with('error', 'Event not found');
-        }
-        return view('eventinz_admin.events.details_event', compact('event','eventTypes','vendorCategories','companies','privateOrPublic','status','canceledEvents','is_pay_dones'));
+
+        return view('eventinz_admin.events.details_event', compact('event','eventTypes','vendorCategories','companies','privateOrPublic','status','canceledEvents','is_pay_dones','eventBids','eventQuotes'));
     }
 
     public function adminEventUpdate(Request $request, $eventId){
@@ -128,6 +130,22 @@ class AdminEventController extends Controller
         $update = $event->update($dataValidate);
     
         return back()->with('success', 'Event has been updated!');
+    }
+
+    public function adminEventBidsDetails(Request $request, $QuoteCode){
+        
+        $eventQuotes = EventQuotes::where('quote_code', $QuoteCode)->get();
+        $quoteEpicsDetails = EventQuotes::where('quote_code', $QuoteCode)->first();
+        
+        if (!$eventQuotes) {
+            return back()->with('error', 'This Bid don\'t has quotes yet!');
+        }
+
+        if (!$quoteEpicsDetails) {
+            return back()->with('error', 'This Bid don\'t has quotes yet!');
+        }
+
+        return view('eventinz_admin.events.list_quotes_events', compact('eventQuotes','quoteEpicsDetails'));
     }
     
     // Event Type Management

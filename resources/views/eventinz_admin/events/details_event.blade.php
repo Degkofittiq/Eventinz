@@ -240,6 +240,17 @@
                     @error('travel') <p> {{ $message }} </p> @enderror
                 </td>
             </tr>
+            {{-- // eventBids-eventQuotes --}}
+            <tr>
+                <th>Bids</th>
+                <td>
+                    @foreach ($eventBids as $eventBid)
+                    <a href="{{ route('admin.bidsdetails.event',$eventBid->quote_code) }}" style="color:black;text-decoration:underline" class="mx-1">
+                        {{ $eventBid->quote_code }},
+                    </a>
+                    @endforeach
+                </td>
+            </tr>
             <tr>
                 <th>Action</th>
                 <td>
