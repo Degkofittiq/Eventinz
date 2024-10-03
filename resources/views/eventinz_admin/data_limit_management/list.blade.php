@@ -30,6 +30,7 @@
             <th scope="col">#</th>
             <th scope="col">Names</th>
             <th scope="col">Value</th>
+            <th scope="col">Creation Date</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -41,6 +42,7 @@
             <th scope="row">{{ $count++ }}</th>
             <td>{{ $datalimit->name ?? "" }}</td>
             <td>{{ $datalimit->value ?? "Not set Yet" }}</td>
+            <td>{{ \Carbon\Carbon::parse($datalimit->updated_at)->format('d-m-y') ?? ""}}</td>
             <td>
               <a href="{{ route('admin.edit.datalimit', $datalimit->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
             </td>

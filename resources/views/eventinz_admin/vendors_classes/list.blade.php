@@ -31,6 +31,7 @@
             <th scope="col">Names</th>
             <th scope="col">Description</th>
             <th scope="col">Service Number</th>
+            <th scope="col">Creation Date</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -43,6 +44,7 @@
             <td>{{ $vendorClasse->name ?? "" }}</td>
             <td>{{ $vendorClasse->description ?? "" }}</td>
             <td>{{ $vendorClasse->service_number ?? "" }}</td>
+            <td>{{ \Carbon\Carbon::parse($vendorClasse->created_at)->format('d-m-y') ?? ""}}</td>
             <td>
               <a href="{{ route('admin.show.vendorclass', $vendorClasse->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
             </td>

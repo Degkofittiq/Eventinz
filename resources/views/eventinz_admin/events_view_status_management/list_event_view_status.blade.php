@@ -40,6 +40,7 @@
               <th scope="col" >Name</th>
               <th scope="col" class="limited-text2"  data-limit="5">Description</th>
               <th scope="col">Price</th>
+              <th scope="col">Creation Date</th>
               <th scope="col" >Actions</th>
             </tr>
           </thead>
@@ -52,6 +53,7 @@
                 <td>{{ $eventViewStatus->name  ?? "" }}</td>
                 <td class="limited-text2"  data-limit="5">{{ $eventViewStatus->description  ?? "" }}</td>
                 <td>{{ $eventViewStatus->price  ?? "" }}</td>
+                <td>{{ \Carbon\Carbon::parse($eventViewStatus->created_at)->format('d-m-y') ?? ""}}</td>
                 <td>
                     <a href="{{ route('admin.edit.eventviewstatusform', $eventViewStatus->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
                     <a href="{{ route('admin.deleteform.eventviewstatus', $eventViewStatus->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>

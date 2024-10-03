@@ -45,10 +45,11 @@
             <th scope="col">Generic Ids</th>
             <th scope="col">Owner</th>
             <th scope="col">Type</th>
-            <th scope="col">Vendor(s)</th>
+            {{-- <th scope="col">Vendor(s)</th> --}}
             <th scope="col">Aprx budget</th>
             <th scope="col">Pay Status</th>
             <th scope="col">Public/Private</th>
+            <th scope="col">Creation Date</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -63,7 +64,7 @@
               <a href="{{ $event->user_id ? route('admin.details.user', $event->user_id) : "#" }}" style="text-decoration: underline; color:black;">{{ $event->eventOwner->username ?? ""}}</a>
             </td>
             <td>{{ $event->eventType->name ?? ""}}</td>
-            <td>
+            {{-- <td>
                 @if (is_array(json_decode($event->vendor_type_id)))
                     @foreach (json_decode($event->vendor_type_id) as $vendorTypeId)
                         @php
@@ -78,10 +79,11 @@
                 @else
                     "No Vendor "
                 @endif
-            </td>
+            </td> --}}
             <td>{{ $event->aprx_budget ?? ""}}</td>
             <td>{{ $event->is_pay_done == 1 ? "Yes" : "Not yet" ?? ""}}</td>
             <td>{{ $event->eventsViewStatus->name ?? ""}}</td>
+            <td>{{ \Carbon\Carbon::parse($event->created_at)->format('d-m-y') ?? ""}}</td>
             <td>
               <a href="{{ route('admin.details.event', $event->id) ?? ""}}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
               {{-- <a href="{{ route('admin.deleteform.event', $event->id) ?? ""}}"   class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a> --}}

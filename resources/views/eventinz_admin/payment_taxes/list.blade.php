@@ -28,8 +28,9 @@
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col"  style="width: 40%">Name</th>
-              <th scope="col"  style="width: 30%">Value(%)</th>
+              <th scope="col">Name</th>
+              <th scope="col">Value(%)</th>
+              <th scope="col">Creation Date</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -41,6 +42,7 @@
                 <th scope="row">{{ $count++ }}</th>
                 <td>{{ $paymentTaxe->name  ?? "" }}</td>
                 <td>{{ $paymentTaxe->value  ?? "" }}</td>
+                <td>{{ \Carbon\Carbon::parse($paymentTaxe->created_at)->format('d-m-y') ?? ""}}</td>
                 <td>
                     <a href="{{ route('admin.show.paymenttaxe', $paymentTaxe->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
                     <a href="{{ route('admin.deleteform.paymenttaxe', $paymentTaxe->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>

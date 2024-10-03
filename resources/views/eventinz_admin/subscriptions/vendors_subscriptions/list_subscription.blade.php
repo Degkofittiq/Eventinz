@@ -47,6 +47,7 @@
             <th scope="col">Prices</th>
             <th scope="col">Credits</th>
             <th scope="col">Durations</th>
+            <th scope="col">Creation Date</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -61,6 +62,7 @@
             <td>{{ $subscriptionPlan->price ?? "" }}</td>
             <td>{{ $subscriptionPlan->credits ?? "" }}</td>
             <td>{{ ($subscriptionPlan->duration == 3 ||  $subscriptionPlan->duration == 6) ?  $subscriptionPlan->duration . " Months" :  "1 Year" }}</td>
+            <td>{{ \Carbon\Carbon::parse($subscriptionPlan->created_at)->format('d-m-y') ?? ""}}</td>
             <td>
               <a href="{{ route('admin.details.subscriptionplan', $subscriptionPlan->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Details</a>
               {{-- <a href="{{ route('admin.edit.subscriptionplan', $subscriptionPlan->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-pen"></i> Edit</a> --}}

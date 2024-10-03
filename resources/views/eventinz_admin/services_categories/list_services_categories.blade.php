@@ -48,6 +48,7 @@
               <th scope="col">Categories Names</th>
               <th scope="col">Descriptions</th>
               <th scope="col">vendor Category</th>
+              <th scope="col">Creation Date</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -60,6 +61,7 @@
                 <td>{{ $servicesCategorie->name }}</td>
                 <td>{{ $servicesCategorie->description }}</td>
                 <td>{{ $servicesCategorie->vendorCategory->name ?? "" }}</td>
+                <td>{{ \Carbon\Carbon::parse($servicesCategorie->created_at)->format('d-m-y') ?? ""}}</td>
                 <td>
                     <a href="{{ route('admin.edit.servicescategory', $servicesCategorie->id) }}"  class="btn btn-info btn-sm"><i class="fas fa-pen"></i> Edit</a>
                     {{-- <a href="{{ route('admin.deleteform.servicescategory', $servicesCategorie->id) }}"  class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a> --}}

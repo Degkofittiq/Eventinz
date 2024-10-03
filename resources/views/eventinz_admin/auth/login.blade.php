@@ -67,6 +67,37 @@
             alert('{{ session('error') }}');
         </script>
     @endif
+
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            let successAlert = document.getElementById('success-alert');
+            if (successAlert) {
+                successAlert.style.display = 'none';
+            }
+  
+            let errorAlert = document.getElementById('error-alert');
+            if (errorAlert) {
+                errorAlert.style.display = 'none';
+            }
+        }, 5000); // Le message disparaîtra après 5 secondes (5000 ms)
+    });
+  </script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            // Sélectionner tous les éléments avec la classe 'alert'
+            let alerts = document.querySelectorAll('.alert');
+  
+            // Parcourir chaque alerte et les masquer
+            alerts.forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 7000); // Le message disparaîtra après 7 secondes (7000 ms)
+    });
+  </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>

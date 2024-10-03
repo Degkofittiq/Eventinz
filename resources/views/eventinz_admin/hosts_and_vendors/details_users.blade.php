@@ -115,61 +115,142 @@
         <tr>
             <th>Total events</th>
             <td>
-                ({{ count($eventStatistics['All Events']) > 0 ? $eventStatistics['All Events']->count() : 0 }})
-                <strong>
-                    List:
-                </strong> 
-                @foreach ($eventStatistics['All Events'] as $item)
-                    <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
-                @endforeach
+                <div class="card direct-chat direct-chat-primary collapsed-card">
+                    <div class="card-header ui-sortable-handle" style="cursor: move;">
+                      <h3 class="card-title">List</h3>
+      
+                      <div class="card-tools">
+                        <span title="total" class="badge badge-primary">{{ count($eventStatistics['All Events']) > 0 ? $eventStatistics['All Events']->count() : 0 }}</span>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body" style="display: none;">
+                      <div class="mx-4 p-1">                            
+                        @forelse ($eventStatistics['All Events'] as $item)
+                            <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
+                        
+                        @empty
+                            No event here yet
+                        @endforelse
+                      </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>  
             </td>
         </tr>
         <tr>
             <th>Active events</th>
             <td>
-                ({{ count($eventStatistics['Active Events']) > 0 ? $eventStatistics['Active Events']->count() : 0 }})
-                <strong>
-                    List:
-                </strong> 
-                @foreach ($eventStatistics['Active Events'] as $item)
-                    <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
-                @endforeach
+                <div class="card direct-chat direct-chat-primary collapsed-card">
+                    <div class="card-header ui-sortable-handle" style="cursor: move;">
+                      <h3 class="card-title">List</h3>
+      
+                      <div class="card-tools">
+                        <span title="total" class="badge badge-primary">{{ count($eventStatistics['Active Events']) > 0 ? $eventStatistics['Active Events']->count() : 0 }}</span>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body" style="display: none;">
+                      <div class="mx-4 p-1">                            
+                        @forelse ($eventStatistics['Active Events'] as $item)
+                            <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
+                        @empty
+                            No event here yet
+                        @endforelse
+                      </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>  
             </td>
         </tr>
         <tr>
             <th>Completed events</th>
             <td>
-                ({{ count($eventStatistics['Completed Events']) > 0 ? $eventStatistics['Completed Events']->count() : 0 }})
-                <strong>
-                    List:
-                </strong> 
-                @foreach ($eventStatistics['Completed Events'] as $item)
-                    <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
-                @endforeach
+                <div class="card direct-chat direct-chat-primary collapsed-card">
+                    <div class="card-header ui-sortable-handle" style="cursor: move;">
+                      <h3 class="card-title">List</h3>
+      
+                      <div class="card-tools">
+                        <span title="total" class="badge badge-primary">{{ count($eventStatistics['Completed Events']) > 0 ? $eventStatistics['Completed Events']->count() : 0 }}</span>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body" style="display: none;">
+                      <div class="mx-4 p-1">                            
+                        @forelse ($eventStatistics['Completed Events'] as $item)
+                            <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
+                        @empty
+                            No event here yet
+                        @endforelse
+                      </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>  
             </td>
         </tr>
         <tr>
             <th>Upcomming events</th>
             <td>
-                ({{ count($eventStatistics['Future Events']) > 0 ? $eventStatistics['Future Events']->count() : 0 }})
-                <strong>
-                    List:
-                </strong> 
-                @foreach ($eventStatistics['Future Events'] as $item)
-                    <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
-                @endforeach
+                <div class="card direct-chat direct-chat-primary collapsed-card">
+                    <div class="card-header ui-sortable-handle" style="cursor: move;">
+                      <h3 class="card-title">List</h3>
+      
+                      <div class="card-tools">
+                        <span title="total" class="badge badge-primary">{{ count($eventStatistics['Future Events']) > 0 ? $eventStatistics['Future Events']->count() : 0 }}</span>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body" style="display: none;">
+                      <div class="mx-4 p-1">                            
+                        @forelse ($eventStatistics['Future Events'] as $item)
+                            <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> ,
+                        @empty
+                            No event here yet
+                        @endforelse
+                      </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div> 
             </td>
         </tr>
         <tr>
             <th>Canceled events</th>
             <td>
-                ({{ count($eventStatistics['Canceled Events']) > 0 ? $eventStatistics['Canceled Events']->count() : 0 }})
-                <strong>
-                    List:
-                </strong> 
-                @foreach ($eventStatistics['Canceled Events'] as $item)
-                    <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
-                @endforeach
+                <div class="card direct-chat direct-chat-primary collapsed-card">
+                    <div class="card-header ui-sortable-handle" style="cursor: move;">
+                      <h3 class="card-title">List</h3>
+      
+                      <div class="card-tools">
+                        <span title="total" class="badge badge-primary">{{ count($eventStatistics['Canceled Events']) > 0 ? $eventStatistics['Canceled Events']->count() : 0 }}</span>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body" style="display: none;">
+                      <div class="mx-4 p-1">                            
+                        @forelse ($eventStatistics['Canceled Events'] as $item)
+                        <a href="{{ route('admin.details.event', $item->id) }}">{{ $item->generic_id }}</a> , 
+                        @empty
+                            No event here yet
+                        @endforelse
+                      </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div> 
             </td>
         </tr>
     </table>
