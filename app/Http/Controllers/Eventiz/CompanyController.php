@@ -968,29 +968,64 @@ class CompanyController extends Controller
              ], 200);
         }
 
-        // dd($companyAssoc->vendor_categories_id);
+        // dd(json_decode($companyAssoc->vendor_categories_id));
         if($user ){ 
             $uncompletedEvents = Event::whereDate('start_date', '<', now()->format('Y-m-d'))
             ->where(function($query) use ($user,$companyAssoc) {
-                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
+                // Convertir $companyAssoc->vendor_categories_id en tableau si ce n'est pas déjà fait
+                $vendorCategories = json_decode($companyAssoc->vendor_categories_id);
+                
+                // Vérifier si un élément de $vendorCategories est contenu dans vendor_type_id
+                foreach ($vendorCategories as $categoryId) {
+                    $query->orWhereRaw('JSON_CONTAINS(vendor_type_id, ?, "$")', [json_encode($categoryId)]);
+                }
+            
+                // Vérifier si companyAssoc->id est contenu dans vendor_poke
+                $query->orWhereRaw('JSON_CONTAINS(vendor_poke, ?, "$")', [json_encode($companyAssoc->id)]);
             })
             ->orWhere('cancelstatus','Canceled')
             ->get();
-            $upcommingEvents = Event::whereDate('start_date', '>', now()->format('Y-m-d'))
-            ->where(function($query) use ($user,$companyAssoc) {
-                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
-            })->get();
+
+            $upcommingEvents = Event::where(function($query) use ($companyAssoc) {
+                // Convertir $companyAssoc->vendor_categories_id en tableau si ce n'est pas déjà fait
+                $vendorCategories = json_decode($companyAssoc->vendor_categories_id);
+                
+                // Vérifier si un élément de $vendorCategories est contenu dans vendor_type_id
+                foreach ($vendorCategories as $categoryId) {
+                    $query->orWhereRaw('JSON_CONTAINS(vendor_type_id, ?, "$")', [json_encode($categoryId)]);
+                }
+            
+                // Vérifier si companyAssoc->id est contenu dans vendor_poke
+                $query->orWhereRaw('JSON_CONTAINS(vendor_poke, ?, "$")', [json_encode($companyAssoc->id)]);
+            })
+            ->whereDate('start_date', '>', now()->format('Y-m-d'))
+            ->get();
+
             $completedEvents = Event::where('cancelstatus','Completed')
             ->where(function($query) use ($user,$companyAssoc) {
-                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
+                // Convertir $companyAssoc->vendor_categories_id en tableau si ce n'est pas déjà fait
+                $vendorCategories = json_decode($companyAssoc->vendor_categories_id);
+                
+                // Vérifier si un élément de $vendorCategories est contenu dans vendor_type_id
+                foreach ($vendorCategories as $categoryId) {
+                    $query->orWhereRaw('JSON_CONTAINS(vendor_type_id, ?, "$")', [json_encode($categoryId)]);
+                }
+            
+                // Vérifier si companyAssoc->id est contenu dans vendor_poke
+                $query->orWhereRaw('JSON_CONTAINS(vendor_poke, ?, "$")', [json_encode($companyAssoc->id)]);
             })->get();
             $activeEvents = Event::where('status', 'Yes')
             ->where(function($query) use ($user,$companyAssoc) {
-                $query->whereRaw('JSON_CONTAINS(vendor_type_id, ?)', [json_encode($companyAssoc->vendor_categories_id)])
-                      ->orWhereRaw('JSON_CONTAINS(vendor_poke, ?)', [json_encode($companyAssoc->id)]);
+                // Convertir $companyAssoc->vendor_categories_id en tableau si ce n'est pas déjà fait
+                $vendorCategories = json_decode($companyAssoc->vendor_categories_id);
+                
+                // Vérifier si un élément de $vendorCategories est contenu dans vendor_type_id
+                foreach ($vendorCategories as $categoryId) {
+                    $query->orWhereRaw('JSON_CONTAINS(vendor_type_id, ?, "$")', [json_encode($categoryId)]);
+                }
+            
+                // Vérifier si companyAssoc->id est contenu dans vendor_poke
+                $query->orWhereRaw('JSON_CONTAINS(vendor_poke, ?, "$")', [json_encode($companyAssoc->id)]);
             })->get();
            
             // processEvents($uncompletedEvents);
@@ -1003,9 +1038,9 @@ class CompanyController extends Controller
             return response()->json([
                 'message'=> 'Success',
                  'Uncompleted Event'=> count($uncompletedEvents) > 0 ? ['Total' => count($uncompletedEvents) ,'Events' => $uncompletedEvents] : 0,
-                 'Upcomming Event'=> count($upcommingEvents) > 0 ? ['Total' => count($uncompletedEvents) ,'Events' => $upcommingEvents] : 0,
-                 'Current Event'=> count($completedEvents) > 0 ? ['Total' => count($uncompletedEvents) ,'Events' => $completedEvents] : 0,
-                 'Active Event'=> count($activeEvents) > 0 ? ['Total' => count($uncompletedEvents) ,'Events' => $activeEvents] : 0
+                 'Upcomming Event'=> count($upcommingEvents) > 0 ? ['Total' => count($upcommingEvents) ,'Events' => $upcommingEvents] : 0,
+                 'Current Event'=> count($completedEvents) > 0 ? ['Total' => count($completedEvents) ,'Events' => $completedEvents] : 0,
+                 'Active Event'=> count($activeEvents) > 0 ? ['Total' => count($activeEvents) ,'Events' => $activeEvents] : 0
              ], 200);
         }else{
             return response()->json([
