@@ -17,9 +17,11 @@ Route::prefix('admin')->group(function() {
     Route::post('/login', [AdminController::class, 'login'])->name('admin.login');
 });
 
+
 // Route::get('/getcurrency', [PaymentController::class, 'testCurrency'])->name('get.current.currency'); 
 
 Route::prefix('admin')->middleware(['auth','rights','checkAccountStatus'])->group(function() {
+    Route::get('admin/logs', [AdminController::class, 'indexLog'])->name('admin.logs.index');
     Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
     // Route pour le tableau de bord admin
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');

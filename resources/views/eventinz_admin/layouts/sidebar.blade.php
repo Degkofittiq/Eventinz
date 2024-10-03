@@ -61,7 +61,15 @@
                     </p>
                   </a>
                 </li>
-              @endif
+              @endif 
+              <li class="nav-item">
+                <a href="{{ route('admin.logs.index') }}" class="nav-link {{ request()->url() == route('admin.logs.index') ? "active" : "" }}">
+                  <i class="far fa-dot-circle nav-icon"></i>
+                  <p>
+                    Admin logs
+                  </p>
+                </a>
+              </li>
               
               @if(in_array('view_support_help', json_decode(Auth::user()->rights)))
                 <li class="nav-item">

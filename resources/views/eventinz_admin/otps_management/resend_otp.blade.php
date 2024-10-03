@@ -30,7 +30,7 @@
             <div class="box-body">
                 <div class="form-group">
                     <label for="emailselect">Email address <span style="color:red">*</span></label>
-                    <select name="emailselect" id="emailselect" class="form-control">
+                    <select name="" id="emailselect" class="form-control">
                         <option value="desacled">--Select the email address--</option>
                         
                         @foreach ($allusers as $eachuser)
@@ -58,7 +58,7 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
+{{-- <script>
     $(document).ready(function() {
     $('#emailselect').select2();
     });
@@ -67,6 +67,23 @@
     $(document).ready(function(){
         $('span.select2-selection.select2-selection--single').css('height', '35px');
     });
+</script> --}}
+
+<script>
+    $(document).ready(function() {
+        // Initialiser Select2
+        $('#emailselect').select2();
+
+        // Mettre à jour la valeur de l'input email lors de la sélection dans le select2
+        $('#emailselect').on('change', function() {
+            var selectedEmail = $(this).val();  // Récupérer la valeur sélectionnée
+            $('#email').val(selectedEmail);     // Mettre à jour le champ email
+        });
+
+        // Ajustement de la hauteur pour Select2
+        $('span.select2-selection.select2-selection--single').css('height', '35px');
+    });
 </script>
+
 
 @endsection

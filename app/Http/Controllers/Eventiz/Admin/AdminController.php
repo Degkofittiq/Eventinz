@@ -14,6 +14,7 @@ use App\Rules\SameSizeAs;
 use App\Models\EventQuotes;
 use App\Models\PaymentTaxe;
 use Illuminate\Http\Request;
+use App\Models\AdminActionLog;
 use App\Models\Paymenthistory;
 use App\Models\VarriablesLimit;
 use App\Models\ServicesCategory;
@@ -32,6 +33,12 @@ class AdminController extends Controller
 {
     //
 
+
+    public function indexLog()
+    {
+        $logs = AdminActionLog::where('method','POST')->orderBy('created_at', 'desc')->paginate(10);
+        return view('eventinz_admin.logs.index', compact('logs'));
+    }
 
     public function loginForm(){
         return view('eventinz_admin.auth.login');
@@ -86,7 +93,6 @@ class AdminController extends Controller
             return redirect()->route('/')->with('error', 'You are not authorized');
         }
     }
-    
         
     public function logout(Request $request)
     {

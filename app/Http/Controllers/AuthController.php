@@ -208,18 +208,18 @@ class AuthController extends Controller
     }
 
     public function userResendOTP(Request $request){
-        try{
+        // try{
             $request->validate([
                 'email' => 'required|string|email'
             ]);
             // Trouver l'utilisateur par son email
             $user = User::where('email', $request->email)->first();
-        }catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => $e->errors(),
-            ], 422);
-        }
+        // }catch (ValidationException $e) {
+        //     return response()->json([
+        //         'message' => 'The given data was invalid.',
+        //         'errors' => $e->errors(),
+        //     ], 422);
+        // }
 
         if ($user) {
 
