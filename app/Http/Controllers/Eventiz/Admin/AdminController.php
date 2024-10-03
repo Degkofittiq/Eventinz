@@ -245,20 +245,28 @@ class AdminController extends Controller
         return view('eventinz_admin.hosts_and_vendors.supportdetails_users', compact('userFound'));
     }
 
+    public function userSupportHelpList(Request $request){
+        $supports = userSupportsAndHelp::all();
+
+        return view('eventinz_admin.hosts_and_vendors.support_help_list', compact('supports'));
+    }
+
     public function userSupportHelp(Request $request, $userId){
 
         $userFound = User::find($userId);
         if (!$userFound) {
             return back()->with('error', 'User not found.');            
         }
-
+        
         $dataValidation = $request->validate([
-            'support_description' =>'required|string|max:255',
+            'support_subject' =>'required|string|max:255',
+            'support_description' =>'required|string|max:255'
         ]);
         
         $supportHelpForm = userSupportsAndHelp::create([
             'admin_id' => Auth::user()->id,
             'users_id' => $userId,
+            'support_subject' => $request->support_subject,
             'support_description' => $request->support_description,
         ]);
         

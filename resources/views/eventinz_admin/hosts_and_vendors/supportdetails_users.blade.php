@@ -28,34 +28,43 @@
       </div>
     </div>
     <!-- /.card-header -->
-    <table class="table">
-        <tr>
-            <th>Generic Id</th>
-            <td>{{ $userFound->generic_id }}</td>
-        </tr>    
-        <tr>
-            <th>Username</th>
-            <td>{{ $userFound->username }}</td>
-        </tr>
-        <tr>
-            <th>Email</th>
-            <td>{{ $userFound->email }}</td>
-        </tr>
-        <tr>
-            <th>Comment For Support</th>
-            <td>
-                <form action="{{ route('admin.addlog.supporthelp', $userFound->id) }}" method="post">
-                    @csrf
-                    <textarea name="support_description" rows="5" class="form-control @error('support_description') is-invalid @enderror" placeholder="Write a comment support about"></textarea><br>
-                    @error('support_description')
-                        <p class="text-danger">{{ $message }}</p>
-                    @enderror
-                    
-                    <button type="submit" class="btn btn-primary float-right"><i class="fas fa-save"></i> Submit</button>
-                </form>
-            </td>
-        </tr>
-    </table>
+    <form action="{{ route('admin.addlog.supporthelp', $userFound->id) }}" method="post">
+        @csrf
+        <table class="table">
+            <tr>
+                <th>Generic Id</th>
+                <td>{{ $userFound->generic_id }}</td>
+            </tr>    
+            <tr>
+                <th>Username</th>
+                <td>{{ $userFound->username }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ $userFound->email }}</td>
+            </tr>
+            <tr>
+                <th>Comment Subject</th>
+                <td>
+                        <input type="text" name="support_subject" class="form-control @error('support_subject') is-invalid @enderror" placeholder="Write a comment support about">
+                        @error('support_subject')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
+                </td>
+            </tr>
+            <tr>
+                <th>Comment For Support</th>
+                <td>
+                        <textarea name="support_description" rows="5" class="form-control @error('support_description') is-invalid @enderror" placeholder="Write a comment support about"></textarea><br>
+                        @error('support_description')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
+                        
+                        <button type="submit" class="btn btn-primary float-right"><i class="fas fa-save"></i> Submit</button>
+                </td>
+            </tr>
+        </table>
+    </form>
 </div>
 
 @endsection

@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('user_supports_and_helps', function (Blueprint $table) {
             $table->id();
             $table->integer('admin_id'); // Admin qui ecrit le commantaire
-            $table->integer('users_id'); // Admin qui ecrit le commantaire
+            $table->integer('users_id'); // Admin qui ecrit le commantaire 
+            $table->string('support_subject'); // Admin qui ecrit le commantaire 
             $table->string('support_description'); // Admin qui ecrit le commantaire
             $table->timestamps();
         });

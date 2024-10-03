@@ -31,6 +31,7 @@ Route::prefix('admin')->middleware(['auth','rights','checkAccountStatus'])->grou
     Route::get('/userdetails/{userId}', [AdminController::class, 'userDetails'])->name('admin.details.user')->middleware('rights:view_details_about_hosts_and_vendors');
 
     // user Support & Help Form
+    Route::get('/usersupporthelplist', [AdminController::class, 'userSupportHelpList'])->name('admin.list.supporthelp')/*->middleware('rights:resend_otp')*/; //send the new otp
     Route::get('/supporthelpform/{userId}', [AdminController::class, 'userSupportHelpForm'])->name('admin.addlogform.supporthelp')/*->middleware('rights:resend_otp')*/; //send the new otp
     Route::post('/supporthelp/{userId}', [AdminController::class, 'userSupportHelp'])->name('admin.addlog.supporthelp')/*->middleware('rights:resend_otp')*/; //send the new otp
 

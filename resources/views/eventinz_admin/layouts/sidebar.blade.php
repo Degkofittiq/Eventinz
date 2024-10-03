@@ -73,8 +73,7 @@
               
               @if(in_array('view_support_help', json_decode(Auth::user()->rights)))
                 <li class="nav-item">
-                  {{-- <a href="{{ route('admin.resendform.otp') }}" class="nav-link {{ request()->url() == route('admin.resendform.otp') ? "active" : "" }}"> --}}
-                  <a href="#" class="nav-link ">
+                  <a href="{{ route('admin.list.supporthelp') }}" class="nav-link {{ request()->url() == route('admin.list.supporthelp') ? "active" : "" }}">
                     <i class="far fa-dot-circle nav-icon"></i>
                     <p>
                       Support & Help
