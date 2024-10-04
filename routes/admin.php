@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Eventiz\PaymentController;
 use App\Http\Controllers\Eventiz\Admin\AdminController;
 use App\Http\Controllers\Eventiz\Admin\AdminEventController;
@@ -20,12 +21,15 @@ Route::prefix('admin')->group(function() {
 
 // Route::get('/getcurrency', [PaymentController::class, 'testCurrency'])->name('get.current.currency'); 
 
-Route::prefix('admin')->middleware(['auth','rights','checkAccountStatus'])->group(function() {
+Route::prefix('admin')->middleware(['auth','rights','checkAccountStatus','gettoken'])->group(function() {
     Route::get('admin/logs', [AdminController::class, 'indexLog'])->name('admin.logs.index');
     Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
     // Route pour le tableau de bord admin
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
+    Route::post('/messages', [ChatController::class, 'sendMessageAsAdmin'])->name('send.message');
+    Route::get('/conversations', [ChatController::class, 'indexListConversation'])->name('my.conversations');
+    Route::get('/conversations/{id}/messages', [ChatController::class, 'getMessagesAsAdmin']);
     // Autres routes d'administration
     Route::get('/userslist', [AdminController::class, 'usersList'])->name('admin.userslist.index')->middleware('rights:view_users_hosts_and_vendors_list');
     Route::get('/userdetails/{userId}', [AdminController::class, 'userDetails'])->name('admin.details.user')->middleware('rights:view_details_about_hosts_and_vendors');

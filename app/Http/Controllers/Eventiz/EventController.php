@@ -500,11 +500,6 @@ class EventController extends Controller
                     }
                 
                     $quoteCode = strtoupper(Str::random(4)) . "-". $eventId . "-" . $userCompany->id;
-                    BidQuotes::create([
-                        'quote_code' => $quoteCode,
-                        'event_id' => $eventId,
-                        'status' => 'Pending'
-                    ]);
                 
                     // Boucle sur les services pour créer les devis si 'servicename' est un tableau
                     if (isset($dataValidate['servicename']) && is_array($dataValidate['servicename'])) {
@@ -525,6 +520,11 @@ class EventController extends Controller
                         }
                         
                         if ($quoteCreated) {
+                            BidQuotes::create([
+                                'quote_code' => $quoteCode,
+                                'event_id' => $eventId,
+                                'status' => 'Pending'
+                            ]);
                             $restCredit = $user->credit - 1;
                         
                             // Mise à jour du crédit de l'utilisateur authentifié

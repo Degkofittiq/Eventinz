@@ -5,6 +5,17 @@
   #no-hover{
     text-decoration: none;
   }
+  .img-size-50{
+    width: 30px !important;
+  }
+  
+  .notif-section{
+        position: relative;
+        padding: .75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+    }
 </style>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
@@ -48,70 +59,110 @@
         </div>
       </li>
 
+
+      <script>
+        async function fetchConversations() {
+            const response = await fetch('/api/conversations', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + '{{ $userToken }}'  // Remplacez par le token de l'utilisateur authentifié
+                }
+            });
+      
+            if (response.ok) {
+                const conversations = await response.json();
+                const conversationsList = document.getElementById('conversationsList');
+                conversationsList.innerHTML = ''; // Vider la liste actuelle
+      
+                conversations.forEach(conversation => {
+                    const lastMessage = conversation.lastMessage ? conversation.lastMessage.body : 'Aucun message';
+                    const otherUser = conversation.otherUser; // Obtenez l'utilisateur opposé
+                    const listItem = document.createElement('li');
+                    const profileImage = otherUser.profile_image ? otherUser.profile_image : '{{ asset('AdminTemplate/dist/img/user-avatars-thumbnail_2.png') }}';
+
+                    listItem.innerHTML = `
+                      <a href="/admin/conversations/${conversation.conversation.id}/messages" class="dropdown-item">
+                        <!-- Message Start -->
+                        <div class="media">
+                          <img src="${profileImage}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                          <div class="media-body">
+                            <h3 class="dropdown-item-title">
+                              ${otherUser.username} <!-- Utilisateur opposé -->
+                              <!--span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span-->
+                            </h3>
+                            <p class="text-sm">${lastMessage}</p>
+                            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                          </div>
+                        </div>
+                        <!-- Message End -->
+                      </a>
+                      <div class="dropdown-divider"></div>
+                    `;
+                    
+                    conversationsList.appendChild(listItem);
+                });
+            } else {
+                console.error('Erreur lors de la récupération des conversations');
+            }
+        }
+      
+        // Appeler la fonction pour récupérer les conversations
+        fetchConversations();
+      </script>
+
+
       <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-comments"></i>
-          <span class="badge badge-danger navbar-badge">3</span>
+          {{-- <span class="badge badge-danger navbar-badge">3</span> --}}
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="{{ asset('AdminTemplate/dist/img/user1-128x128.jpg') }}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Brad Diesel
-                  <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">Call me whenever you can...</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="{{ asset('AdminTemplate/dist/img/user8-128x128.jpg') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  John Pierce
-                  <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">I got your message bro</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="{{ asset('AdminTemplate/dist/img/user3-128x128.jpg') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Nora Silvester
-                  <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">The subject goes here</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+          <div class="div" id="conversationsList">
+
+          </div>
+          <script>
+            async function fetchConversations() {
+              const response = await fetch('/api/conversations', {
+                method: 'GET',
+                headers: {
+                  'Authorization': 'Bearer ' + '{{ $userToken }}'  // Remplacez par le token de l'utilisateur authentifié
+                }
+              });
+          
+              if (response.ok) {
+                const conversationsContent = await response.json();
+                const conversationsContentList = document.getElementById('conversationContent');
+                let content = '';  // Utilisation de chaîne vide au lieu de `null`
+          
+                // Vérifie s'il n'y a pas de conversations
+                if (conversationsContent.length <= 0) {
+                  content = `<span class="dropdown-item dropdown-footer">No conversation yet</span>`;
+                } else {
+                  content = `<a href="{{ route('my.conversations') }}" class="dropdown-item dropdown-footer">See All Messages</a>`;
+                }
+          
+                // Insérer le contenu généré dans l'élément
+                conversationsContentList.innerHTML = content;
+              } else {
+                console.error('Erreur lors de la récupération des conversations');
+              }
+            }
+          
+            // Appeler la fonction pour récupérer les conversations
+            fetchConversations();
+          </script>
+          
+          <div id="conversationContent"></div>
+          
         </div>
       </li>
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
+        {{-- <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
           <span class="badge badge-warning navbar-badge">15</span>
-        </a>
+        </a> --}}
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-header">15 Notifications</span>
           <div class="dropdown-divider"></div>

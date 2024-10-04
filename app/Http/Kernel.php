@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\LogAdminActions::class,
+            \App\Http\Middleware\AddUserToken::class,
         ],
 
         'api' => [
@@ -76,5 +77,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'rights' => \App\Http\Middleware\CheckRight::class,
         'checkAccountStatus' => \App\Http\Middleware\CheckAccountStatus::class,
+        'gettoken' =>  \App\Http\Middleware\AddUserToken::class,
     ];
 }

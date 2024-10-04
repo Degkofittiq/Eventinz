@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\AppContentController;
 use App\Http\Controllers\Eventiz\OtpController;
 use App\Http\Controllers\Eventiz\EventController;
@@ -51,6 +52,14 @@ Route::post('password/resetOTP', [AuthController::class, 'verifyResetOTP']);
 Route::post('password/reset', [AuthController::class, 'resetPassword']);
 
 Route::get('/allappcontent', [AppContentController::class, 'allAppContent']);
+
+// -indexListConversation-storeConversation-sendMessage-getMessages
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/conversations', [ChatController::class, 'indexListConversation']);
+    Route::post('/conversations', [ChatController::class, 'storeConversation']);
+    Route::post('/messages', [ChatController::class, 'sendMessage']);
+    Route::get('/conversations/{id}/messages', [ChatController::class, 'getMessages']);
+});
 
 Route::middleware(['api', 'web','auth:sanctum'])->group(function () {
     // Route::post('/send-otp', [OtpController::class, 'sendOtp']); Hors Service
