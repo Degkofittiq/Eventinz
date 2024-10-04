@@ -71,7 +71,7 @@
                             <a href="{{ $log->user ? route('admin.edit.adminuserform',$log->user_id) : '#' }}" style="{{ $log->user ? 'color: black; text-decoration:underline' : 'color: black; text-decoration:underline' }}">{{ $log->user->username ?? 'Guest' }}</a>
                         </td>
                         <td>{{ $log->action }}</td>
-                        <td>{{ str_replace('admin/', "",  $log->path ) }}</td>
+                        <td>{{ str_replace('admin/', "",  preg_replace('/\/\d+/', '/*****', $log->path) ) }}</td>
                         <td>
                             @php
                                 // Décoder l'input JSON
