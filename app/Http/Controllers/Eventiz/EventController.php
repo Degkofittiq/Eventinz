@@ -340,6 +340,19 @@ class EventController extends Controller
                         $bid['QotesDetails'] = $quoteQuery->get();
                         if ($quoteQuery->first()->company) {
                             $company = $quoteQuery->first()->company->makeHidden(['created_at', 'updated_at']);
+                            if ($company) {
+                                $tableau = [];
+                                // dd(json_decode($company->vendor_categories_id, true));
+                                foreach (json_decode($company->vendor_categories_id, true) as $list) {
+                                    $VendorCategories = VendorCategories::all();
+                                    foreach ($VendorCategories as $VendorCategory) {
+                                        if ($VendorCategory->id == $list) {
+                                            $tableau[] = $VendorCategory->name;
+                                        }
+                                    }
+                                }
+                                $company->vendor_categories_id = $tableau; 
+                            }
                             $bid['VendorCompany'] = $company;
                             $bid['VendorName'] = $company->user->name;
                         }
